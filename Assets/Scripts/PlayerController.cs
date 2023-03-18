@@ -1,0 +1,187 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerController : MonoBehaviour
+{
+    [field: SerializeField] public Controls PlayerControls { get; set; }
+
+    [Header("Dashing")]
+    public float DashForce;
+    public float DashUpwardForce;
+    public float DashDuration;
+
+    [Header("Dash Cooldown")]
+    public float DashCd;
+    private float DashCdTimer;
+    
+
+    private Rigidbody _rb;
+    private Vector3 _moveDirection = Vector3.zero;
+
+    //Input actions.
+    private InputAction _iMove;
+    private InputAction _iJump;
+    private InputAction _iDash;
+    private InputAction _iSprint;
+    private InputAction _iMelee;
+    private InputAction _iShootLeft;
+    private InputAction _iShootRight;
+    private InputAction _iCycleLeft;
+    private InputAction _iCycleRight;
+    private InputAction _iHeal;
+    private InputAction _iCritical;
+
+    private const float MoveSpeed = 500f; //placeholder
+    private Vector3 _jumpForce; //placeholder
+    //private const float DashForce = 200f;
+
+    private bool _isSprinting = false;
+    private bool _isGrounded = true;
+    private bool _canDoubleJump = true;
+
+    private float _ySpeed;
+    private bool _jumpEnded;
+
+    private int _sprintMultiplier = 1;
+    private void Awake()
+    {
+        PlayerControls = new Controls();
+    }
+
+    private void OnEnable()
+    {
+        _iMove = PlayerControls.Player.Walk;
+        _iMove.Enable();
+
+        _iJump = PlayerControls.Player.Jump;
+        _iJump.performed += Jump;
+        _iJump.canceled += JumpEnded;
+        _iJump.Enable();
+
+        _iDash = PlayerControls.Player.Dash;
+        _iDash.performed += Dash;
+        _iDash.Enable();
+
+        _iSprint = PlayerControls.Player.Sprint;
+        _iSprint.performed += ToggleSprint;
+        _iSprint.Enable();
+
+        _iMelee = PlayerControls.Player.Melee;
+        _iMelee.Enable();
+
+        _iShootLeft = PlayerControls.Player.ShootLeft;
+        _iShootLeft.Enable();
+
+        _iShootRight = PlayerControls.Player.ShootRight;
+        _iShootRight.Enable();
+
+        _iCycleLeft = PlayerControls.Player.CycleLeft;
+        _iCycleLeft.Enable();
+
+        _iCycleRight = PlayerControls.Player.CycleRight;
+        _iCycleRight.Enable();
+
+        _iHeal = PlayerControls.Player.Healing;
+        _iHeal.Enable();
+
+        _iCritical = PlayerControls.Player.CriticalMesures;
+        _iCritical.Enable();
+
+    }
+
+    private void OnDisable()
+    {
+        _iMove.Disable();
+        _iJump.Disable();
+        _iDash.Disable();
+        _iSprint.Disable();
+        _iMelee.Disable();
+        _iShootLeft.Disable();
+        _iShootRight.Disable();
+        _iCycleLeft.Disable();
+        _iCycleRight.Disable();
+        _iHeal.Disable();
+        _iCritical.Disable();
+
+    }
+
+    private void Start()
+    {
+        _rb = GetComponent<Rigidbody>();
+        _jumpForce = new Vector3(0, 100, 0);
+    }
+
+    private void Update()
+    {
+        _moveDirection = _iMove.ReadValue<Vector3>();
+        if (_isSprinting) _sprintMultiplier = 2;
+        else _sprintMultiplier = 1;
+
+        _ySpeed += Physics.gravity.y * Time.deltaTime * 10;
+        
+        if(_jumpEnded)
+        {
+            _ySpeed -= 100 * Time.deltaTime;
+        }
+
+        if (_isGrounded)
+        {
+            _ySpeed = -0.5f;
+        }
+        Debug.Log("Can double jump " + _canDoubleJump);
+    }
+
+    private void FixedUpdate()
+    {
+        _rb.velocity = new Vector3(_moveDirection.x * MoveSpeed, _ySpeed * 10, _moveDirection.z * MoveSpeed) * Time.deltaTime * _sprintMultiplier;
+    }
+
+    private void ToggleSprint(InputAction.CallbackContext context)
+    {
+        _isSprinting = !_isSprinting;
+    }
+
+    private void Jump(InputAction.CallbackContext context)
+    {
+        if (_isGrounded || _canDoubleJump)
+        {
+            _ySpeed = _jumpForce.y;
+            _isGrounded = false;
+            if (_canDoubleJump && _jumpEnded)
+            {
+                _canDoubleJump = false;
+            }
+        }
+    }
+    private void JumpEnded(InputAction.CallbackContext context)
+    {
+        _jumpEnded = true;
+    }
+
+    private void Dash(InputAction.CallbackContext context)
+    {
+        Vector3 forceToApply = transform.forward * DashForce + transform.up * DashUpwardForce;
+
+        _rb.AddForce(forceToApply, ForceMode.Impulse);
+
+        Invoke(nameof(ResetDash), DashDuration);
+    }
+
+    private void ResetDash()
+    {
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.collider.CompareTag("Ground"))
+        {
+            _isGrounded = true;
+            _canDoubleJump = true;
+            _jumpEnded = false;
+            Debug.Log("Bruh");
+        }
+    }
+}
