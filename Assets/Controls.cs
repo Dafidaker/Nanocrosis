@@ -125,6 +125,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""5e0418e0-5226-4021-9356-08833525ece5"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -314,6 +323,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""CriticalMesures"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0a3d66ce-1240-42b1-bf95-22736d810c3d"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -333,6 +353,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Player_Melee = m_Player.FindAction("Melee", throwIfNotFound: true);
         m_Player_Healing = m_Player.FindAction("Healing", throwIfNotFound: true);
         m_Player_CriticalMesures = m_Player.FindAction("CriticalMesures", throwIfNotFound: true);
+        m_Player_Rotate = m_Player.FindAction("Rotate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -403,6 +424,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Melee;
     private readonly InputAction m_Player_Healing;
     private readonly InputAction m_Player_CriticalMesures;
+    private readonly InputAction m_Player_Rotate;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -418,6 +440,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Melee => m_Wrapper.m_Player_Melee;
         public InputAction @Healing => m_Wrapper.m_Player_Healing;
         public InputAction @CriticalMesures => m_Wrapper.m_Player_CriticalMesures;
+        public InputAction @Rotate => m_Wrapper.m_Player_Rotate;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -460,6 +483,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @CriticalMesures.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCriticalMesures;
                 @CriticalMesures.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCriticalMesures;
                 @CriticalMesures.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCriticalMesures;
+                @Rotate.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotate;
+                @Rotate.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotate;
+                @Rotate.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotate;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -497,6 +523,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @CriticalMesures.started += instance.OnCriticalMesures;
                 @CriticalMesures.performed += instance.OnCriticalMesures;
                 @CriticalMesures.canceled += instance.OnCriticalMesures;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
             }
         }
     }
@@ -514,5 +543,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnMelee(InputAction.CallbackContext context);
         void OnHealing(InputAction.CallbackContext context);
         void OnCriticalMesures(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
 }
