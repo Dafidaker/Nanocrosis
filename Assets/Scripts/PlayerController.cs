@@ -84,7 +84,7 @@ public class PlayerController : MonoBehaviour
     {
         _moveDirection = _iMove.ReadValue<Vector3>();
         _moveDirection = _moveDirection.normalized;
-        RotatePlayer();
+        //RotatePlayer();
         
         if (_isSprinting) _sprintMultiplier = 2;
         else _sprintMultiplier = 1;
@@ -203,7 +203,7 @@ public class PlayerController : MonoBehaviour
     
     #endregion
 
-    private void RotatePlayer()
+    /*private void RotatePlayer()
     {
         //Debug.DrawRay(transform.position, transform.forward, Color.red,1000);
         //if (_moveDirection == Vector3.zero)return;
@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour
          
         if (_moveDirection == Vector3.zero)return;
         _moveDirection = (Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward).normalized;
-    }
+    }*/
 
     #region Collisions
 
