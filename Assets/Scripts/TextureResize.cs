@@ -5,7 +5,7 @@ using System.Collections;
 public class TextureResize : MonoBehaviour
 {
 
-    public float scaleFactor = 5.0f;
+    public float scaleFactor = 1f;
     Material mat;
     // Use this for initialization
     void Start()
