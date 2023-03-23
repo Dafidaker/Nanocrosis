@@ -21,6 +21,8 @@ public class Joel_PlayerMovement : MonoBehaviour
     public float airMultiplier;
     public float fallGravity;
     private bool _readyToJump = true;
+    [field: SerializeField, Range(1,10)] private int numberOfJumps;
+    private int _currentJumps;
     [field: HideInInspector] public bool isJumpOver;
     
     [Header("RotatePlayer"), Space(10)] 
@@ -30,8 +32,11 @@ public class Joel_PlayerMovement : MonoBehaviour
     private float _turnSmoothVelocity;
     
     [Header("Slope Handling"), Space(10)] 
-    public float maxSlopeAngle;
+    public float minSlopeAngle;
     private RaycastHit _slopeHit;
+
+    [Header("DetectGround"), Space(10)] 
+    [field: SerializeField] private LayerMask _layerMask;
 
     [Header("DebugVariables"), Space(10)] 
     public bool isGrounded;
@@ -84,15 +89,18 @@ public class Joel_PlayerMovement : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         DebugGameObject = Instantiate(DebugGameObject);
+
+        _currentJumps = 0;
     }
     
     private void Update()
     {
-        _horizontalInput = _iMove.ReadValue<Vector3>().x;
-        _verticalInput = _iMove.ReadValue<Vector3>().z;
-
+        _horizontalInput = _iMove.ReadValue<Vector2>().x;
+        _verticalInput = _iMove.ReadValue<Vector2>().y;
+        
         //adds drag if player is grounded
         if (isGrounded) { _rb.drag = groundDrag;}
+        else if (OnSlope()) { _rb.drag = groundDrag * 3;}
         else { _rb.drag = 0; }
         
         //limits the player speed
@@ -104,16 +112,34 @@ public class Joel_PlayerMovement : MonoBehaviour
         //changes the movement state
         StateHandler();
 
-        if (isJumpOver && !OnSlope())
+        
+        //'increase' gravity if player is on air and the jump is over
+        if (isJumpOver && _movementState == MovementState.Airbourne)
         {
-            _rb.AddForce(Physics.gravity * fallGravity, ForceMode.Acceleration);
+            _rb.AddForce(Physics.gravity * fallGravity , ForceMode.Acceleration);
+        }
+
+        //if its on a slope apply more gravity
+        if (OnSlope())
+        {
+            _rb.useGravity = false;
+            _rb.AddForce(_slopeHit.normal * -Physics.gravity.magnitude , ForceMode.Acceleration);
+            Debug.Log("hit slope");
+            
+        }
+        else
+        {
+            _rb.useGravity = true;
         }
         
         
+        Debug.DrawRay(transform.position , _rb.velocity.normalized, Color.green, 100f);
     }
 
     private void FixedUpdate()
     {
+        DetectGround();
+        
         MovePlayer();
     }
 
@@ -132,9 +158,9 @@ public class Joel_PlayerMovement : MonoBehaviour
         if (OnSlope())
         {
             Debug.Log("slope hit");
-            _rb.AddForce(GetSlopeMoveDirection() * (_moveSpeed * 10f), ForceMode.Force);
+            
+            _rb.AddForce(GetSlopeMoveDirection(_moveDirection).normalized * (_moveSpeed * 10f), ForceMode.Force);
         }
-        
         else if (isGrounded)
         {
             _rb.AddForce(_moveDirection.normalized * (_moveSpeed * 10f), ForceMode.Force); 
@@ -143,9 +169,6 @@ public class Joel_PlayerMovement : MonoBehaviour
         {
             _rb.AddForce(_moveDirection.normalized * (_moveSpeed * 10f * airMultiplier), ForceMode.Force); 
         }
-        
-        
-        //_rb.useGravity = !OnSlope();
         
     }
 
@@ -157,11 +180,18 @@ public class Joel_PlayerMovement : MonoBehaviour
         if (!(flatVelocity.magnitude > _moveSpeed)) return;
         Vector3 limitedVelocity = flatVelocity.normalized * _moveSpeed;
         _rb.velocity = new Vector3(limitedVelocity.x, _rb.velocity.y, limitedVelocity.z);
+
+        if (_rb.velocity.y <= 0 )
+        {
+            isJumpOver = true;
+        }
     }
 
     private void Jump()
     {
+        _currentJumps++;
         isJumpOver = false;
+        
         var velocity = _rb.velocity;
         _rb.velocity = new Vector3(velocity.x, 0, velocity.z);
         
@@ -177,12 +207,12 @@ public class Joel_PlayerMovement : MonoBehaviour
     
     private void RotatePlayer()
     {
-        var targetAngle = MathF.Atan2(_moveDirection.x, _moveDirection.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-        var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, turnSmoothTime);
+        //var targetAngle = MathF.Atan2(_moveDirection.x, _moveDirection.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+        //var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, turnSmoothTime);
          
         
         if (!_iRotate.triggered) return;
-        _moveDirection = (Quaternion.Euler(0f, angle, 0f) * Vector3.forward).normalized;
+        //_moveDirection = (Quaternion.Euler(0f, angle, 0f) * Vector3.forward).normalized;
         var camTransformForward = cam.transform.forward;
         transform.forward = new Vector3(camTransformForward.x, 0f, camTransformForward.z);
     }
@@ -204,25 +234,34 @@ public class Joel_PlayerMovement : MonoBehaviour
         else
         {
             _movementState = MovementState.Airbourne;
+            
         }
     }
 
     private bool OnSlope()
     {
-        //DebugGameObject.transform.position = new Vector3(transform.position.x, transform.position.y  - 2f, transform.position.z);
-        Debug.DrawLine(transform.position, new Vector3(transform.position.x, transform.position.y  - 1f, transform.position.z) , Color.green);
         //if it doesnt hit a slope it returns false 
-        if (!Physics.Raycast(transform.position, Vector3.down, out _slopeHit, transform.position.y  - 1f)) return false;
+        if (!Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _slopeHit,0.6f, _layerMask )) return false;
 
         
         //if it hits we check it the angles is smaller that the max slope angle
         float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
-        return angle < maxSlopeAngle && angle != 0;
+        return angle > minSlopeAngle && angle != 0;
     }
 
-    private Vector3 GetSlopeMoveDirection()
+    private void DetectGround()
     {
-        return Vector3.ProjectOnPlane(_moveDirection.normalized, _slopeHit.normal + _slopeHit.transform.forward).normalized;
+        isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, _layerMask);
+        
+        //if _readyToJump is false it means the player just jumped meaning that they arent on the ground
+        if (!_readyToJump) isGrounded = false;
+        
+        //if the player is on the ground their jumps will reset
+        if (isGrounded) { _currentJumps = 0; }
+    }
+    private Vector3 GetSlopeMoveDirection(Vector3 vector)
+    {
+        return Vector3.ProjectOnPlane(vector, _slopeHit.normal);
     }
     
     #endregion
@@ -251,11 +290,16 @@ public class Joel_PlayerMovement : MonoBehaviour
     }
     private void JumpInput(InputAction.CallbackContext context)
     {
-        if (!_readyToJump || !isGrounded) return;
-        _readyToJump = false;
-        Jump();
-        
-        Invoke(nameof(ResetJump), jumpCooldown);
+        Debug.Log("_readyToJump" + _readyToJump);
+        Debug.Log("isGrounded" + isGrounded);
+        if (_readyToJump && (isGrounded || _currentJumps < numberOfJumps))
+        {
+            _readyToJump = false;
+
+            Jump();
+
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
     }
     private void JumpEndedInput(InputAction.CallbackContext context)
     {
@@ -329,5 +373,10 @@ public class Joel_PlayerMovement : MonoBehaviour
     }
     
     #endregion
-    
+
+    private void OnGUI()
+    {
+        GUI.Box(new Rect(0, 0, Screen.width * 0.1f, Screen.height * 0.1f), _rb.velocity.ToString());
+        GUI.Box(new Rect(0, 50, Screen.width * 0.1f, Screen.height * 0.1f), isJumpOver.ToString());
+    }
 }

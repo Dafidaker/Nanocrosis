@@ -8,6 +8,6 @@ public static class Settings
 
     public static void GameStart()
     {
-        IsSprintToggle = false;
+        IsSprintToggle = true;
     }
 }
