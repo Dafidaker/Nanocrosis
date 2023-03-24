@@ -1,15 +1,21 @@
 using System;
+using System.Collections;
 using Enums;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Joel_PlayerMovement : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     private Controls PlayerControls { get; set; }
 
+    [Header("Debug Variables"), Space(10)] 
+    public bool isGrounded;
+    public GameObject debugGameObject;
+    
     [Header("Movement"), Space(10)]
     public float walkSpeed;
     public float sprintSpeed;
+    public float dashSpeed;
     public float groundDrag;
     private MovementState _movementState;
     private float _moveSpeed;
@@ -25,22 +31,35 @@ public class Joel_PlayerMovement : MonoBehaviour
     private int _currentJumps;
     [field: HideInInspector] public bool isJumpOver;
     
-    [Header("RotatePlayer"), Space(10)] 
-    public Transform cam;
-    public float rotationSpeed = 6f;
-    public float turnSmoothTime = 0.1f;
-    private float _turnSmoothVelocity;
+    [Header("Dash"), Space(10)] 
+    [field: SerializeField] private float dashForce;
+    [field: SerializeField] private float dashUpwardForce;
+    [field: SerializeField] private float dashDuration;
+    [field: SerializeField] private float dashCooldown;
+    [field: SerializeField] private float dashSpeedChangeFactor;
+    private float _dashCooldownTimer;
+    private bool _dashing;
     
+    [Header("Rotate Player"), Space(10)] 
+    public Transform cam;
+
     [Header("Slope Handling"), Space(10)] 
     public float minSlopeAngle;
+    public float slopeDragMultiplier;
     private RaycastHit _slopeHit;
+    
+    //Keeping Momentum
+    private float _speedChangeFactor;
+    private float _desiredMoveSpeed;
+    private float _lastDesiredMoveSpeed;
+    private MovementState _lastMovementState;
+    private bool _keepMomentum;
 
-    [Header("DetectGround"), Space(10)] 
-    [field: SerializeField] private LayerMask _layerMask;
+    [Header("Detect Ground"), Space(10)] 
+    [field: SerializeField] private LayerMask layerMask;
 
-    [Header("DebugVariables"), Space(10)] 
-    public bool isGrounded;
-    public GameObject DebugGameObject;
+
+    private Vector3 _delayedForceToApply;
     
     private float _horizontalInput;
     private float _verticalInput;
@@ -88,7 +107,7 @@ public class Joel_PlayerMovement : MonoBehaviour
         _rb.freezeRotation = true;
 
         Cursor.lockState = CursorLockMode.Locked;
-        DebugGameObject = Instantiate(DebugGameObject);
+        //debugGameObject = Instantiate(debugGameObject);
 
         _currentJumps = 0;
     }
@@ -99,8 +118,11 @@ public class Joel_PlayerMovement : MonoBehaviour
         _verticalInput = _iMove.ReadValue<Vector2>().y;
         
         //adds drag if player is grounded
-        if (isGrounded) { _rb.drag = groundDrag;}
-        else if (OnSlope()) { _rb.drag = groundDrag * 3;}
+        if (_movementState == MovementState.Sprint || _movementState == MovementState.Walk)
+        {
+            _rb.drag = groundDrag;
+            if (OnSlope()) { _rb.drag = groundDrag * slopeDragMultiplier;}
+        }
         else { _rb.drag = 0; }
         
         //limits the player speed
@@ -114,7 +136,7 @@ public class Joel_PlayerMovement : MonoBehaviour
 
         
         //'increase' gravity if player is on air and the jump is over
-        if (isJumpOver && _movementState == MovementState.Airbourne)
+        if (isJumpOver && _movementState == MovementState.Airborne)
         {
             _rb.AddForce(Physics.gravity * fallGravity , ForceMode.Acceleration);
         }
@@ -124,12 +146,16 @@ public class Joel_PlayerMovement : MonoBehaviour
         {
             _rb.useGravity = false;
             _rb.AddForce(_slopeHit.normal * -Physics.gravity.magnitude , ForceMode.Acceleration);
-            Debug.Log("hit slope");
-            
         }
         else
         {
             _rb.useGravity = true;
+        }
+
+        //if the dash cooldown hasn't ended count it down
+        if (_dashCooldownTimer > 0)
+        {
+            _dashCooldownTimer -= Time.deltaTime;
         }
         
         
@@ -157,8 +183,6 @@ public class Joel_PlayerMovement : MonoBehaviour
         //on a slope
         if (OnSlope())
         {
-            Debug.Log("slope hit");
-            
             _rb.AddForce(GetSlopeMoveDirection(_moveDirection).normalized * (_moveSpeed * 10f), ForceMode.Force);
         }
         else if (isGrounded)
@@ -171,7 +195,6 @@ public class Joel_PlayerMovement : MonoBehaviour
         }
         
     }
-
     private void SpeedControl()
     {
         var velocity = _rb.velocity;
@@ -186,7 +209,6 @@ public class Joel_PlayerMovement : MonoBehaviour
             isJumpOver = true;
         }
     }
-
     private void Jump()
     {
         _currentJumps++;
@@ -197,12 +219,57 @@ public class Joel_PlayerMovement : MonoBehaviour
         
         _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
     }
-    
     private void ResetJump()
     {
         _readyToJump = true;
     }
 
+    private void Dash()
+    {
+        //if the cooldown hasn't ended just returns
+        if (_dashCooldownTimer > 0) return;
+        
+        //if the dash goes through the timer gets as big as the cooldown
+        _dashCooldownTimer = dashCooldown;
+
+        _dashing = true;
+        
+        Vector3 dashDirection = Vector3.zero;
+        
+        if (Settings.DashMovementDirection)
+        {
+            dashDirection = _moveDirection;
+        }
+        
+        if (!Settings.DashMovementDirection || (_verticalInput == 0 && _horizontalInput == 0))
+        {
+            dashDirection = cam.forward; 
+        }
+
+        var forceToApply = dashDirection * dashForce + transform.up * dashUpwardForce;
+
+        _delayedForceToApply = forceToApply;
+
+        _rb.useGravity = false;
+        
+        Invoke(nameof(DelayedForceToApply), 0.025f);
+        
+        Invoke(nameof(ResetDash), dashDuration);
+    }
+    
+    private void DelayedForceToApply()
+    {
+        _rb.velocity = Vector3.zero;
+        
+        _rb.AddForce(_delayedForceToApply, ForceMode.Impulse);  
+    }
+    
+    private void ResetDash()
+    {
+        _rb.useGravity = true;
+        _dashing = false;
+    }
+    
     #endregion
     
     private void RotatePlayer()
@@ -219,29 +286,63 @@ public class Joel_PlayerMovement : MonoBehaviour
 
     private void StateHandler()
     {
-        if (isGrounded && _isSprinting)
+        if (_dashing)
+        {
+            _movementState = MovementState.Dash;
+            _desiredMoveSpeed = dashSpeed;
+            _speedChangeFactor = dashSpeedChangeFactor;
+        }
+        
+        else if (isGrounded && _isSprinting)
         {
             _movementState = MovementState.Sprint;
-            _moveSpeed = sprintSpeed;
+            _desiredMoveSpeed = sprintSpeed;
         }
         
         else if (isGrounded)
         {
             _movementState = MovementState.Walk;
-            _moveSpeed = walkSpeed;
+            _desiredMoveSpeed = walkSpeed;
         }
 
         else
         {
-            _movementState = MovementState.Airbourne;
+            _movementState = MovementState.Airborne;
             
+            //if the player speed is lower than the sprint speed it makes the desired the walk
+            //other wise it makes the desired the sprint speed
+            _desiredMoveSpeed = _desiredMoveSpeed < sprintSpeed ? walkSpeed : sprintSpeed;
         }
+
+        bool desiredMoveSpeedHasChanged = _desiredMoveSpeed != _lastDesiredMoveSpeed;
+        
+        if (_lastMovementState == MovementState.Dash)
+        {
+            _keepMomentum = true;
+        }
+        
+        if (desiredMoveSpeedHasChanged)
+        {
+            if (_keepMomentum)
+            {
+                StopAllCoroutines();
+                StartCoroutine(SmoothlyLerpMoveSpeed());
+            }
+            else
+            {
+                StopAllCoroutines();
+                _moveSpeed = _desiredMoveSpeed;
+            }
+        }
+
+        _lastDesiredMoveSpeed = _desiredMoveSpeed;
+        _lastMovementState = _movementState;
     }
 
     private bool OnSlope()
     {
         //if it doesnt hit a slope it returns false 
-        if (!Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _slopeHit,0.6f, _layerMask )) return false;
+        if (!Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _slopeHit,0.6f, layerMask )) return false;
 
         
         //if it hits we check it the angles is smaller that the max slope angle
@@ -251,7 +352,7 @@ public class Joel_PlayerMovement : MonoBehaviour
 
     private void DetectGround()
     {
-        isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, _layerMask);
+        isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, layerMask);
         
         //if _readyToJump is false it means the player just jumped meaning that they arent on the ground
         if (!_readyToJump) isGrounded = false;
@@ -262,6 +363,29 @@ public class Joel_PlayerMovement : MonoBehaviour
     private Vector3 GetSlopeMoveDirection(Vector3 vector)
     {
         return Vector3.ProjectOnPlane(vector, _slopeHit.normal);
+    }
+
+    private IEnumerator SmoothlyLerpMoveSpeed()
+    {
+        float time = 0;
+        float difference = Mathf.Abs(_desiredMoveSpeed - _moveSpeed);
+        float startValue = _moveSpeed;
+
+        float boostFactor = _speedChangeFactor;
+
+        while (time < difference)
+        {
+            _moveSpeed = Mathf.Lerp(startValue, _desiredMoveSpeed, time / difference);
+
+            time += Time.deltaTime * boostFactor;
+
+            yield return null;
+        }
+
+        
+        _moveSpeed = _desiredMoveSpeed;
+        _speedChangeFactor = 1f;
+        _keepMomentum = false;
     }
     
     #endregion
@@ -280,7 +404,6 @@ public class Joel_PlayerMovement : MonoBehaviour
         }
         
     }
-    
     private void SprintEndedInput(InputAction.CallbackContext context)
     {
         if (!Settings.IsSprintToggle)
@@ -290,16 +413,17 @@ public class Joel_PlayerMovement : MonoBehaviour
     }
     private void JumpInput(InputAction.CallbackContext context)
     {
-        Debug.Log("_readyToJump" + _readyToJump);
-        Debug.Log("isGrounded" + isGrounded);
-        if (_readyToJump && (isGrounded || _currentJumps < numberOfJumps))
-        {
-            _readyToJump = false;
+        //if the player isn't _readyToJump or
+        //the nº of jumps that they took are higher or equal to the amount allowed it returns
+        if (!_readyToJump || _currentJumps >= numberOfJumps) return;
+        
+        //if its your first jump and you arent on the ground u cant jump 
+        if (_currentJumps == 0  && !isGrounded) return;
+        _readyToJump = false;
 
-            Jump();
+        Jump();
 
-            Invoke(nameof(ResetJump), jumpCooldown);
-        }
+        Invoke(nameof(ResetJump), jumpCooldown);
     }
     private void JumpEndedInput(InputAction.CallbackContext context)
     {
@@ -307,11 +431,7 @@ public class Joel_PlayerMovement : MonoBehaviour
     }
     private void DashInput(InputAction.CallbackContext context)
     {
-        
-    }
-    private void ResetDash()
-    {
-        
+        Dash();
     }
     private void EnableInputSystem()
     {
@@ -376,7 +496,7 @@ public class Joel_PlayerMovement : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.Box(new Rect(0, 0, Screen.width * 0.1f, Screen.height * 0.1f), _rb.velocity.ToString());
-        GUI.Box(new Rect(0, 50, Screen.width * 0.1f, Screen.height * 0.1f), isJumpOver.ToString());
+        /*GUI.Box(new Rect(0, 0, Screen.width * 0.1f, Screen.height * 0.1f), _rb.velocity.ToString());
+        GUI.Box(new Rect(0, 50, Screen.width * 0.1f, Screen.height * 0.1f), isJumpOver.ToString());*/
     }
 }
