@@ -47,6 +47,17 @@ public class PlayerController : MonoBehaviour
     public float minSlopeAngle;
     public float slopeDragMultiplier;
     private RaycastHit _slopeHit;
+
+    [Header("Jump Buffering / Coyote Time"), Space(10)]
+   //Jump Buffering
+    public float jumpBufferingDuration;
+    private float _jumpInputTimer;
+    private bool _jumpWasPressed;
+    //Coyote Time
+    public float coyoteDuration;
+    private float _canJumpTimer;
+    private bool _canJump;
+    
     
     //Keeping Momentum
     private float _speedChangeFactor;
@@ -153,12 +164,30 @@ public class PlayerController : MonoBehaviour
         }
 
         //if the dash cooldown hasn't ended count it down
-        if (_dashCooldownTimer > 0)
+        if (_dashCooldownTimer > 0) _dashCooldownTimer -= Time.deltaTime;
+        
+        if (_jumpInputTimer > 0) _jumpInputTimer -= Time.deltaTime;
+        else _jumpWasPressed = false;
+
+        if (_canJumpTimer > 0) _canJumpTimer -= Time.deltaTime;
+        else _canJump = false;
+        
+        //if the jump was pressed in the (jumpbuffering) duration and the player can jump they jump
+        if (_jumpWasPressed && CanJump()) Jump();
+
+        /*//if they can jump it saves that they can jump for the coyoteDuration
+        if (CanJump() && !_canJump)
         {
-            _dashCooldownTimer -= Time.deltaTime;
+            _canJump = true;
+            Invoke(nameof(EndCoyoteTime), coyoteDuration);
+        }*/
+
+        if (CanJump())
+        {
+            _canJump = true;
+            _canJumpTimer = coyoteDuration;
         }
-        
-        
+
         Debug.DrawRay(transform.position , _rb.velocity.normalized, Color.green, 100f);
     }
 
@@ -171,6 +200,8 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
+    
+    
     #region Funtions
 
     #region Movement
@@ -211,13 +242,18 @@ public class PlayerController : MonoBehaviour
     }
     private void Jump()
     {
-        _currentJumps++;
+        _readyToJump = false;
+        _jumpWasPressed = false;
         isJumpOver = false;
         
         var velocity = _rb.velocity;
         _rb.velocity = new Vector3(velocity.x, 0, velocity.z);
         
         _rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+        
+        _currentJumps++;
+        
+        Invoke(nameof(ResetJump), jumpCooldown);
     }
     private void ResetJump()
     {
@@ -388,8 +424,23 @@ public class PlayerController : MonoBehaviour
         _keepMomentum = false;
     }
     
+    private bool CanJump()
+    {
+        //if the player isn't _readyToJump or
+        //the nº of jumps that they took are higher or equal to the amount allowed it returns
+        if (!_readyToJump || _currentJumps >= numberOfJumps) return false;
+        
+        //if its your first jump and you arent on the ground u cant jump 
+        if (_currentJumps == 0  && !isGrounded) return false;
+
+        return true;
+    }
+    
+    
     #endregion
 
+    
+    
     #region Input System Functions
     
     private void SprintInput(InputAction.CallbackContext context)
@@ -413,17 +464,15 @@ public class PlayerController : MonoBehaviour
     }
     private void JumpInput(InputAction.CallbackContext context)
     {
-        //if the player isn't _readyToJump or
-        //the nº of jumps that they took are higher or equal to the amount allowed it returns
-        if (!_readyToJump || _currentJumps >= numberOfJumps) return;
+        _jumpWasPressed = true;
+        _jumpInputTimer = jumpBufferingDuration;
         
-        //if its your first jump and you arent on the ground u cant jump 
-        if (_currentJumps == 0  && !isGrounded) return;
-        _readyToJump = false;
-
+        //if (!CanJump()) return;
+        
+        if (!_canJump) return;
+        
         Jump();
-
-        Invoke(nameof(ResetJump), jumpCooldown);
+        
     }
     private void JumpEndedInput(InputAction.CallbackContext context)
     {
@@ -496,7 +545,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnGUI()
     {
-        /*GUI.Box(new Rect(0, 0, Screen.width * 0.1f, Screen.height * 0.1f), _rb.velocity.ToString());
-        GUI.Box(new Rect(0, 50, Screen.width * 0.1f, Screen.height * 0.1f), isJumpOver.ToString());*/
+        GUI.Box(new Rect(0, 0, Screen.width * 0.2f, Screen.height * 0.1f), _rb.velocity.ToString());
+        GUI.Box(new Rect(0, 50, Screen.width * 0.2f, Screen.height * 0.1f), "can jump: " + _canJump);
+        GUI.Box(new Rect(0, 100, Screen.width * 0.2f, Screen.height * 0.1f), "_jumpWasPressed: " + _jumpWasPressed);
     }
 }
