@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController_Old : MonoBehaviour
 {
     [field: SerializeField] public Controls PlayerControls { get; set; }
 
@@ -203,7 +203,7 @@ public class PlayerController : MonoBehaviour
     
     #endregion
 
-    /*private void RotatePlayer()
+    private void RotatePlayer()
     {
         //Debug.DrawRay(transform.position, transform.forward, Color.red,1000);
         //if (_moveDirection == Vector3.zero)return;
@@ -213,7 +213,7 @@ public class PlayerController : MonoBehaviour
          
         if (_moveDirection == Vector3.zero)return;
         _moveDirection = (Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward).normalized;
-    }*/
+    }
 
     #region Collisions
 
