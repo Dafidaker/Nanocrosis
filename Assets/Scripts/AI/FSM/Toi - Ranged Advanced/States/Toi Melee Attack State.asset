@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Toi Melee Attack State
+  m_EditorClassIdentifier: Assembly-CSharp::State
+  entryAction: {fileID: 0}
+  stateActions:
+  - {fileID: 11400000, guid: 86882b22c4272a4459c2a64a37aee996, type: 2}
+  exitAction: {fileID: 0}
+  transitions:
+  - {fileID: 11400000, guid: ff50157cf3b8df5429b5b937002256de, type: 2}
+  - {fileID: 11400000, guid: a414bdf2b316ee54583d109de0382591, type: 2}

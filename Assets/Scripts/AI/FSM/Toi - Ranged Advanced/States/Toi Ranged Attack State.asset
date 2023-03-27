@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Toi Ranged Attack State
+  m_EditorClassIdentifier: Assembly-CSharp::State
+  entryAction: {fileID: 0}
+  stateActions:
+  - {fileID: 11400000, guid: b0bb5602908dedf4a842239cd2f0f902, type: 2}
+  exitAction: {fileID: 0}
+  transitions:
+  - {fileID: 11400000, guid: ec66ff9a462274844aaaf65d739a2922, type: 2}
+  - {fileID: 11400000, guid: 8f8a9791aef8cab42afab794fbc90901, type: 2}
+  - {fileID: 11400000, guid: 2247c879d22938c4baf1004f14843db5, type: 2}

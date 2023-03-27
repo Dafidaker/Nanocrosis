@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 0}
+  m_Name: Kukoru Chase State
+  m_EditorClassIdentifier: Assembly-CSharp::State
+  entryAction: {fileID: 0}
+  stateActions:
+  - {fileID: 11400000, guid: 2fff1ff3b1f22b940844b6881e38ca09, type: 2}
+  exitAction: {fileID: 0}
+  transitions:
+  - {fileID: 11400000, guid: d76e282f11e49eb43abee94cffad8f73, type: 2}
