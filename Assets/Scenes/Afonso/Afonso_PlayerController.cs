@@ -98,6 +98,7 @@ public class Afonso_PlayerController : MonoBehaviour
     private InputAction _iCycle;
     private InputAction _iHeal;
     private InputAction _iCritical;
+    private InputAction _iReload;
 
 
     #region Unity Funtions
@@ -494,6 +495,19 @@ public class Afonso_PlayerController : MonoBehaviour
 
     private void Shoot(InputAction.CallbackContext context)
     {
+        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+
+        if (weaponController.CurrentMag <= 0)
+        {
+            foreach (GameObject bit in weaponController.ColoredBits)
+            {
+                bit.GetComponent<MeshRenderer>().material = weaponController.EmptyMagMaterial;
+            }
+            return;
+        }
+
+        weaponController.CurrentMag--;
+
         RaycastHit hit;
 
         GameObject bullet = GameObject.Instantiate(BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
@@ -509,6 +523,53 @@ public class Afonso_PlayerController : MonoBehaviour
             bulletController.Target = cam.position + cam.forward * MissDistance;
             bulletController.Hit = false;
         }
+    }
+
+    private void Reload(InputAction.CallbackContext context)
+    {
+        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+
+        if (weaponController.CurrentMag < weaponController.MagSize && weaponController.CurrentAmmoReserve > 0)
+        {
+            StartCoroutine(ReloadCountdown(weaponController));
+        }
+        else if (weaponController.CurrentMag == weaponController.MagSize) Debug.Log("MAG FULL");
+        else if (weaponController.CurrentAmmoReserve <= 0) Debug.Log("OUT OF AMMO");
+
+        foreach(GameObject bit in weaponController.ColoredBits)
+        {
+            if (weaponController.Reloading) bit.GetComponent<MeshRenderer>().material = weaponController.ReloadMaterial;
+            else bit.GetComponent<MeshRenderer>().material = weaponController.NormalMaterial;
+        }
+    }
+
+    private IEnumerator ReloadCountdown(WeaponController w)
+    {
+        w.Reloading = true;
+
+        foreach (GameObject bit in w.ColoredBits)
+        {
+            bit.GetComponent<MeshRenderer>().material = w.ReloadMaterial;
+        }
+
+        int ammoNeeded = w.MagSize - w.CurrentMag;
+
+        if (ammoNeeded > w.CurrentAmmoReserve)
+        {
+            ammoNeeded = w.CurrentAmmoReserve;
+        }
+
+        yield return new WaitForSeconds(w.ReloadTime);
+
+        w.CurrentAmmoReserve -= ammoNeeded;
+        w.CurrentMag += ammoNeeded;
+
+        foreach (GameObject bit in w.ColoredBits)
+        {
+            bit.GetComponent<MeshRenderer>().material = w.NormalMaterial;
+        }
+
+        w.Reloading = false;
     }
 
     private void CycleWeapons(InputAction.CallbackContext context)
@@ -563,6 +624,10 @@ public class Afonso_PlayerController : MonoBehaviour
 
         _iCritical = PlayerControls.Player.CriticalMesures;
         _iCritical.Enable();
+
+        _iReload = PlayerControls.Player.Reload;
+        _iReload.performed += Reload;
+        _iReload.Enable();
     }
     private void DisableInputSystem()
     {
@@ -576,6 +641,7 @@ public class Afonso_PlayerController : MonoBehaviour
         _iCycle.Disable();
         _iHeal.Disable();
         _iCritical.Disable();
+        _iReload.Disable();
     }
     
     #endregion
@@ -588,7 +654,10 @@ public class Afonso_PlayerController : MonoBehaviour
 
         //Weapons
         GUI.Box(new Rect(0, 200, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().Name);
-        GUI.Box(new Rect(0, 250, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().MagSize.ToString());
-        GUI.Box(new Rect(0, 300, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().AmmoReserve.ToString());
+        GUI.Box(new Rect(0, 250, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentMag.ToString());
+        GUI.Box(new Rect(0, 300, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentAmmoReserve.ToString());
+        GUI.Box(new Rect(0, 350, Screen.width * 0.2f, Screen.height * 0.1f), "Magazine Empty: " +  _currentWeapon.GetComponent<WeaponController>().MagEmpty);
+        GUI.Box(new Rect(0, 400, Screen.width * 0.2f, Screen.height * 0.1f), "Out of Ammo: " + _currentWeapon.GetComponent<WeaponController>().OutOfAmmo);
+        GUI.Box(new Rect(0, 450, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + _currentWeapon.GetComponent<WeaponController>().Reloading);
     }
 }
