@@ -167,16 +167,16 @@ public class PlayerController_Old : MonoBehaviour
         _iMelee = PlayerControls.Player.Melee;
         _iMelee.Enable();
 
-        _iShootLeft = PlayerControls.Player.ShootLeft;
+        _iShootLeft = PlayerControls.Player.Shoot;
         _iShootLeft.Enable();
 
-        _iShootRight = PlayerControls.Player.ShootRight;
+        _iShootRight = PlayerControls.Player.Shoot;
         _iShootRight.Enable();
 
-        _iCycleLeft = PlayerControls.Player.CycleLeft;
+        _iCycleLeft = PlayerControls.Player.Cycle;
         _iCycleLeft.Enable();
 
-        _iCycleRight = PlayerControls.Player.CycleRight;
+        _iCycleRight = PlayerControls.Player.Cycle;
         _iCycleRight.Enable();
 
         _iHeal = PlayerControls.Player.Healing;

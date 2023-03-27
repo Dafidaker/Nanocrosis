@@ -1,0 +1,40 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class WeaponController : MonoBehaviour
+{
+    [Header("Weapon Variables"), Space(10)]
+    public string Name;
+    public int MagSize;
+    public int CurrentMag;
+    public int AmmoReserve;
+    public int CurrentAmmoReserve;
+    public float ReloadTime;
+    public float FireRate;
+    public bool FullAuto;
+    public bool SpreadShot;
+    public bool MagEmpty;
+    public bool OutOfAmmo;
+    public bool Reloading;
+
+    [Header("Colours"), Space(10)]
+    public GameObject[] ColoredBits;
+    public Material NormalMaterial;
+    public Material ReloadMaterial;
+    public Material EmptyMagMaterial;
+    
+    private void Start()
+    {
+        CurrentMag = MagSize;
+        CurrentAmmoReserve = AmmoReserve;
+    }
+
+    private void Update()
+    {
+        if(CurrentMag <= 0) MagEmpty = true;
+        else MagEmpty = false;
+        if (CurrentAmmoReserve <= 0) OutOfAmmo = true;
+        else OutOfAmmo = false;
+    }
+}

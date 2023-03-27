@@ -24,36 +24,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "ShootRight",
-                    "type": "Button",
-                    "id": "bada4539-9e0c-448e-9bfa-9e05281d6bcb",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "ShootLeft",
-                    "type": "Button",
+                    "name": "Shoot",
+                    "type": "Value",
                     "id": "fb4932e2-5e9d-470f-992b-25b0522c4aea",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
-                    "name": "CycleRight",
+                    "name": "Cycle",
                     "type": "Button",
                     "id": "d85d07ff-12b4-431f-9a82-9e3dcec1cc96",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "CycleLeft",
-                    "type": "Button",
-                    "id": "bd327305-f8f0-4c72-bd64-32cbe6ea6f65",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -112,6 +94,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "0b610942-843f-48bb-92ed-7edecb209583",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -183,23 +174,12 @@
                 },
                 {
                     "name": "",
-                    "id": "3545149e-e1e6-47e2-9f72-f290ca88a8e2",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ShootRight",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "528b5265-5cea-42e2-97f5-e2ed8292a9e1",
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ShootLeft",
+                    "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -210,18 +190,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "CycleRight",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "263cae2a-a020-4f21-91c0-6dd1196d995f",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "CycleLeft",
+                    "action": "Cycle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -288,6 +257,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Rotate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d0c28a3d-8ec1-4ce0-94f8-aba1337cbf6a",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
