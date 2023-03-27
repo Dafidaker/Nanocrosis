@@ -506,6 +506,31 @@ public class Afonso_PlayerController : MonoBehaviour
             return;
         }
 
+        if (weaponController.Reloading) return;
+
+        weaponController.CurrentMag--;
+
+        RaycastHit hit;
+
+        GameObject bullet = GameObject.Instantiate(BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+        BulletController bulletController = bullet.GetComponent<BulletController>();
+
+        if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
+        {
+            bulletController.Target = hit.point;
+            bulletController.Hit = true;
+        }
+        else
+        {
+            bulletController.Target = cam.position + cam.forward * MissDistance;
+            bulletController.Hit = false;
+        }
+    }
+
+    private void SemiAutoFire()
+    {
+        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+
         weaponController.CurrentMag--;
 
         RaycastHit hit;
