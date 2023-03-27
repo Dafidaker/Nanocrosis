@@ -15,4 +15,4 @@ MonoBehaviour:
   negation: 0
   checkForWalls: 1
   viewAngle: 360
-  viewDistance: 2
+  viewDistance: 8

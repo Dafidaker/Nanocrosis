@@ -12,16 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f89927339c11a9442a6709a8dbaa3498, type: 3}
   m_Name: Toi [1]WhitinRangedAttack and TimerIsOver
   m_EditorClassIdentifier: 
-  andDecisions: []
+  andDecisions:
+  - {fileID: 11400000, guid: 9575fdc91e5468e4ebe31b45d80a7a40, type: 2}
+  - {fileID: 11400000, guid: 44682affd0162504a9cdaabdeca886d6, type: 2}
   andOrDecisions:
-    combinedConditions:
-    - condition:
-      - {fileID: 11400000, guid: 9575fdc91e5468e4ebe31b45d80a7a40, type: 2}
-      operation: 02000000
-    - condition:
-      - {fileID: 11400000, guid: 44682affd0162504a9cdaabdeca886d6, type: 2}
-      operation: 02000000
-    operation: 0000000000000000
-    combinedConditionsResults: 0001
+    combinedConditions: []
+    operation: 
+    combinedConditionsResults: 
   action: {fileID: 0}
   targetState: {fileID: 11400000, guid: 3c5e776caabcd0441aa029451ff6ba5a, type: 2}

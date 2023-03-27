@@ -22,7 +22,7 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 0196c1b92afeb314ea4ff92f8eb580e2, type: 2}
       - {fileID: 11400000, guid: 23c7993565255ff4a95002857093f5d1, type: 2}
       operation: 0000000001000000
-    operation: 00000000
-    combinedConditionsResults: 
+    operation: 0000000000000000
+    combinedConditionsResults: 0100
   action: {fileID: 0}
   targetState: {fileID: 11400000, guid: 3c5e776caabcd0441aa029451ff6ba5a, type: 2}
