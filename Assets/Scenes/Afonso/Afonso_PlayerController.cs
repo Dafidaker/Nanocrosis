@@ -76,7 +76,9 @@ public class Afonso_PlayerController : MonoBehaviour
     [SerializeField] private GameObject[] Weapons;
     private GameObject _currentWeapon;
     private int _currrentWeaponIndex = 0;
+    private bool _firing;
 
+    private Coroutine _shooting;
 
     private Vector3 _delayedForceToApply;
     
@@ -117,6 +119,7 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         PlayerControls = new Controls();
         Settings.GameStart(); //todo change this to a game controller or something :)
+        _currentWeapon = Weapons[_currrentWeaponIndex];
     }
     
     private void Start()
@@ -124,7 +127,6 @@ public class Afonso_PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _rb.freezeRotation = true;
 
-        _currentWeapon = Weapons[_currrentWeaponIndex];
         _currentWeapon.SetActive(true);
         
         Cursor.lockState = CursorLockMode.Locked;
@@ -497,8 +499,11 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
 
+        _firing = true;
+
         if (weaponController.CurrentMag <= 0)
         {
+            //Changes colour
             foreach (GameObject bit in weaponController.ColoredBits)
             {
                 bit.GetComponent<MeshRenderer>().material = weaponController.EmptyMagMaterial;
@@ -508,7 +513,13 @@ public class Afonso_PlayerController : MonoBehaviour
 
         if (weaponController.Reloading) return;
 
-        weaponController.CurrentMag--;
+        if (!weaponController.FullAuto) SemiAutoFire();
+        else
+        {
+            _shooting = StartCoroutine(FullAuto());
+        }
+
+        /*weaponController.CurrentMag--;
 
         RaycastHit hit;
 
@@ -524,6 +535,22 @@ public class Afonso_PlayerController : MonoBehaviour
         {
             bulletController.Target = cam.position + cam.forward * MissDistance;
             bulletController.Hit = false;
+        }*/
+    }
+
+    private void ShootEndedInput(InputAction.CallbackContext context)
+    {
+        StopCoroutine(_shooting);
+    }
+
+    private IEnumerator FullAuto()
+    {
+        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+
+        while (true)
+        {
+            SemiAutoFire();
+            yield return new WaitForSeconds(weaponController.FireRate);
         }
     }
 
@@ -531,6 +558,12 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
 
+        if (weaponController.CurrentMag <= 0 && _shooting != null)
+        {
+            StopCoroutine(_shooting);
+            return;
+        }
+
         weaponController.CurrentMag--;
 
         RaycastHit hit;
@@ -548,6 +581,7 @@ public class Afonso_PlayerController : MonoBehaviour
             bulletController.Target = cam.position + cam.forward * MissDistance;
             bulletController.Hit = false;
         }
+
     }
 
     private void Reload(InputAction.CallbackContext context)
@@ -572,6 +606,7 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         w.Reloading = true;
 
+        //Changes colour
         foreach (GameObject bit in w.ColoredBits)
         {
             bit.GetComponent<MeshRenderer>().material = w.ReloadMaterial;
@@ -588,7 +623,8 @@ public class Afonso_PlayerController : MonoBehaviour
 
         w.CurrentAmmoReserve -= ammoNeeded;
         w.CurrentMag += ammoNeeded;
-
+        
+        //Changes colour
         foreach (GameObject bit in w.ColoredBits)
         {
             bit.GetComponent<MeshRenderer>().material = w.NormalMaterial;
@@ -638,6 +674,7 @@ public class Afonso_PlayerController : MonoBehaviour
 
         _iShoot = PlayerControls.Player.Shoot;
         _iShoot.performed += Shoot;
+        _iShoot.canceled += ShootEndedInput;
         _iShoot.Enable();
 
         _iCycle = PlayerControls.Player.Cycle;
