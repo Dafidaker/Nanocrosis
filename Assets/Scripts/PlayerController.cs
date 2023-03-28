@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Cinemachine;
 using Enums;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [Header("Debug Variables"), Space(10)] 
     public bool isGrounded;
     public GameObject debugGameObject;
+    public CinemachineFreeLook CinemachineFreeLook;
+    public CinemachineBrain CinemachineBrain;
     
     [Header("Movement"), Space(10)]
     public float walkSpeed;
@@ -119,10 +122,14 @@ public class PlayerController : MonoBehaviour
         //debugGameObject = Instantiate(debugGameObject);
 
         _currentJumps = 0;
+        
     }
     
     private void Update()
     {
+        HidePlayer();
+        
+        
         _horizontalInput = _iMove.ReadValue<Vector2>().x;
         _verticalInput = _iMove.ReadValue<Vector2>().y;
         
@@ -198,7 +205,6 @@ public class PlayerController : MonoBehaviour
 
     #endregion
 
-    
     
     #region Funtions
 
@@ -433,7 +439,12 @@ public class PlayerController : MonoBehaviour
 
         return true;
     }
-    
+
+    private void HidePlayer()
+    {
+        //disables the body of the player when the camera goes to low rig
+        GetComponent<MeshRenderer>().enabled = !(CinemachineFreeLook.State.Lens.Dutch > 0.8f);
+    }
     
     #endregion
 
