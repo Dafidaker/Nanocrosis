@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 67605b11d8842b34185795c0d93d636c, type: 3}
   m_Name: Kukoru Chase State
-  m_EditorClassIdentifier: Assembly-CSharp::State
+  m_EditorClassIdentifier: 
   entryAction: {fileID: 0}
   stateActions:
   - {fileID: 11400000, guid: 2fff1ff3b1f22b940844b6881e38ca09, type: 2}
   exitAction: {fileID: 0}
   transitions:
-  - {fileID: 11400000, guid: d76e282f11e49eb43abee94cffad8f73, type: 2}
+  - {fileID: 11400000, guid: 70d4620dbb56061479ae760cc977144b, type: 2}

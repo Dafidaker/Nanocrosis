@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: f89927339c11a9442a6709a8dbaa3498, type: 3}
   m_Name: Kuroru AttackToChase Transition
-  m_EditorClassIdentifier: Assembly-CSharp::Transition
+  m_EditorClassIdentifier: 
   andDecisions:
   - {fileID: 11400000, guid: 6f3212f9de73fc143ac9460c26df44b6, type: 2}
   andOrDecisions:
@@ -19,4 +19,4 @@ MonoBehaviour:
     operation: 
     combinedConditionsResults: 
   action: {fileID: 0}
-  targetState: {fileID: 11400000, guid: e7dfbb97a90213449b29804e68084920, type: 2}
+  targetState: {fileID: 11400000, guid: 052cd29b65066684baf174142228ee4f, type: 2}

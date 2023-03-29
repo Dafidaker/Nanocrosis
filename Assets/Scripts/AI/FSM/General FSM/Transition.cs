@@ -33,7 +33,6 @@ public class Transition : ScriptableObject
             return result;
         }
         
-        Debug.Log("AndOrCondition" + AndOrCondition(fsm));
         return AndOrCondition(fsm);
     }
 
