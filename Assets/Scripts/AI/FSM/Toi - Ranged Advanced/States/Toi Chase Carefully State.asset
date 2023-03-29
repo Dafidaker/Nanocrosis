@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: 67605b11d8842b34185795c0d93d636c, type: 3}
   m_Name: Toi Chase Carefully State
-  m_EditorClassIdentifier: Assembly-CSharp::State
+  m_EditorClassIdentifier: 
   entryAction: {fileID: 0}
   stateActions:
   - {fileID: 11400000, guid: ad015ce5a3eaec1438d6e9ce4b162e0d, type: 2}
