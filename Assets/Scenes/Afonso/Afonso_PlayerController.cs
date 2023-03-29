@@ -70,8 +70,6 @@ public class Afonso_PlayerController : MonoBehaviour
     [field: SerializeField] private LayerMask layerMask;
 
     [Header("Weapon Variables"), Space(10)]
-    [SerializeField] private GameObject RifleBulletPrefab;
-    [SerializeField] private GameObject ShotgunBulletPrefab;
     [SerializeField] private Transform FirePoint;
     [SerializeField] private Transform BulletParent;
     [SerializeField] private float MissDistance = 25f;
@@ -631,7 +629,7 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
 
-        if (weaponController.CurrentMag < weaponController.MagSize && weaponController.CurrentAmmoReserve > 0)
+        if (weaponController.CurrentMag < weaponController.MagSize && weaponController.CurrentAmmoReserve > 0 && !weaponController.Reloading)
         {
             StartCoroutine(ReloadCountdown(weaponController));
         }

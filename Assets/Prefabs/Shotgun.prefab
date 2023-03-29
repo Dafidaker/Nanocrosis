@@ -483,7 +483,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Shotgun
-  MagSize: 2147483647
+  MagSize: 8
   CurrentMag: 0
   AmmoReserve: 80
   CurrentAmmoReserve: 0
