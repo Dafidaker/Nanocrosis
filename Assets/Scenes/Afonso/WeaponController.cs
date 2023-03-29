@@ -14,20 +14,34 @@ public class WeaponController : MonoBehaviour
     public float FireRate;
     public bool FullAuto;
     public bool SpreadShot;
+    public int BulletsPerShot;
+    public float SpreadAngle;
     public bool MagEmpty;
     public bool OutOfAmmo;
     public bool Reloading;
+    public GameObject BulletPrefab;
+    public Transform FirePoint;
+    public List<Quaternion> Pellets;
 
     [Header("Colours"), Space(10)]
     public GameObject[] ColoredBits;
     public Material NormalMaterial;
     public Material ReloadMaterial;
     public Material EmptyMagMaterial;
-    
+
     private void Start()
     {
         CurrentMag = MagSize;
         CurrentAmmoReserve = AmmoReserve;
+
+        if (Name == "Shotgun")
+        {
+            Pellets = new List<Quaternion>(BulletsPerShot);
+            for (int i = 0; i < BulletsPerShot; i++)
+            {
+                Pellets.Add(Quaternion.Euler(Vector3.zero));
+            }
+        }
     }
 
     private void Update()

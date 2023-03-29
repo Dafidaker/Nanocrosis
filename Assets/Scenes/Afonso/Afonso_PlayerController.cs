@@ -3,6 +3,7 @@ using System.Collections;
 using Enums;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class Afonso_PlayerController : MonoBehaviour
 {
@@ -69,16 +70,16 @@ public class Afonso_PlayerController : MonoBehaviour
     [field: SerializeField] private LayerMask layerMask;
 
     [Header("Weapon Variables"), Space(10)]
-    [SerializeField] private GameObject BulletPrefab;
+    [SerializeField] private GameObject RifleBulletPrefab;
+    [SerializeField] private GameObject ShotgunBulletPrefab;
     [SerializeField] private Transform FirePoint;
     [SerializeField] private Transform BulletParent;
     [SerializeField] private float MissDistance = 25f;
     [SerializeField] private GameObject[] Weapons;
     private GameObject _currentWeapon;
     private int _currrentWeaponIndex = 0;
-    private bool _firing;
-
     private Coroutine _shooting;
+    private float _fireCountdown;
 
     private Vector3 _delayedForceToApply;
     
@@ -120,6 +121,7 @@ public class Afonso_PlayerController : MonoBehaviour
         PlayerControls = new Controls();
         Settings.GameStart(); //todo change this to a game controller or something :)
         _currentWeapon = Weapons[_currrentWeaponIndex];
+        FirePoint = _currentWeapon.GetComponent<WeaponController>().FirePoint;
     }
     
     private void Start()
@@ -128,6 +130,8 @@ public class Afonso_PlayerController : MonoBehaviour
         _rb.freezeRotation = true;
 
         _currentWeapon.SetActive(true);
+
+        _fireCountdown = _currentWeapon.GetComponent<WeaponController>().FireRate;
         
         Cursor.lockState = CursorLockMode.Locked;
         //debugGameObject = Instantiate(debugGameObject);
@@ -193,6 +197,8 @@ public class Afonso_PlayerController : MonoBehaviour
             _canJump = true;
             Invoke(nameof(EndCoyoteTime), coyoteDuration);
         }*/
+
+        if(_fireCountdown > 0) _fireCountdown -= Time.deltaTime;
 
         if (CanJump())
         {
@@ -499,8 +505,6 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
 
-        _firing = true;
-
         if (weaponController.CurrentMag <= 0)
         {
             //Changes colour
@@ -513,34 +517,13 @@ public class Afonso_PlayerController : MonoBehaviour
 
         if (weaponController.Reloading) return;
 
-        if (!weaponController.FullAuto) SemiAutoFire();
-        else
-        {
-            _shooting = StartCoroutine(FullAuto());
-        }
-
-        /*weaponController.CurrentMag--;
-
-        RaycastHit hit;
-
-        GameObject bullet = GameObject.Instantiate(BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
-        BulletController bulletController = bullet.GetComponent<BulletController>();
-
-        if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
-        {
-            bulletController.Target = hit.point;
-            bulletController.Hit = true;
-        }
-        else
-        {
-            bulletController.Target = cam.position + cam.forward * MissDistance;
-            bulletController.Hit = false;
-        }*/
+        if (!weaponController.FullAuto) SingleFire(weaponController);
+        else _shooting = StartCoroutine(FullAuto());
     }
 
     private void ShootEndedInput(InputAction.CallbackContext context)
     {
-        StopCoroutine(_shooting);
+         if(_shooting != null) StopCoroutine(_shooting);
     }
 
     private IEnumerator FullAuto()
@@ -552,6 +535,15 @@ public class Afonso_PlayerController : MonoBehaviour
             SemiAutoFire();
             yield return new WaitForSeconds(weaponController.FireRate);
         }
+    }
+
+    private void SingleFire(WeaponController w)
+    {
+        if (_fireCountdown > 0) return;
+
+        _fireCountdown = w.FireRate;
+
+        SemiAutoFire();
     }
 
     private void SemiAutoFire()
@@ -568,19 +560,70 @@ public class Afonso_PlayerController : MonoBehaviour
 
         RaycastHit hit;
 
-        GameObject bullet = GameObject.Instantiate(BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
-        BulletController bulletController = bullet.GetComponent<BulletController>();
+        GameObject bullet = null;
+        
+        if(weaponController.Name == "Rifle")
+        {
+            bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
+            BulletController bulletController = bullet.GetComponent<BulletController>();
+
+            if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
+            {
+                bulletController.Target = hit.point;
+                bulletController.Hit = true;
+                Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
+            }
+            else
+            {
+                bulletController.Target = cam.position + cam.forward * MissDistance;
+                bulletController.Hit = false;
+                Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
+            }
+       
+        }
+        
+        else if(weaponController.Name == "Shotgun") //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+        {
+            int i = 0;
+            foreach(Quaternion q in weaponController.Pellets.ToArray())
+            {
+                weaponController.Pellets[i] = Random.rotation;
+                bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+                bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, weaponController.Pellets[i], weaponController.SpreadAngle);
+                
+                BulletController b = bullet.GetComponent<BulletController>();
+
+                if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
+                {
+                    b.Target = hit.point;
+                    b.Hit = true;
+                    Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
+                }
+                else
+                {
+                    b.Target = cam.position + cam.forward * MissDistance;
+                    b.Hit = false;
+                    Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
+                }
+                i++;
+            }
+        }
+        
+        /*BulletController bulletController = bullet.GetComponent<BulletController>();
 
         if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
         {
             bulletController.Target = hit.point;
             bulletController.Hit = true;
+            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
         }
         else
         {
             bulletController.Target = cam.position + cam.forward * MissDistance;
             bulletController.Hit = false;
-        }
+            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
+        }*/
 
     }
 
