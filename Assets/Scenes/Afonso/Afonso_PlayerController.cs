@@ -100,6 +100,7 @@ public class Afonso_PlayerController : MonoBehaviour
     private InputAction _iHeal;
     private InputAction _iCritical;
     private InputAction _iReload;
+    private InputAction _iInteract;
 
 
     #region Unity Funtions
@@ -503,7 +504,7 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
 
-        if (weaponController.CurrentMag <= 0)
+        if (weaponController.CurrentMag <= 0 && !weaponController.Reloading)
         {
             //Changes colour
             foreach (GameObject bit in weaponController.ColoredBits)
@@ -528,7 +529,7 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
 
-        while (true)
+        while (!weaponController.Reloading)
         {
             SemiAutoFire();
             yield return new WaitForSeconds(weaponController.FireRate);
@@ -560,7 +561,7 @@ public class Afonso_PlayerController : MonoBehaviour
 
         GameObject bullet = null;
         
-        if(weaponController.Name == "Rifle")
+        if(weaponController.FullAuto)
         {
             bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
             Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
@@ -581,7 +582,7 @@ public class Afonso_PlayerController : MonoBehaviour
        
         }
         
-        else if(weaponController.Name == "Shotgun") //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+        else if(weaponController.SpreadShot) //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
         {
             int i = 0;
             foreach(Quaternion q in weaponController.Pellets.ToArray())
@@ -607,22 +608,6 @@ public class Afonso_PlayerController : MonoBehaviour
                 i++;
             }
         }
-        
-        /*BulletController bulletController = bullet.GetComponent<BulletController>();
-
-        if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
-        {
-            bulletController.Target = hit.point;
-            bulletController.Hit = true;
-            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
-        }
-        else
-        {
-            bulletController.Target = cam.position + cam.forward * MissDistance;
-            bulletController.Hit = false;
-            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
-        }*/
-
     }
 
     private void Reload(InputAction.CallbackContext context)
@@ -731,6 +716,9 @@ public class Afonso_PlayerController : MonoBehaviour
         _iReload = PlayerControls.Player.Reload;
         _iReload.performed += Reload;
         _iReload.Enable();
+
+        _iInteract = PlayerControls.Player.Interact;
+        _iInteract.Enable();
     }
     private void DisableInputSystem()
     {
@@ -745,6 +733,7 @@ public class Afonso_PlayerController : MonoBehaviour
         _iHeal.Disable();
         _iCritical.Disable();
         _iReload.Disable();
+        _iInteract.Disable();
     }
     
     #endregion

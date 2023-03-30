@@ -38,7 +38,18 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "bullet") return;
+        if(collision.collider.CompareTag("bullet")) return;
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("bullet")) return;
+        if(other.GetComponent<DamageController>() != null)
+        {
+            DamageController d = other.GetComponent<DamageController>();
+            d.CurrentHealthPoints -= Damage;
+        }
         Destroy(gameObject);
     }
 }

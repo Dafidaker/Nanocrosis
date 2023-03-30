@@ -492,7 +492,7 @@ MonoBehaviour:
   FullAuto: 0
   SpreadShot: 1
   BulletsPerShot: 10
-  SpreadAngle: 15
+  SpreadAngle: 0
   MagEmpty: 0
   OutOfAmmo: 0
   Reloading: 0

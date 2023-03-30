@@ -34,7 +34,7 @@ public class WeaponController : MonoBehaviour
         CurrentMag = MagSize;
         CurrentAmmoReserve = AmmoReserve;
 
-        if (Name == "Shotgun")
+        if (SpreadShot)
         {
             Pellets = new List<Quaternion>(BulletsPerShot);
             for (int i = 0; i < BulletsPerShot; i++)
