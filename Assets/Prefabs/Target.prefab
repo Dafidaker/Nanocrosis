@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &201194235411125790
 MeshFilter:
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 6fd7b84f062e54a4ea88786c8d5071ca, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -120,6 +120,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TimeToRespawn: 0
   MaxHealthPoints: 0
+  Normal: {fileID: 2100000, guid: 6fd7b84f062e54a4ea88786c8d5071ca, type: 2}
+  Damaged: {fileID: 2100000, guid: 0a80ff26e3a884f4fa920fb73e4883cf, type: 2}
   IsDead: 0
   CurrentHealthPoints: 0
   CurrentTimeToRespawn: 0

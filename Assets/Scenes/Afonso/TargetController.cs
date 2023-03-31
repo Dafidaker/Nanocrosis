@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamageController : MonoBehaviour
+public class TargetController : MonoBehaviour
 {
     [SerializeField] private float TimeToRespawn;
     [SerializeField] private int MaxHealthPoints;
+
     public bool IsDead;
     public int CurrentHealthPoints;
     public float CurrentTimeToRespawn;

@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Enums;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.XR;
 using Random = UnityEngine.Random;
 
 public class Afonso_PlayerController : MonoBehaviour
 {
+    public static Afonso_PlayerController Instance { get; private set; }
     private Controls PlayerControls { get; set; }
 
     [Header("Debug Variables"), Space(10)] 
@@ -74,6 +77,10 @@ public class Afonso_PlayerController : MonoBehaviour
     [SerializeField] private Transform BulletParent;
     [SerializeField] private float MissDistance = 25f;
     [SerializeField] private GameObject[] Weapons;
+    [SerializeField] private GameObject BombPrefab;
+    public GameObject FakeBomb;
+    public bool BombAttached;
+
     private GameObject _currentWeapon;
     private int _currrentWeaponIndex = 0;
     private Coroutine _shooting;
@@ -102,6 +109,9 @@ public class Afonso_PlayerController : MonoBehaviour
     private InputAction _iReload;
     private InputAction _iInteract;
 
+    //Item interactions.
+    private GameObject _currentBomb;
+
 
     #region Unity Funtions
 
@@ -118,9 +128,11 @@ public class Afonso_PlayerController : MonoBehaviour
     private void Awake()
     {
         PlayerControls = new Controls();
+        Instance = this;
         Settings.GameStart(); //todo change this to a game controller or something :)
         _currentWeapon = Weapons[_currrentWeaponIndex];
         FirePoint = _currentWeapon.GetComponent<WeaponController>().FirePoint;
+        FakeBomb.SetActive(false);
     }
     
     private void Start()
@@ -205,7 +217,9 @@ public class Afonso_PlayerController : MonoBehaviour
             _canJumpTimer = coyoteDuration;
         }
 
-        Debug.DrawRay(transform.position , _rb.velocity.normalized, Color.green, 100f);
+        Debug.DrawRay(transform.position, _rb.velocity.normalized, Color.green, 100f);
+
+        Debug.Log(BombAttached);
     }
 
     private void FixedUpdate()
@@ -504,20 +518,47 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
 
-        if (weaponController.CurrentMag <= 0 && !weaponController.Reloading)
+        RaycastHit hit;
+
+        GameObject bomb;
+        if (!BombAttached)
         {
-            //Changes colour
-            foreach (GameObject bit in weaponController.ColoredBits)
+            if (weaponController.CurrentMag <= 0 && !weaponController.Reloading)
             {
-                bit.GetComponent<MeshRenderer>().material = weaponController.EmptyMagMaterial;
+                //Changes colour
+                foreach (GameObject bit in weaponController.ColoredBits)
+                {
+                    bit.GetComponent<MeshRenderer>().material = weaponController.EmptyMagMaterial;
+                }
+                return;
             }
-            return;
+
+            if (weaponController.Reloading) return;
+
+            if (!weaponController.FullAuto) SingleFire(weaponController);
+            else _shooting = StartCoroutine(FullAuto());
         }
+        else
+        {
+            bomb = GameObject.Instantiate(BombPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward));
+            Debug.DrawRay(FirePoint.position, bomb.transform.forward, Color.red, 2f);
+            BombController bombController = bomb.GetComponent<BombController>();
 
-        if (weaponController.Reloading) return;
-
-        if (!weaponController.FullAuto) SingleFire(weaponController);
-        else _shooting = StartCoroutine(FullAuto());
+            if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
+            {
+                bombController.Target = hit.point;
+                bombController.Hit = true;
+                Debug.DrawRay(FirePoint.position, bomb.transform.forward, Color.red, 2f);
+            }
+            else
+            {
+                bombController.Target = cam.position + cam.forward * MissDistance;
+                bombController.Hit = false;
+                Debug.DrawRay(FirePoint.position, bomb.transform.forward, Color.red, 2f);
+            }
+            FakeBomb.SetActive(false);
+            BombAttached = false;
+        }
     }
 
     private void ShootEndedInput(InputAction.CallbackContext context)
@@ -560,8 +601,8 @@ public class Afonso_PlayerController : MonoBehaviour
         RaycastHit hit;
 
         GameObject bullet = null;
-        
-        if(weaponController.FullAuto)
+
+        if (weaponController.FullAuto)
         {
             bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
             Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
@@ -579,18 +620,18 @@ public class Afonso_PlayerController : MonoBehaviour
                 bulletController.Hit = false;
                 Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
             }
-       
+
         }
-        
-        else if(weaponController.SpreadShot) //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+
+        else if (weaponController.SpreadShot) //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
         {
             int i = 0;
-            foreach(Quaternion q in weaponController.Pellets.ToArray())
+            foreach (Quaternion q in weaponController.Pellets.ToArray())
             {
                 weaponController.Pellets[i] = Random.rotation;
                 bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
                 bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, weaponController.Pellets[i], weaponController.SpreadAngle);
-                
+
                 BulletController b = bullet.GetComponent<BulletController>();
 
                 if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
@@ -672,6 +713,15 @@ public class Afonso_PlayerController : MonoBehaviour
         }
         _currentWeapon = Weapons[_currrentWeaponIndex];
         _currentWeapon.SetActive(true);
+        StopCoroutine(_shooting);
+    }
+
+    private void Interact(InputAction.CallbackContext context)
+    {
+        if(_currentBomb != null)
+        {
+            _currentBomb.GetComponent<BombPickupController>().Interact();
+        }
     }
     private void EnableInputSystem()
     {
@@ -718,6 +768,7 @@ public class Afonso_PlayerController : MonoBehaviour
         _iReload.Enable();
 
         _iInteract = PlayerControls.Player.Interact;
+        _iInteract.performed += Interact;
         _iInteract.Enable();
     }
     private void DisableInputSystem()
@@ -751,5 +802,21 @@ public class Afonso_PlayerController : MonoBehaviour
         GUI.Box(new Rect(0, 350, Screen.width * 0.2f, Screen.height * 0.1f), "Magazine Empty: " +  _currentWeapon.GetComponent<WeaponController>().MagEmpty);
         GUI.Box(new Rect(0, 400, Screen.width * 0.2f, Screen.height * 0.1f), "Out of Ammo: " + _currentWeapon.GetComponent<WeaponController>().OutOfAmmo);
         GUI.Box(new Rect(0, 450, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + _currentWeapon.GetComponent<WeaponController>().Reloading);
+    }
+
+    private void OnTriggerEnter(Collider col)
+    {
+        if (col.CompareTag($"Bomb"))
+        {
+            _currentBomb = col.gameObject;
+        }
+    }
+
+    private void OnTriggerExit(Collider col)
+    {
+        if (col.CompareTag($"Bomb"))
+        {
+           _currentBomb = null;
+        }
     }
 }
