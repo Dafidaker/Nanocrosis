@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Ground
   - bullet
+  - Bomb
+  - Gun
+  - Explosion
   layers:
   - Default
   - TransparentFX

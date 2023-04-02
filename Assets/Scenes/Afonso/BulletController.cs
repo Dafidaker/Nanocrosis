@@ -6,6 +6,7 @@ public class BulletController : MonoBehaviour
 {
     [SerializeField] private float Speed = 100f;
     [SerializeField] private float TimeToDestroy = 5f;
+ 
 
     public GameObject Gun;
 
@@ -38,7 +39,18 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "bullet") return;
+        if(collision.collider.CompareTag("bullet")) return;
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("bullet")) return;
+        if(other.GetComponent<TargetController>() != null)
+        {
+            TargetController d = other.GetComponent<TargetController>();
+            d.CurrentHealthPoints -= Damage;
+        }
         Destroy(gameObject);
     }
 }
