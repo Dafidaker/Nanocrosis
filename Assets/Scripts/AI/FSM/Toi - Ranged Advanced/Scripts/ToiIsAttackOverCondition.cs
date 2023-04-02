@@ -8,8 +8,8 @@ public class ToiIsAttackOverCondition : Condition
     [field: SerializeField] private bool negation;
     public override bool Test(FiniteStateMachine fsm)
     {
-        if (negation) { return !fsm.GetNavMeshAgent().toiAgent.isAttackOver; }
-        return fsm.GetNavMeshAgent().toiAgent.isAttackOver;
+        if (negation) { return fsm.GetNavMeshAgent().toiAgent.isAttacking; }
+        return !fsm.GetNavMeshAgent().toiAgent.isAttacking;
     }
     
 }

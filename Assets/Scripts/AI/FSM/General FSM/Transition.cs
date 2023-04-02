@@ -95,9 +95,6 @@ public class Transition : ScriptableObject
     
     private bool DoOperation(bool bool1, bool bool2, And_Or andOr)
     {
-        Debug.Log("bool1 " + bool1);
-        Debug.Log("bool2 " + bool2);
-        Debug.Log("andOr " + andOr);
         switch (andOr)
         {
             case And_Or.And:

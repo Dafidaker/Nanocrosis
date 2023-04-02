@@ -7,7 +7,6 @@ public class ToiRangedAttack : Action
 {
     public override void Act(FiniteStateMachine fsm)
     {
-        Debug.Log("RangedAttackAction");
         fsm.GetNavMeshAgent().toiAgent.RangedAttackAction();
     }
 }

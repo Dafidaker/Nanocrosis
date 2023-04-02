@@ -5,6 +5,8 @@ public class ChikaiAgent : FSMNavMeshAgent
 {
     private FSMNavMeshAgent _fsmNavMeshAgent;
 
+    [field: SerializeField] public bool isAttacking;
+    
     public float viewDistance = 0;
     public float viewAngle = 0;
     

@@ -6,8 +6,7 @@ using UnityEngine;
 public class ChikaiChase : Action
 {
     public override void Act(FiniteStateMachine fsm)
-    {
-        Debug.Log("Chase");
+    { 
         fsm.GetNavMeshAgent().chikaiAgent.Chase();
     }
 }

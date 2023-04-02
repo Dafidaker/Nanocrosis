@@ -7,7 +7,6 @@ public class ToiChase : Action
 {
     public override void Act(FiniteStateMachine fsm)
     {
-        Debug.Log("Toi Chase");
         fsm.GetNavMeshAgent().toiAgent.ChaseAction();
     }
 }

@@ -7,7 +7,6 @@ public class ChikaiAttack : Action
 {
     public override void Act(FiniteStateMachine fsm)
     {
-        Debug.Log("Attack");
         fsm.GetNavMeshAgent().chikaiAgent.Attack();
     }
 }

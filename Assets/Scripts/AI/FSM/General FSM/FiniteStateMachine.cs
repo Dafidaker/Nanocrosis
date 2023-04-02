@@ -23,6 +23,8 @@ public class FiniteStateMachine : MonoBehaviour
     
     void Update()
     {
+        //Debug.Log(currentState);
+        
         Transition triggerTransition = null;
         foreach (var transition in currentState.GetTransitions())
         {
@@ -69,7 +71,8 @@ public class FiniteStateMachine : MonoBehaviour
 
     private void OnGUI()
     {
-        GUI.Label(new Rect(5, 0, 200, 100), currentState.name);
+        GUI.color = Color.red;
+        GUI.Label(new Rect(50, 50, 1000, 1000), currentState.name);
     }
     
     
