@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67605b11d8842b34185795c0d93d636c, type: 3}
+  m_Name: Chikai Chase State
+  m_EditorClassIdentifier: 
+  entryAction: {fileID: 0}
+  stateActions:
+  - {fileID: 11400000, guid: 46f86533371788141bf61be5681263cc, type: 2}
+  exitAction: {fileID: 0}
+  transitions:
+  - {fileID: 11400000, guid: 21c57029b9537a242bebacc80de9b6fd, type: 2}
+  - {fileID: 11400000, guid: 33be2714d8cfe124fa7a180a468bd9b2, type: 2}
+  - {fileID: 11400000, guid: 494be6dcd826cd247802a7982beb85e9, type: 2}

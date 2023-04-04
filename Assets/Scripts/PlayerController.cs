@@ -129,6 +129,7 @@ public class PlayerController : MonoBehaviour
     {
         HidePlayer();
         
+        Debug.DrawRay(transform.position, _rb.velocity.normalized, Color.red);  
         
         _horizontalInput = _iMove.ReadValue<Vector2>().x;
         _verticalInput = _iMove.ReadValue<Vector2>().y;
@@ -192,8 +193,7 @@ public class PlayerController : MonoBehaviour
             _canJump = true;
             _canJumpTimer = coyoteDuration;
         }
-
-        Debug.DrawRay(transform.position , _rb.velocity.normalized, Color.green, 100f);
+        
     }
 
     private void FixedUpdate()

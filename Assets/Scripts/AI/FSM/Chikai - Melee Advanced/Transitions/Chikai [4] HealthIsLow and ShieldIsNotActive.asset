@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f89927339c11a9442a6709a8dbaa3498, type: 3}
+  m_Name: Chikai [4] HealthIsLow and ShieldIsNotActive
+  m_EditorClassIdentifier: 
+  andDecisions:
+  - {fileID: 11400000, guid: 4d2a02d843ad25c468b67ac88858a8fc, type: 2}
+  - {fileID: 11400000, guid: 39e2cbcf5469a1f4999f2528e81ab9fa, type: 2}
+  andOrDecisions:
+    combinedConditions: []
+    operation: 
+    combinedConditionsResults: 
+  action: {fileID: 0}
+  targetState: {fileID: 11400000, guid: 56a2b964bfda51d4a9a6bc4ae109cf88, type: 2}

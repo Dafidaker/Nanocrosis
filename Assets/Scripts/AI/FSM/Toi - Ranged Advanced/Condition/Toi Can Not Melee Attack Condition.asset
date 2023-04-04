@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Toi Can Not Melee Attack Condition
   m_EditorClassIdentifier: 
   negation: 1
-  checkForWalls: 1
+  checkForWalls: 0
   viewAngle: 360
-  viewDistance: 9
+  viewDistance: 11

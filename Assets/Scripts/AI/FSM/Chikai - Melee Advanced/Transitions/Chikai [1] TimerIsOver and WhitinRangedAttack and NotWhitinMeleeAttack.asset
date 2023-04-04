@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f89927339c11a9442a6709a8dbaa3498, type: 3}
+  m_Name: Chikai [1] TimerIsOver and WhitinRangedAttack and NotWhitinMeleeAttack
+  m_EditorClassIdentifier: 
+  andDecisions:
+  - {fileID: 11400000, guid: 78ce4888167b15543aed798c190087a7, type: 2}
+  - {fileID: 11400000, guid: 15ee70cd039b8ff42b4851048ddaf07e, type: 2}
+  - {fileID: 11400000, guid: 08b14461c3431ee46b0540481f7b40b7, type: 2}
+  andOrDecisions:
+    combinedConditions: []
+    operation: 
+    combinedConditionsResults: 
+  action: {fileID: 0}
+  targetState: {fileID: 11400000, guid: 25feac946ef51f24c877a79763fd36bd, type: 2}

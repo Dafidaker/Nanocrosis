@@ -10,7 +10,7 @@ public class ToiMeleeAttackController : MonoBehaviour
 {
     
     [Header("Path"),Space(10)] 
-    [field: SerializeField] public List<Vector3> pathNodes;
+    [field: SerializeField] public List<Transform> pathNodes;
     [field: HideInInspector] public Transform toiTransform;
     private bool _followPath;
     private bool _isInPath;
@@ -63,13 +63,13 @@ public class ToiMeleeAttackController : MonoBehaviour
         if (!_isInPath && pathNodes.Count >= 1)
         {
             var distanceToNode = float.MaxValue;
-            _closestNode = pathNodes[0];
-            foreach (Vector3 pathNode in pathNodes)
+            _closestNode = pathNodes[0].position;
+            foreach (Transform pathNode in pathNodes)
             {
-                if (Vector3.Distance(pathNode, transform.position) < distanceToNode)
+                if (Vector3.Distance(pathNode.position, transform.position) < distanceToNode)
                 {
-                    distanceToNode = Vector3.Distance(pathNode, transform.position); 
-                    _closestNode = pathNode;
+                    distanceToNode = Vector3.Distance(pathNode.position, transform.position); 
+                    _closestNode = pathNode.position;
                     _currentNodeIndex = pathNodes.FindIndex(a => a == pathNode);
                 }
             }
@@ -95,8 +95,8 @@ public class ToiMeleeAttackController : MonoBehaviour
         
         Debug.Log("Moving towards the next node ");
         //if its on the path it moves to the next node on path
-        transform.position = Vector3.MoveTowards(transform.position , pathNodes[_currentNodeIndex], 0.01f * speedRotating);
-        if (Vector3.Distance(pathNodes[_currentNodeIndex], transform.position) < 0.01f)
+        transform.position = Vector3.MoveTowards(transform.position , pathNodes[_currentNodeIndex].position, 0.01f * speedRotating);
+        if (Vector3.Distance(pathNodes[_currentNodeIndex].position, transform.position) < 0.01f)
         {
             _currentNodeIndex++;
             if (_currentNodeIndex > pathNodes.Count - 1)
@@ -125,6 +125,14 @@ public class ToiMeleeAttackController : MonoBehaviour
         transform.forward = new Vector3(newDirection.x, transform.forward.y, newDirection.z);
         _rb.velocity = transform.forward.normalized * forceLeaving;
         
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<PlayerStats>().DamageTaken(5);
+        }
     }
     
     

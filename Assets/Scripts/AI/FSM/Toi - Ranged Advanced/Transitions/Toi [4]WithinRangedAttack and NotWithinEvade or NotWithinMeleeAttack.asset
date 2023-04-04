@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f89927339c11a9442a6709a8dbaa3498, type: 3}
   m_Name: Toi [4]WithinRangedAttack and NotWithinEvade or NotWithinMeleeAttack
   m_EditorClassIdentifier: 
-  andDecisions: []
+  andDecisions:
+  - {fileID: 11400000, guid: 9575fdc91e5468e4ebe31b45d80a7a40, type: 2}
+  - {fileID: 11400000, guid: 23c7993565255ff4a95002857093f5d1, type: 2}
+  - {fileID: 11400000, guid: 0196c1b92afeb314ea4ff92f8eb580e2, type: 2}
+  - {fileID: 11400000, guid: 11fa900a9d732b04a84b02734afd8489, type: 2}
   andOrDecisions:
-    combinedConditions:
-    - condition:
-      - {fileID: 11400000, guid: 9575fdc91e5468e4ebe31b45d80a7a40, type: 2}
-      operation: 02000000
-    - condition:
-      - {fileID: 11400000, guid: 0196c1b92afeb314ea4ff92f8eb580e2, type: 2}
-      - {fileID: 11400000, guid: 23c7993565255ff4a95002857093f5d1, type: 2}
-      operation: 0000000001000000
-    operation: 0000000000000000
-    combinedConditionsResults: 0100
+    combinedConditions: []
+    operation: 
+    combinedConditionsResults: 
   action: {fileID: 0}
   targetState: {fileID: 11400000, guid: e027293e6e1cb804b885b5a0c41f2c43, type: 2}

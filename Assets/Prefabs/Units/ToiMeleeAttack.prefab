@@ -4893,7 +4893,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a1e97cbf2538241b691aae8243b5fb10, type: 2}
+  - {fileID: 2100000, guid: 0c487d398d967a8459ef169a61fe1b93, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4977,7 +4977,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathNodes: []
   toiTransform: {fileID: 0}
-  forceLeaving: 3
+  forceLeaving: 7
   speedRotating: 2
   timeRotating: 3
-  maxDistanceTraveled: 0
+  maxDistanceTraveled: 300
