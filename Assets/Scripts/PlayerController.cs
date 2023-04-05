@@ -83,7 +83,7 @@ public class PlayerController : MonoBehaviour
     
     
     //Input actions.
-    private InputAction _iRotate;
+    private InputAction _iLook;
     private InputAction _iMove;
     private InputAction _iJump;
     private InputAction _iDash;
@@ -129,6 +129,7 @@ public class PlayerController : MonoBehaviour
     {
         HidePlayer();
         
+        Debug.DrawRay(transform.position, _rb.velocity.normalized, Color.red);  
         
         _horizontalInput = _iMove.ReadValue<Vector2>().x;
         _verticalInput = _iMove.ReadValue<Vector2>().y;
@@ -192,8 +193,7 @@ public class PlayerController : MonoBehaviour
             _canJump = true;
             _canJumpTimer = coyoteDuration;
         }
-
-        Debug.DrawRay(transform.position , _rb.velocity.normalized, Color.green, 100f);
+        
     }
 
     private void FixedUpdate()
@@ -318,7 +318,7 @@ public class PlayerController : MonoBehaviour
         //var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, turnSmoothTime);
          
         
-        if (!_iRotate.triggered) return;
+        if (!_iLook.triggered) return;
         //_moveDirection = (Quaternion.Euler(0f, angle, 0f) * Vector3.forward).normalized;
         var camTransformForward = cam.transform.forward;
         transform.forward = new Vector3(camTransformForward.x, 0f, camTransformForward.z);
@@ -496,8 +496,8 @@ public class PlayerController : MonoBehaviour
         _iMove = PlayerControls.Player.Walk;
         _iMove.Enable();
         
-        _iRotate = PlayerControls.Player.Rotate;
-        _iRotate.Enable();
+        _iLook = PlayerControls.Player.Look;
+        _iLook.Enable();
         
         _iJump = PlayerControls.Player.Jump;
         _iJump.performed += JumpInput;
@@ -532,7 +532,7 @@ public class PlayerController : MonoBehaviour
     private void DisableInputSystem()
     {
         _iMove.Disable();
-        _iRotate.Disable();
+        _iLook.Disable();
         _iJump.Disable();
         _iDash.Disable();
         _iSprint.Disable();

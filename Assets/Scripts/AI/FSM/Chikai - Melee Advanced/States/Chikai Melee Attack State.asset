@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Chikai Melee Attack State
   m_EditorClassIdentifier: 
   entryAction: {fileID: 0}
-  stateActions: []
+  stateActions:
+  - {fileID: 11400000, guid: d3e9702744fc0b342b5f8ac5571c1e6d, type: 2}
   exitAction: {fileID: 0}
-  transitions: []
+  transitions:
+  - {fileID: 11400000, guid: 1d1659cedbf2da440a0e9c1e54054469, type: 2}

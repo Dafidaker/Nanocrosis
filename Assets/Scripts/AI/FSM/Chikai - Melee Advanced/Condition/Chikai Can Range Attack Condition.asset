@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67605b11d8842b34185795c0d93d636c, type: 3}
-  m_Name: Chikai Chase
+  m_Script: {fileID: 11500000, guid: da2dfb422381a91499c941c9b0ca1028, type: 3}
+  m_Name: Chikai Can Range Attack Condition
   m_EditorClassIdentifier: 
-  entryAction: {fileID: 0}
-  stateActions: []
-  exitAction: {fileID: 0}
-  transitions: []
+  negation: 0
+  checkForWalls: 1
+  viewAngle: 180
+  viewDistance: 15

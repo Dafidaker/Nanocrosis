@@ -120,8 +120,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TimeToRespawn: 0
   MaxHealthPoints: 0
-  Normal: {fileID: 2100000, guid: 6fd7b84f062e54a4ea88786c8d5071ca, type: 2}
-  Damaged: {fileID: 2100000, guid: 0a80ff26e3a884f4fa920fb73e4883cf, type: 2}
+  HasShield: 0
+  MaxShieldHealthPoints: 0
+  NormalMaterial: {fileID: 2100000, guid: 6fd7b84f062e54a4ea88786c8d5071ca, type: 2}
+  ShieldedMaterial: {fileID: 2100000, guid: d8146f62f7c2255478077550322d11de, type: 2}
+  DamageMaterial: {fileID: 2100000, guid: 2d016ff5ae9c0f647be5b7d0aad5af8a, type: 2}
   IsDead: 0
+  ShieldActive: 0
   CurrentHealthPoints: 0
+  CurrentShieldHealthPoints: 0
   CurrentTimeToRespawn: 0

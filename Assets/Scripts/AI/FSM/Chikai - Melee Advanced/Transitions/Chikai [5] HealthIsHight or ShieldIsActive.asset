@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f89927339c11a9442a6709a8dbaa3498, type: 3}
+  m_Name: Chikai [5] HealthIsHight or ShieldIsActive
+  m_EditorClassIdentifier: 
+  andDecisions: []
+  andOrDecisions:
+    combinedConditions:
+    - condition:
+      - {fileID: 11400000, guid: eceec2900fc5b6a42886e089828cd4fc, type: 2}
+      - {fileID: 11400000, guid: 39e2cbcf5469a1f4999f2528e81ab9fa, type: 2}
+      operation: 0200000001000000
+    operation: 02000000
+    combinedConditionsResults: 00
+  action: {fileID: 0}
+  targetState: {fileID: 11400000, guid: 89e51d02e92cef845bef77db7931d7fb, type: 2}

@@ -7,6 +7,6 @@ public class ChikaiChase : Action
 {
     public override void Act(FiniteStateMachine fsm)
     { 
-        fsm.GetNavMeshAgent().chikaiAgent.Chase();
+        fsm.GetNavMeshAgent().chikaiAgent.ChaseCalled();
     }
 }

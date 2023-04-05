@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5792032946839554035}
   m_Layer: 0
   m_Name: Rifle Bullet
-  m_TagString: Untagged
+  m_TagString: bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,6 +125,7 @@ MonoBehaviour:
   TimeToDestroy: 5
   Gun: {fileID: 7615206379009653064, guid: 96caf1af24998734a96a2cb980a1e650, type: 3}
   Damage: 5
+  Enhanced: 0
 --- !u!54 &3611978850171806414
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -83,10 +84,14 @@ public class ToiRangedAttackController : MonoBehaviour
         _rb.velocity = direction * bulletForce;
     }
 
-    public void MeleeAttackStart()
-    {
-        
-    }
 
     //collision
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            other.gameObject.GetComponent<PlayerStats>().DamageTaken(5);
+        }
+    }
 }

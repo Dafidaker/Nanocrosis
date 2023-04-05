@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: Chikai Chase Carefully State
   m_EditorClassIdentifier: 
   entryAction: {fileID: 0}
-  stateActions: []
+  stateActions:
+  - {fileID: 11400000, guid: fc5a16843310a5c4391f4f89f4c23103, type: 2}
   exitAction: {fileID: 0}
-  transitions: []
+  transitions:
+  - {fileID: 11400000, guid: 21c57029b9537a242bebacc80de9b6fd, type: 2}
+  - {fileID: 11400000, guid: 33be2714d8cfe124fa7a180a468bd9b2, type: 2}
+  - {fileID: 11400000, guid: 425c02c2a96995b408611803fc13c8e3, type: 2}

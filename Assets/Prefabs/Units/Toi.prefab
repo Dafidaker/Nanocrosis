@@ -575,22 +575,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31c501fa440f19041a7c221cf17a2b75, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseState: {fileID: 0}
-  chaseCarefullyState: {fileID: 0}
-  rangeAttackState: {fileID: 0}
-  meleeAttackState: {fileID: 0}
-  evadeState: {fileID: 0}
+  chaseState: {fileID: 11400000, guid: 1b42fab6dae5dd141baef1ab45bd58da, type: 2}
+  chaseCarefullyState: {fileID: 11400000, guid: 29df4038ea101d348abd3178ee907046, type: 2}
+  rangeAttackState: {fileID: 11400000, guid: e027293e6e1cb804b885b5a0c41f2c43, type: 2}
+  meleeAttackState: {fileID: 11400000, guid: 6580879a12a8a9d4db96e0cbc8861964, type: 2}
+  evadeState: {fileID: 11400000, guid: 58159a430185fcf449db1832855c29d3, type: 2}
   currentHealth: 100
   maxHealth: 100
   hasShield: 0
-  attackCooldown: 0
+  attackCooldown: 5
   distanceToTarget: 0
   attackTimer: 0
   isAttacking: 0
-  rangedAttackPositions: []
-  rangedAttackPrefab: {fileID: 0}
+  rangedAttackPositions:
+  - {fileID: 3298842094138759573}
+  - {fileID: 3575122891584593442}
+  - {fileID: 8861648474263468315}
+  rangedAttackPrefab: {fileID: 8798475704629104677, guid: 2acfc7875fcb9ce488cf7bd5a9ba06c8, type: 3}
   meleeAttackPrefab: {fileID: 8798475704629104677, guid: 15055977b34adab42a0b163f1992ea1d, type: 3}
-  meleeAttackTransforms: []
+  meleeAttackTransforms:
+  - {fileID: 6110075651474031534}
+  - {fileID: 4960443490453989676}
+  - {fileID: 6024521799823486103}
+  - {fileID: 5526862298887205159}
+  - {fileID: 7581523044868879802}
+  - {fileID: 7841707263781937472}
+  - {fileID: 8132597366007132702}
+  - {fileID: 1225749724976731706}
   spinDuration: 0
   launchDuration: 0
 --- !u!136 &7220725514435021438
@@ -924,7 +935,6 @@ MonoBehaviour:
   endOfPathInstruction: 0
   speed: 5
   distanceTravelled: 0
-  followPath: 1
 --- !u!1 &8410300095870921230
 GameObject:
   m_ObjectHideFlags: 0

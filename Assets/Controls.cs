@@ -109,13 +109,13 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Rotate"",
+                    ""name"": ""Look"",
                     ""type"": ""PassThrough"",
                     ""id"": ""5e0418e0-5226-4021-9356-08833525ece5"",
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Reload"",
@@ -130,6 +130,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""42fd9a55-be41-44b3-9154-a1d2e2172efa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EnhanceAmmo"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab943603-b12c-409e-905e-58e9ef236991"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -283,11 +292,11 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""0a3d66ce-1240-42b1-bf95-22736d810c3d"",
-                    ""path"": ""<Mouse>/position"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Rotate"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -312,6 +321,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6b474fe-c1cc-42a1-8b70-b1eaa8272c98"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EnhanceAmmo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -329,9 +349,10 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Player_Melee = m_Player.FindAction("Melee", throwIfNotFound: true);
         m_Player_Healing = m_Player.FindAction("Healing", throwIfNotFound: true);
         m_Player_CriticalMesures = m_Player.FindAction("CriticalMesures", throwIfNotFound: true);
-        m_Player_Rotate = m_Player.FindAction("Rotate", throwIfNotFound: true);
+        m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_EnhanceAmmo = m_Player.FindAction("EnhanceAmmo", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -400,9 +421,10 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Melee;
     private readonly InputAction m_Player_Healing;
     private readonly InputAction m_Player_CriticalMesures;
-    private readonly InputAction m_Player_Rotate;
+    private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_EnhanceAmmo;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -416,9 +438,10 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Melee => m_Wrapper.m_Player_Melee;
         public InputAction @Healing => m_Wrapper.m_Player_Healing;
         public InputAction @CriticalMesures => m_Wrapper.m_Player_CriticalMesures;
-        public InputAction @Rotate => m_Wrapper.m_Player_Rotate;
+        public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @EnhanceAmmo => m_Wrapper.m_Player_EnhanceAmmo;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -455,15 +478,18 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @CriticalMesures.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCriticalMesures;
                 @CriticalMesures.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCriticalMesures;
                 @CriticalMesures.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCriticalMesures;
-                @Rotate.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotate;
-                @Rotate.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotate;
-                @Rotate.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotate;
+                @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Reload.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                 @Reload.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                 @Reload.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnReload;
                 @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @EnhanceAmmo.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnhanceAmmo;
+                @EnhanceAmmo.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnhanceAmmo;
+                @EnhanceAmmo.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnhanceAmmo;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -495,15 +521,18 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @CriticalMesures.started += instance.OnCriticalMesures;
                 @CriticalMesures.performed += instance.OnCriticalMesures;
                 @CriticalMesures.canceled += instance.OnCriticalMesures;
-                @Rotate.started += instance.OnRotate;
-                @Rotate.performed += instance.OnRotate;
-                @Rotate.canceled += instance.OnRotate;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
                 @Reload.started += instance.OnReload;
                 @Reload.performed += instance.OnReload;
                 @Reload.canceled += instance.OnReload;
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @EnhanceAmmo.started += instance.OnEnhanceAmmo;
+                @EnhanceAmmo.performed += instance.OnEnhanceAmmo;
+                @EnhanceAmmo.canceled += instance.OnEnhanceAmmo;
             }
         }
     }
@@ -519,8 +548,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnMelee(InputAction.CallbackContext context);
         void OnHealing(InputAction.CallbackContext context);
         void OnCriticalMesures(InputAction.CallbackContext context);
-        void OnRotate(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnEnhanceAmmo(InputAction.CallbackContext context);
     }
 }

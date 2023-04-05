@@ -6,13 +6,14 @@ public class BulletController : MonoBehaviour
 {
     [SerializeField] private float Speed = 100f;
     [SerializeField] private float TimeToDestroy = 5f;
- 
-
+    
     public GameObject Gun;
 
     public int Damage;
     public Vector3 Target { get; set; }
     public bool Hit { get; set; }
+
+    public bool Enhanced;
 
     private Rigidbody _rb;
 
@@ -39,17 +40,28 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.CompareTag("bullet")) return;
+        if(collision.gameObject.CompareTag("bullet") || collision.gameObject.CompareTag("Player")) return;
         Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("bullet")) return;
-        if(other.GetComponent<TargetController>() != null)
+        if(other.CompareTag("bullet") || other.CompareTag("Player")) return;
+        if(other.GetComponent<RespawningTargetController>() != null)
         {
-            TargetController d = other.GetComponent<TargetController>();
-            d.CurrentHealthPoints -= Damage;
+            RespawningTargetController d = other.GetComponent<RespawningTargetController>();
+            if (d.ShieldActive && Enhanced)
+            {
+                d.CurrentShieldHealthPoints -= Damage;
+            }
+            else if (d.ShieldActive && !Enhanced)
+            {
+                Debug.Log("HAS SHIELD AND AMMO IS NOT ENHANCED");
+            }
+            else if ((!d.ShieldActive && Enhanced) || (!d.ShieldActive && !Enhanced))
+            {
+                d.CurrentHealthPoints -= Damage;
+            }
         }
         Destroy(gameObject);
     }

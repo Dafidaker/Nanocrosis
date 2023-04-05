@@ -27,7 +27,7 @@ public class ToiAgent : MonoBehaviour
     public bool hasShield;
     public float attackCooldown;
     public float distanceToTarget;
-    [field: HideInInspector]public float attackTimer;
+    public float attackTimer;
     [field: HideInInspector] public bool isAttacking;
     
     [Header("Ranged Attack"),Space(10)]
@@ -134,21 +134,22 @@ public class ToiAgent : MonoBehaviour
     {
         _agent.isStopped = true;
         isAttacking = true;
-
-        for (int i = 0; i < _meleeAttackPositions.Count; i++)
+        Debug.Log("yahah");
+        
+        for (int i = 0; i < meleeAttackTransforms.Length; i++)
         {
             //create melee attack and get its script
-            var temporaryMeleeAttack = Instantiate(meleeAttackPrefab, meleeAttackTransforms[i].position, meleeAttackTransforms[i].rotation);
+            var temporaryMeleeAttack = Instantiate(meleeAttackPrefab, meleeAttackTransforms[i].position + transform.up * 5 , meleeAttackTransforms[i].rotation);
             var temporaryMeleeScript = temporaryMeleeAttack.GetComponent<ToiMeleeAttackController>();
             
             //add the positions in order
             
             var count = 0;
             var index = i;
-            while (count <= _meleeAttackPositions.Count - 1)
+            while (count <= meleeAttackTransforms.Length - 1)
             {
-                if (index > _meleeAttackPositions.Count - 1) { index = 0; }
-                temporaryMeleeScript.pathNodes.Add(_meleeAttackPositions[index]);
+                if (index > meleeAttackTransforms.Length - 1) { index = 0; }
+                temporaryMeleeScript.pathNodes.Add(meleeAttackTransforms[index]);
                 count++;
                 index++;
             }
@@ -182,8 +183,8 @@ public class ToiAgent : MonoBehaviour
     {
         if (!isAttacking)
         {
-            StopAllCoroutines();
-            //todo create performed melee attack
+            isAttacking = true;
+            //StopAllCoroutines();
             StartCoroutine(PerformMeleeAttack());
         }
         //Debug.Log("MeleeAttackAction");
@@ -194,7 +195,8 @@ public class ToiAgent : MonoBehaviour
         //Debug.Log("RangedAttackAction");
         if (!isAttacking)
         {
-            StopAllCoroutines();
+            isAttacking = true;
+            //StopAllCoroutines();
             StartCoroutine(PerformRangedAttack());
         }
     }

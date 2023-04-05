@@ -30,18 +30,13 @@ public class CanSeeCondition : Condition
         
         var direction = _agent.target.position - _agent.transform.position;
         
-        //can see = false
-        //can not see = true
         //if the distance not is smaller than the minDistance return negation
         if (!(direction.magnitude < viewDistance)) return negation;
         
         var angle = Vector3.Angle(direction.normalized, _agent.transform.forward);
         
-        //can see = false
-        //can not see = true
         //if the angle not is smaller than the viewingAngle return negation
         if (!(angle < viewAngle)) return negation;
-        
         
         //the target is within distance and view angle
         //check if are checking for walls and if so
@@ -50,7 +45,5 @@ public class CanSeeCondition : Condition
         
         //if we arent checking for the walls then
         return !negation;
-
-
     }
 }

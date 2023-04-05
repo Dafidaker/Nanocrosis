@@ -49,10 +49,10 @@ public class BombController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player")) return;
-        if (other.GetComponent<TargetController>() != null)
+        if (other.GetComponent<RespawningTargetController>() != null)
         {
-            TargetController d = other.GetComponent<TargetController>();
-            d.CurrentHealthPoints -= ImpactDamage;            
+            RespawningTargetController d = other.GetComponent<RespawningTargetController>();
+            if(!d.ShieldActive) d.CurrentHealthPoints -= ImpactDamage;            
         }
         StartCoroutine(Explode());
     }

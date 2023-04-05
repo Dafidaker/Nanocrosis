@@ -78,23 +78,54 @@ public class FSMNavMeshAgent : MonoBehaviour
 
         return false;
     }
+
+    public Vector3 DiretionToTarget(bool predictFuture = false, float howTimeIntheFuture = 2)
+    {
+        var targetPosition = Vector3.zero;
+        var targetRigidbody = target.GetComponent<Rigidbody>();
+        
+        if (!predictFuture || targetRigidbody == null)
+        {
+            targetPosition = target.position;
+        }
+        else if(targetRigidbody != null)
+        {
+            targetPosition = TargetFuturePosition(targetRigidbody, howTimeIntheFuture);
+        }
+        
+        return (targetPosition - transform.position).normalized;
+       
+    }
     
+    public Vector3 TargetFuturePosition(Rigidbody targetRigidBody, float howTimeInTheFuture)
+    {
+        var velocity = targetRigidBody.velocity;
+        var targetDirection = velocity.normalized;
+        var targetSpeed = velocity.magnitude;
+        
+        if (targetSpeed == 0 || targetDirection == Vector3.zero)
+        {
+            return  target.position + target.forward * howTimeInTheFuture;
+        }
+        return  target.position + targetDirection * (targetSpeed * howTimeInTheFuture);
+    }
+
     #endregion
-    
+
     #region Actions Functions
 
 
 
     #endregion
-    
-    
-    void OnDrawGizmosSelected()
+
+
+    /*void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1f,0f,0f,0.2f);
         Gizmos.DrawSphere(transform.position, viewDistance);
         //Gizmos.DrawLine(transform.position, Quaternion.Euler(0, viewAngle/2, 0) * transform.forward);
         //Gizmos.DrawLine(transform.position, Quaternion.Euler(0, -viewAngle/2, 0) * transform.forward);
-    }
+    }*/
 
-    
+
 }

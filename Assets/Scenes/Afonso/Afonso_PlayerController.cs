@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using Enums;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,6 +16,8 @@ public class Afonso_PlayerController : MonoBehaviour
     [Header("Debug Variables"), Space(10)] 
     public bool isGrounded;
     public GameObject debugGameObject;
+    public CinemachineFreeLook CinemachineFreeLook;
+    public CinemachineVirtualCamera CinemachineVirtual;
     
     [Header("Movement"), Space(10)]
     public float walkSpeed;
@@ -78,9 +81,20 @@ public class Afonso_PlayerController : MonoBehaviour
     [SerializeField] private float MissDistance = 25f;
     [SerializeField] private GameObject[] Weapons;
     [SerializeField] private GameObject BombPrefab;
+    [SerializeField] private int AvailableBuffs;
+    [SerializeField] private LayerMask bulletsHit;
     public GameObject FakeBomb;
     public bool BombAttached;
-
+    
+    
+    [Header("Aim"), Space(10)]
+    [SerializeField] private float mouseYSentivity;
+    [SerializeField] private float mouseXSentivity;
+    [SerializeField] private AxisState.SpeedMode speedMode;
+    private float _camXSpeed;
+    private float _camYSpeed;
+    
+    
     private GameObject _currentWeapon;
     private int _currrentWeaponIndex = 0;
     private Coroutine _shooting;
@@ -96,7 +110,7 @@ public class Afonso_PlayerController : MonoBehaviour
     
     
     //Input actions.
-    private InputAction _iRotate;
+    private InputAction _iLook;
     private InputAction _iMove;
     private InputAction _iJump;
     private InputAction _iDash;
@@ -108,6 +122,7 @@ public class Afonso_PlayerController : MonoBehaviour
     private InputAction _iCritical;
     private InputAction _iReload;
     private InputAction _iInteract;
+    private InputAction _iEnhanceAmmo;
 
     //Item interactions.
     private GameObject _currentBomb;
@@ -148,6 +163,10 @@ public class Afonso_PlayerController : MonoBehaviour
         //debugGameObject = Instantiate(debugGameObject);
 
         _currentJumps = 0;
+
+
+        _camXSpeed = CinemachineFreeLook.m_XAxis.m_MaxSpeed;
+        _camYSpeed = CinemachineFreeLook.m_YAxis.m_MaxSpeed;
     }
     
     private void Update()
@@ -165,10 +184,7 @@ public class Afonso_PlayerController : MonoBehaviour
         
         //limits the player speed
         SpeedControl();
-        
-        //rotates the player to the direction of the camera if the camera is moving
-        RotatePlayer();
-        
+
         //changes the movement state
         StateHandler();
 
@@ -216,10 +232,7 @@ public class Afonso_PlayerController : MonoBehaviour
             _canJump = true;
             _canJumpTimer = coyoteDuration;
         }
-
-        Debug.DrawRay(transform.position, _rb.velocity.normalized, Color.green, 100f);
-
-        Debug.Log(BombAttached);
+        
     }
 
     private void FixedUpdate()
@@ -227,11 +240,12 @@ public class Afonso_PlayerController : MonoBehaviour
         DetectGround();
         
         MovePlayer();
+        
+        //rotates the player to the direction of the camera if the camera is moving
+        RotatePlayer();
     }
 
     #endregion
-
-    
     
     #region Funtions
 
@@ -339,133 +353,267 @@ public class Afonso_PlayerController : MonoBehaviour
     
     #endregion
     
-    private void RotatePlayer()
-    {
-        //var targetAngle = MathF.Atan2(_moveDirection.x, _moveDirection.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-        //var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, turnSmoothTime);
-         
-        
-        if (!_iRotate.triggered) return;
-        //_moveDirection = (Quaternion.Euler(0f, angle, 0f) * Vector3.forward).normalized;
-        var camTransformForward = cam.transform.forward;
-        transform.forward = new Vector3(camTransformForward.x, 0f, camTransformForward.z);
-    }
+    #region  Shooting
 
-    private void StateHandler()
+    private void GetTargetBomb(RaycastHit hit, BombController bombController, GameObject bomb)
     {
-        if (_dashing)
+        if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity,bulletsHit ))
         {
-            _movementState = MovementState.Dash;
-            _desiredMoveSpeed = dashSpeed;
-            _speedChangeFactor = dashSpeedChangeFactor;
+            bombController.Target = hit.point;
+            bombController.Hit = true;
+            Debug.DrawRay(FirePoint.position, bomb.transform.forward, Color.red, 2f);
         }
-        
-        else if (isGrounded && _isSprinting)
-        {
-            _movementState = MovementState.Sprint;
-            _desiredMoveSpeed = sprintSpeed;
-        }
-        
-        else if (isGrounded)
-        {
-            _movementState = MovementState.Walk;
-            _desiredMoveSpeed = walkSpeed;
-        }
-
         else
         {
-            _movementState = MovementState.Airborne;
-            
-            //if the player speed is lower than the sprint speed it makes the desired the walk
-            //other wise it makes the desired the sprint speed
-            _desiredMoveSpeed = _desiredMoveSpeed < sprintSpeed ? walkSpeed : sprintSpeed;
+            bombController.Target = cam.position + cam.forward * MissDistance;
+            bombController.Hit = false;
+            Debug.DrawRay(FirePoint.position, bomb.transform.forward, Color.red, 2f);
         }
-
-        bool desiredMoveSpeedHasChanged = _desiredMoveSpeed != _lastDesiredMoveSpeed;
-        
-        if (_lastMovementState == MovementState.Dash)
-        {
-            _keepMomentum = true;
-        }
-        
-        if (desiredMoveSpeedHasChanged)
-        {
-            if (_keepMomentum)
-            {
-                StopAllCoroutines();
-                StartCoroutine(SmoothlyLerpMoveSpeed());
-            }
-            else
-            {
-                StopAllCoroutines();
-                _moveSpeed = _desiredMoveSpeed;
-            }
-        }
-
-        _lastDesiredMoveSpeed = _desiredMoveSpeed;
-        _lastMovementState = _movementState;
-    }
-
-    private bool OnSlope()
-    {
-        //if it doesnt hit a slope it returns false 
-        if (!Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _slopeHit,0.6f, layerMask )) return false;
-
-        
-        //if it hits we check it the angles is smaller that the max slope angle
-        float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
-        return angle > minSlopeAngle && angle != 0;
-    }
-
-    private void DetectGround()
-    {
-        isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, layerMask);
-        
-        //if _readyToJump is false it means the player just jumped meaning that they arent on the ground
-        if (!_readyToJump) isGrounded = false;
-        
-        //if the player is on the ground their jumps will reset
-        if (isGrounded) { _currentJumps = 0; }
-    }
-    private Vector3 GetSlopeMoveDirection(Vector3 vector)
-    {
-        return Vector3.ProjectOnPlane(vector, _slopeHit.normal);
-    }
-
-    private IEnumerator SmoothlyLerpMoveSpeed()
-    {
-        float time = 0;
-        float difference = Mathf.Abs(_desiredMoveSpeed - _moveSpeed);
-        float startValue = _moveSpeed;
-
-        float boostFactor = _speedChangeFactor;
-
-        while (time < difference)
-        {
-            _moveSpeed = Mathf.Lerp(startValue, _desiredMoveSpeed, time / difference);
-
-            time += Time.deltaTime * boostFactor;
-
-            yield return null;
-        }
-
-        
-        _moveSpeed = _desiredMoveSpeed;
-        _speedChangeFactor = 1f;
-        _keepMomentum = false;
     }
     
-    private bool CanJump()
+    private void GetTargetBullet(RaycastHit hit, BulletController bulletController, GameObject bullet)
     {
-        //if the player isn't _readyToJump or
-        //the nº of jumps that they took are higher or equal to the amount allowed it returns
-        if (!_readyToJump || _currentJumps >= numberOfJumps) return false;
-        
-        //if its your first jump and you arent on the ground u cant jump 
-        if (_currentJumps == 0  && !isGrounded) return false;
-
-        return true;
+        if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity,bulletsHit))
+        {
+            bulletController.Target = hit.point;
+            bulletController.Hit = true;
+            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
+        }
+        else
+        {
+            bulletController.Target = bullet.transform.position + bullet.transform.forward * MissDistance;
+            bulletController.Hit = false;
+            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
+        }
     }
+    
+    private IEnumerator FullAuto()
+    {
+        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+
+        while (!weaponController.Reloading)
+        {
+            SemiAutoFire();
+            yield return new WaitForSeconds(weaponController.FireRate);
+        }
+    }
+    private void SingleFire(WeaponController w)
+    {
+        if (_fireCountdown > 0) return;
+
+        _fireCountdown = w.FireRate;
+
+        SemiAutoFire();
+    }
+    private void SemiAutoFire()
+    {
+        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+
+        if (weaponController.CurrentMag <= 0 && _shooting != null)
+        {
+            StopCoroutine(_shooting);
+            return;
+        }
+
+        weaponController.CurrentMag--;
+
+        RaycastHit hit = default;
+
+        GameObject bullet;
+
+        if (weaponController.FullAuto)
+        {
+            Debug.Log("shot");
+            bullet = Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward)); // BulletParent
+            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
+            BulletController bulletController = bullet.GetComponent<BulletController>();
+
+            GetTargetBullet(hit, bulletController, bullet);
+
+        }
+
+        else if (weaponController.SpreadShot) //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+        {
+            int i = 0;
+            foreach (Quaternion q in weaponController.Pellets.ToArray())
+            {
+                weaponController.Pellets[i] = Random.rotation;
+                bullet = Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+                bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, weaponController.Pellets[i], weaponController.SpreadAngle);
+
+                BulletController b = bullet.GetComponent<BulletController>();
+
+                GetTargetBullet(hit, b, bullet);
+                i++;
+            }
+        }
+    }
+    
+    private IEnumerator ReloadCountdown(WeaponController w)
+    {
+        w.Reloading = true;
+
+        //Changes colour
+        foreach (GameObject bit in w.ColoredBits)
+        {
+            bit.GetComponent<MeshRenderer>().material = w.ReloadMaterial;
+        }
+
+        int ammoNeeded = w.MagSize - w.CurrentMag;
+
+        if (ammoNeeded > w.CurrentAmmoReserve)
+        {
+            ammoNeeded = w.CurrentAmmoReserve;
+        }
+
+        yield return new WaitForSeconds(w.ReloadTime);
+
+        w.CurrentAmmoReserve -= ammoNeeded;
+        w.CurrentMag += ammoNeeded;
+        
+        //Changes colour
+        foreach (GameObject bit in w.ColoredBits)
+        {
+            if(!w.IsEnhanced) bit.GetComponent<MeshRenderer>().material = w.NormalMaterial;
+            else bit.GetComponent<MeshRenderer>().material = w.EnhancedMaterial;
+        }
+
+        w.Reloading = false;
+    }
+    
+    #endregion
+
+    #region other
+
+    private void RotatePlayer()
+        {
+            //var targetAngle = MathF.Atan2(_moveDirection.x, _moveDirection.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            //var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, turnSmoothTime);
+             
+            
+            if (!_iLook.triggered) return;
+            //_moveDirection = (Quaternion.Euler(0f, angle, 0f) * Vector3.forward).normalized;
+            var camTransformForward = cam.transform.forward;
+            transform.forward = new Vector3(camTransformForward.x, 0f, camTransformForward.z);
+        }
+    
+        private void StateHandler()
+        {
+            if (_dashing)
+            {
+                _movementState = MovementState.Dash;
+                _desiredMoveSpeed = dashSpeed;
+                _speedChangeFactor = dashSpeedChangeFactor;
+            }
+            
+            else if (isGrounded && _isSprinting)
+            {
+                _movementState = MovementState.Sprint;
+                _desiredMoveSpeed = sprintSpeed;
+            }
+            
+            else if (isGrounded)
+            {
+                _movementState = MovementState.Walk;
+                _desiredMoveSpeed = walkSpeed;
+            }
+    
+            else
+            {
+                _movementState = MovementState.Airborne;
+                
+                //if the player speed is lower than the sprint speed it makes the desired the walk
+                //other wise it makes the desired the sprint speed
+                _desiredMoveSpeed = _desiredMoveSpeed < sprintSpeed ? walkSpeed : sprintSpeed;
+            }
+    
+            bool desiredMoveSpeedHasChanged = _desiredMoveSpeed != _lastDesiredMoveSpeed;
+            
+            if (_lastMovementState == MovementState.Dash)
+            {
+                _keepMomentum = true;
+            }
+            
+            if (desiredMoveSpeedHasChanged)
+            {
+                if (_keepMomentum)
+                {
+                    StopAllCoroutines();
+                    StartCoroutine(SmoothlyLerpMoveSpeed());
+                }
+                else
+                {
+                    StopAllCoroutines();
+                    _moveSpeed = _desiredMoveSpeed;
+                }
+            }
+    
+            _lastDesiredMoveSpeed = _desiredMoveSpeed;
+            _lastMovementState = _movementState;
+        }
+    
+        private bool OnSlope()
+        {
+            //if it doesnt hit a slope it returns false 
+            if (!Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _slopeHit,0.6f, layerMask )) return false;
+    
+            
+            //if it hits we check it the angles is smaller that the max slope angle
+            float angle = Vector3.Angle(Vector3.up, _slopeHit.normal);
+            return angle > minSlopeAngle && angle != 0;
+        }
+    
+        private void DetectGround()
+        {
+            isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, layerMask);
+            
+            //if _readyToJump is false it means the player just jumped meaning that they arent on the ground
+            if (!_readyToJump) isGrounded = false;
+            
+            //if the player is on the ground their jumps will reset
+            if (isGrounded) { _currentJumps = 0; }
+        }
+        private Vector3 GetSlopeMoveDirection(Vector3 vector)
+        {
+            return Vector3.ProjectOnPlane(vector, _slopeHit.normal);
+        }
+    
+        private IEnumerator SmoothlyLerpMoveSpeed()
+        {
+            float time = 0;
+            float difference = Mathf.Abs(_desiredMoveSpeed - _moveSpeed);
+            float startValue = _moveSpeed;
+    
+            float boostFactor = _speedChangeFactor;
+    
+            while (time < difference)
+            {
+                _moveSpeed = Mathf.Lerp(startValue, _desiredMoveSpeed, time / difference);
+    
+                time += Time.deltaTime * boostFactor;
+    
+                yield return null;
+            }
+    
+            
+            _moveSpeed = _desiredMoveSpeed;
+            _speedChangeFactor = 1f;
+            _keepMomentum = false;
+        }
+        
+        private bool CanJump()
+        {
+            //if the player isn't _readyToJump or
+            //the nº of jumps that they took are higher or equal to the amount allowed it returns
+            if (!_readyToJump || _currentJumps >= numberOfJumps) return false;
+            
+            //if its your first jump and you arent on the ground u cant jump 
+            if (_currentJumps == 0  && !isGrounded) return false;
+    
+            return true;
+        }
+
+    #endregion
     
     
     #endregion
@@ -493,6 +641,7 @@ public class Afonso_PlayerController : MonoBehaviour
             _isSprinting = false;
         }
     }
+    
     private void JumpInput(InputAction.CallbackContext context)
     {
         _jumpWasPressed = true;
@@ -509,18 +658,20 @@ public class Afonso_PlayerController : MonoBehaviour
     {
         isJumpOver = true;
     }
+    
     private void DashInput(InputAction.CallbackContext context)
     {
         Dash();
     }
-
+    
     private void Shoot(InputAction.CallbackContext context)
     {
         WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
 
-        RaycastHit hit;
+        RaycastHit hit = default;
 
         GameObject bomb;
+        
         if (!BombAttached)
         {
             if (weaponController.CurrentMag <= 0 && !weaponController.Reloading)
@@ -540,117 +691,20 @@ public class Afonso_PlayerController : MonoBehaviour
         }
         else
         {
-            bomb = GameObject.Instantiate(BombPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward));
+            bomb = Instantiate(BombPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward));
             Debug.DrawRay(FirePoint.position, bomb.transform.forward, Color.red, 2f);
             BombController bombController = bomb.GetComponent<BombController>();
 
-            if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
-            {
-                bombController.Target = hit.point;
-                bombController.Hit = true;
-                Debug.DrawRay(FirePoint.position, bomb.transform.forward, Color.red, 2f);
-            }
-            else
-            {
-                bombController.Target = cam.position + cam.forward * MissDistance;
-                bombController.Hit = false;
-                Debug.DrawRay(FirePoint.position, bomb.transform.forward, Color.red, 2f);
-            }
+            GetTargetBomb(hit, bombController, bomb);
             FakeBomb.SetActive(false);
             BombAttached = false;
         }
     }
-
     private void ShootEndedInput(InputAction.CallbackContext context)
     {
          if(_shooting != null) StopCoroutine(_shooting);
     }
-
-    private IEnumerator FullAuto()
-    {
-        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
-
-        while (!weaponController.Reloading)
-        {
-            SemiAutoFire();
-            yield return new WaitForSeconds(weaponController.FireRate);
-        }
-    }
-
-    private void SingleFire(WeaponController w)
-    {
-        if (_fireCountdown > 0) return;
-
-        _fireCountdown = w.FireRate;
-
-        SemiAutoFire();
-    }
-
-    private void SemiAutoFire()
-    {
-        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
-
-        if (weaponController.CurrentMag <= 0 && _shooting != null)
-        {
-            StopCoroutine(_shooting);
-            return;
-        }
-
-        weaponController.CurrentMag--;
-
-        RaycastHit hit;
-
-        GameObject bullet = null;
-
-        if (weaponController.FullAuto)
-        {
-            bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
-            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
-            BulletController bulletController = bullet.GetComponent<BulletController>();
-
-            if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
-            {
-                bulletController.Target = hit.point;
-                bulletController.Hit = true;
-                Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
-            }
-            else
-            {
-                bulletController.Target = cam.position + cam.forward * MissDistance;
-                bulletController.Hit = false;
-                Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
-            }
-
-        }
-
-        else if (weaponController.SpreadShot) //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
-        {
-            int i = 0;
-            foreach (Quaternion q in weaponController.Pellets.ToArray())
-            {
-                weaponController.Pellets[i] = Random.rotation;
-                bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
-                bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, weaponController.Pellets[i], weaponController.SpreadAngle);
-
-                BulletController b = bullet.GetComponent<BulletController>();
-
-                if (Physics.Raycast(cam.position, cam.forward, out hit, Mathf.Infinity))
-                {
-                    b.Target = hit.point;
-                    b.Hit = true;
-                    Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
-                }
-                else
-                {
-                    b.Target = cam.position + cam.forward * MissDistance;
-                    b.Hit = false;
-                    Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
-                }
-                i++;
-            }
-        }
-    }
-
+    
     private void Reload(InputAction.CallbackContext context)
     {
         WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
@@ -667,39 +721,9 @@ public class Afonso_PlayerController : MonoBehaviour
             if (weaponController.Reloading) bit.GetComponent<MeshRenderer>().material = weaponController.ReloadMaterial;
             else bit.GetComponent<MeshRenderer>().material = weaponController.NormalMaterial;
         }
+
+        weaponController.IsEnhanced = false;
     }
-
-    private IEnumerator ReloadCountdown(WeaponController w)
-    {
-        w.Reloading = true;
-
-        //Changes colour
-        foreach (GameObject bit in w.ColoredBits)
-        {
-            bit.GetComponent<MeshRenderer>().material = w.ReloadMaterial;
-        }
-
-        int ammoNeeded = w.MagSize - w.CurrentMag;
-
-        if (ammoNeeded > w.CurrentAmmoReserve)
-        {
-            ammoNeeded = w.CurrentAmmoReserve;
-        }
-
-        yield return new WaitForSeconds(w.ReloadTime);
-
-        w.CurrentAmmoReserve -= ammoNeeded;
-        w.CurrentMag += ammoNeeded;
-        
-        //Changes colour
-        foreach (GameObject bit in w.ColoredBits)
-        {
-            bit.GetComponent<MeshRenderer>().material = w.NormalMaterial;
-        }
-
-        w.Reloading = false;
-    }
-
     private void CycleWeapons(InputAction.CallbackContext context)
     {
         _currentWeapon.SetActive(false);
@@ -715,7 +739,6 @@ public class Afonso_PlayerController : MonoBehaviour
         _currentWeapon.SetActive(true);
         StopCoroutine(_shooting);
     }
-
     private void Interact(InputAction.CallbackContext context)
     {
         if(_currentBomb != null)
@@ -723,13 +746,30 @@ public class Afonso_PlayerController : MonoBehaviour
             _currentBomb.GetComponent<BombPickupController>().Interact();
         }
     }
+    private void EnhanceWeapon(InputAction.CallbackContext context)
+    {
+        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+        if (AvailableBuffs > 0)
+        {
+            weaponController.IsEnhanced = true;
+
+            foreach (GameObject bit in weaponController.ColoredBits)
+            {
+                if(!weaponController.Reloading) bit.GetComponent<MeshRenderer>().material = weaponController.EnhancedMaterial;
+            }
+
+            AvailableBuffs--;
+        }
+        else Debug.Log("NO BUFFS AVAILABLE");
+    }
+    
     private void EnableInputSystem()
     {
         _iMove = PlayerControls.Player.Walk;
         _iMove.Enable();
         
-        _iRotate = PlayerControls.Player.Rotate;
-        _iRotate.Enable();
+        _iLook = PlayerControls.Player.Look;
+        _iLook.Enable();
         
         _iJump = PlayerControls.Player.Jump;
         _iJump.performed += JumpInput;
@@ -770,11 +810,16 @@ public class Afonso_PlayerController : MonoBehaviour
         _iInteract = PlayerControls.Player.Interact;
         _iInteract.performed += Interact;
         _iInteract.Enable();
+
+        _iEnhanceAmmo = PlayerControls.Player.EnhanceAmmo;
+        _iEnhanceAmmo.performed += EnhanceWeapon;
+        _iEnhanceAmmo.Enable();
+
     }
     private void DisableInputSystem()
     {
         _iMove.Disable();
-        _iRotate.Disable();
+        _iLook.Disable();
         _iJump.Disable();
         _iDash.Disable();
         _iSprint.Disable();
@@ -785,23 +830,25 @@ public class Afonso_PlayerController : MonoBehaviour
         _iCritical.Disable();
         _iReload.Disable();
         _iInteract.Disable();
+        _iEnhanceAmmo.Disable();
     }
     
     #endregion
 
     private void OnGUI()
     {
-        GUI.Box(new Rect(0, 0, Screen.width * 0.2f, Screen.height * 0.1f), _rb.velocity.ToString());
+        /*GUI.Box(new Rect(0, 0, Screen.width * 0.2f, Screen.height * 0.1f), _rb.velocity.ToString());
         GUI.Box(new Rect(0, 50, Screen.width * 0.2f, Screen.height * 0.1f), "can jump: " + _canJump);
-        GUI.Box(new Rect(0, 100, Screen.width * 0.2f, Screen.height * 0.1f), "_jumpWasPressed: " + _jumpWasPressed);
+        GUI.Box(new Rect(0, 100, Screen.width * 0.2f, Screen.height * 0.1f), "_jumpWasPressed: " + _jumpWasPressed);*/
 
         //Weapons
-        GUI.Box(new Rect(0, 200, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().Name);
-        GUI.Box(new Rect(0, 250, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentMag.ToString());
-        GUI.Box(new Rect(0, 300, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentAmmoReserve.ToString());
-        GUI.Box(new Rect(0, 350, Screen.width * 0.2f, Screen.height * 0.1f), "Magazine Empty: " +  _currentWeapon.GetComponent<WeaponController>().MagEmpty);
-        GUI.Box(new Rect(0, 400, Screen.width * 0.2f, Screen.height * 0.1f), "Out of Ammo: " + _currentWeapon.GetComponent<WeaponController>().OutOfAmmo);
-        GUI.Box(new Rect(0, 450, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + _currentWeapon.GetComponent<WeaponController>().Reloading);
+        GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().Name);
+        GUI.Box(new Rect(0, Screen.height * 0.2f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentMag.ToString());
+        GUI.Box(new Rect(0, Screen.height * 0.3f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentAmmoReserve.ToString());
+        GUI.Box(new Rect(0, Screen.height * 0.4f, Screen.width * 0.2f, Screen.height * 0.1f), "Magazine Empty: " +  _currentWeapon.GetComponent<WeaponController>().MagEmpty);
+        GUI.Box(new Rect(0, Screen.height * 0.5f, Screen.width * 0.2f, Screen.height * 0.1f), "Out of Ammo: " + _currentWeapon.GetComponent<WeaponController>().OutOfAmmo);
+        GUI.Box(new Rect(0, Screen.height * 0.6f, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + _currentWeapon.GetComponent<WeaponController>().Reloading);
+        GUI.Box(new Rect(0, Screen.height * 0.7f, Screen.width * 0.2f, Screen.height * 0.1f), "Available Buffs: " + AvailableBuffs);
     }
 
     private void OnTriggerEnter(Collider col)
@@ -809,6 +856,21 @@ public class Afonso_PlayerController : MonoBehaviour
         if (col.CompareTag($"Bomb"))
         {
             _currentBomb = col.gameObject;
+        }
+
+        if (col.CompareTag($"BuffPuddle"))
+        {
+            if (AvailableBuffs < 1)
+            {
+                AvailableBuffs += 1;
+            }
+            else Debug.Log("Collect Pickup to go above 1");
+        }
+
+        if (col.CompareTag($"AmmoBuff"))
+        {
+            AvailableBuffs += 2;
+            Destroy(col.gameObject);
         }
     }
 
