@@ -14,6 +14,8 @@ public class BulletController : MonoBehaviour
     public Vector3 Target { get; set; }
     public bool Hit { get; set; }
 
+    public bool Enhanced;
+
     private Rigidbody _rb;
 
 
@@ -49,7 +51,18 @@ public class BulletController : MonoBehaviour
         if(other.GetComponent<TargetController>() != null)
         {
             TargetController d = other.GetComponent<TargetController>();
-            d.CurrentHealthPoints -= Damage;
+            if (d.ShieldActive && Enhanced)
+            {
+                d.CurrentShieldHealthPoints -= Damage;
+            }
+            else if (d.ShieldActive && !Enhanced)
+            {
+                Debug.Log("HAS SHIELD AND AMMO IS NOT ENHANCED");
+            }
+            else if ((!d.ShieldActive && Enhanced) || (!d.ShieldActive && !Enhanced))
+            {
+                d.CurrentHealthPoints -= Damage;
+            }
         }
         Destroy(gameObject);
     }

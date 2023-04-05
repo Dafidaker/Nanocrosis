@@ -134,6 +134,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""EnhanceAmmo"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab943603-b12c-409e-905e-58e9ef236991"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -312,6 +321,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""Interact"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e6b474fe-c1cc-42a1-8b70-b1eaa8272c98"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""EnhanceAmmo"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -332,6 +352,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Player_Rotate = m_Player.FindAction("Rotate", throwIfNotFound: true);
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_EnhanceAmmo = m_Player.FindAction("EnhanceAmmo", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -403,6 +424,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Rotate;
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_EnhanceAmmo;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -419,6 +441,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Rotate => m_Wrapper.m_Player_Rotate;
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @EnhanceAmmo => m_Wrapper.m_Player_EnhanceAmmo;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -464,6 +487,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @EnhanceAmmo.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnhanceAmmo;
+                @EnhanceAmmo.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnhanceAmmo;
+                @EnhanceAmmo.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnhanceAmmo;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -504,6 +530,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @EnhanceAmmo.started += instance.OnEnhanceAmmo;
+                @EnhanceAmmo.performed += instance.OnEnhanceAmmo;
+                @EnhanceAmmo.canceled += instance.OnEnhanceAmmo;
             }
         }
     }
@@ -522,5 +551,6 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnRotate(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnEnhanceAmmo(InputAction.CallbackContext context);
     }
 }

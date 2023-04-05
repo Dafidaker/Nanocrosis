@@ -78,6 +78,7 @@ public class Afonso_PlayerController : MonoBehaviour
     [SerializeField] private float MissDistance = 25f;
     [SerializeField] private GameObject[] Weapons;
     [SerializeField] private GameObject BombPrefab;
+    [SerializeField] private int AvailableBuffs;
     public GameObject FakeBomb;
     public bool BombAttached;
 
@@ -108,6 +109,7 @@ public class Afonso_PlayerController : MonoBehaviour
     private InputAction _iCritical;
     private InputAction _iReload;
     private InputAction _iInteract;
+    private InputAction _iEnhanceAmmo;
 
     //Item interactions.
     private GameObject _currentBomb;
@@ -218,8 +220,6 @@ public class Afonso_PlayerController : MonoBehaviour
         }
 
         Debug.DrawRay(transform.position, _rb.velocity.normalized, Color.green, 100f);
-
-        Debug.Log(BombAttached);
     }
 
     private void FixedUpdate()
@@ -604,7 +604,7 @@ public class Afonso_PlayerController : MonoBehaviour
 
         if (weaponController.FullAuto)
         {
-            bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+            bullet = GameObject.Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
             Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
             BulletController bulletController = bullet.GetComponent<BulletController>();
 
@@ -629,7 +629,7 @@ public class Afonso_PlayerController : MonoBehaviour
             foreach (Quaternion q in weaponController.Pellets.ToArray())
             {
                 weaponController.Pellets[i] = Random.rotation;
-                bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
+                bullet = GameObject.Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
                 bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, weaponController.Pellets[i], weaponController.SpreadAngle);
 
                 BulletController b = bullet.GetComponent<BulletController>();
@@ -667,6 +667,8 @@ public class Afonso_PlayerController : MonoBehaviour
             if (weaponController.Reloading) bit.GetComponent<MeshRenderer>().material = weaponController.ReloadMaterial;
             else bit.GetComponent<MeshRenderer>().material = weaponController.NormalMaterial;
         }
+
+        weaponController.IsEnhanced = false;
     }
 
     private IEnumerator ReloadCountdown(WeaponController w)
@@ -694,7 +696,8 @@ public class Afonso_PlayerController : MonoBehaviour
         //Changes colour
         foreach (GameObject bit in w.ColoredBits)
         {
-            bit.GetComponent<MeshRenderer>().material = w.NormalMaterial;
+            if(!w.IsEnhanced) bit.GetComponent<MeshRenderer>().material = w.NormalMaterial;
+            else bit.GetComponent<MeshRenderer>().material = w.EnhancedMaterial;
         }
 
         w.Reloading = false;
@@ -723,6 +726,24 @@ public class Afonso_PlayerController : MonoBehaviour
             _currentBomb.GetComponent<BombPickupController>().Interact();
         }
     }
+
+    private void EnhanceWeapon(InputAction.CallbackContext context)
+    {
+        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+        if (AvailableBuffs > 0)
+        {
+            weaponController.IsEnhanced = true;
+
+            foreach (GameObject bit in weaponController.ColoredBits)
+            {
+                if(!weaponController.Reloading) bit.GetComponent<MeshRenderer>().material = weaponController.EnhancedMaterial;
+            }
+
+            AvailableBuffs--;
+        }
+        else Debug.Log("NO BUFFS AVAILABLE");
+    }
+
     private void EnableInputSystem()
     {
         _iMove = PlayerControls.Player.Walk;
@@ -770,6 +791,11 @@ public class Afonso_PlayerController : MonoBehaviour
         _iInteract = PlayerControls.Player.Interact;
         _iInteract.performed += Interact;
         _iInteract.Enable();
+
+        _iEnhanceAmmo = PlayerControls.Player.EnhanceAmmo;
+        _iEnhanceAmmo.performed += EnhanceWeapon;
+        _iEnhanceAmmo.Enable();
+
     }
     private void DisableInputSystem()
     {
@@ -785,6 +811,7 @@ public class Afonso_PlayerController : MonoBehaviour
         _iCritical.Disable();
         _iReload.Disable();
         _iInteract.Disable();
+        _iEnhanceAmmo.Disable();
     }
     
     #endregion
@@ -802,6 +829,7 @@ public class Afonso_PlayerController : MonoBehaviour
         GUI.Box(new Rect(0, 350, Screen.width * 0.2f, Screen.height * 0.1f), "Magazine Empty: " +  _currentWeapon.GetComponent<WeaponController>().MagEmpty);
         GUI.Box(new Rect(0, 400, Screen.width * 0.2f, Screen.height * 0.1f), "Out of Ammo: " + _currentWeapon.GetComponent<WeaponController>().OutOfAmmo);
         GUI.Box(new Rect(0, 450, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + _currentWeapon.GetComponent<WeaponController>().Reloading);
+        GUI.Box(new Rect(0, 500, Screen.width * 0.2f, Screen.height * 0.1f), "Available Buffs: " + AvailableBuffs);
     }
 
     private void OnTriggerEnter(Collider col)
@@ -809,6 +837,21 @@ public class Afonso_PlayerController : MonoBehaviour
         if (col.CompareTag($"Bomb"))
         {
             _currentBomb = col.gameObject;
+        }
+
+        if (col.CompareTag($"BuffPuddle"))
+        {
+            if (AvailableBuffs < 1)
+            {
+                AvailableBuffs += 1;
+            }
+            else Debug.Log("Collect Pickup to go above 1");
+        }
+
+        if (col.CompareTag($"AmmoBuff"))
+        {
+            AvailableBuffs += 2;
+            Destroy(col.gameObject);
         }
     }
 
