@@ -2775,7 +2775,7 @@ GameObject:
   - component: {fileID: 2755820342309990986}
   - component: {fileID: 2755820342309990987}
   - component: {fileID: 2755820342309990984}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ground (7)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -3398,7 +3398,7 @@ GameObject:
   - component: {fileID: 2755820342399047193}
   - component: {fileID: 2755820342399047190}
   - component: {fileID: 2755820342399047191}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ceiling (4)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -6252,7 +6252,7 @@ GameObject:
   - component: {fileID: 2755820342934134180}
   - component: {fileID: 2755820342934134181}
   - component: {fileID: 2755820342934134178}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ceiling (2)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -7452,7 +7452,7 @@ GameObject:
   - component: {fileID: 2755820343061613523}
   - component: {fileID: 2755820343061613520}
   - component: {fileID: 2755820343061613521}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ceiling (3)
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -11266,7 +11266,7 @@ Transform:
   - {fileID: 2755820342328652189}
   - {fileID: 2755820342701987066}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2755820343889372948
 GameObject:
@@ -11995,7 +11995,7 @@ GameObject:
   - component: {fileID: 2755820343973855472}
   - component: {fileID: 2755820343973855473}
   - component: {fileID: 2755820343973855438}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Ceiling (1)
   m_TagString: Ground
   m_Icon: {fileID: 0}

@@ -113,7 +113,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""type"": ""PassThrough"",
                     ""id"": ""5e0418e0-5226-4021-9356-08833525ece5"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": ""NormalizeVector2"",
+                    ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
                 },

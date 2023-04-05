@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TargetController : MonoBehaviour
+public class RespawningTargetController : MonoBehaviour
 {
     [SerializeField] private float TimeToRespawn;
     [SerializeField] private int MaxHealthPoints;

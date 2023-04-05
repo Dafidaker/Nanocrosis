@@ -6,8 +6,7 @@ public class BulletController : MonoBehaviour
 {
     [SerializeField] private float Speed = 100f;
     [SerializeField] private float TimeToDestroy = 5f;
- 
-
+    
     public GameObject Gun;
 
     public int Damage;
@@ -41,16 +40,16 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.CompareTag("bullet")) return;
+        if(collision.gameObject.CompareTag("bullet") || collision.gameObject.CompareTag("Player")) return;
         Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("bullet")) return;
-        if(other.GetComponent<TargetController>() != null)
+        if(other.CompareTag("bullet") || other.CompareTag("Player")) return;
+        if(other.GetComponent<RespawningTargetController>() != null)
         {
-            TargetController d = other.GetComponent<TargetController>();
+            RespawningTargetController d = other.GetComponent<RespawningTargetController>();
             if (d.ShieldActive && Enhanced)
             {
                 d.CurrentShieldHealthPoints -= Damage;
