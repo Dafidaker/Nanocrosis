@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using Enums;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,6 +16,8 @@ public class Afonso_PlayerController : MonoBehaviour
     [Header("Debug Variables"), Space(10)] 
     public bool isGrounded;
     public GameObject debugGameObject;
+    public CinemachineFreeLook CinemachineFreeLook;
+    public CinemachineVirtualCamera CinemachineVirtual;
     
     [Header("Movement"), Space(10)]
     public float walkSpeed;
@@ -80,7 +83,15 @@ public class Afonso_PlayerController : MonoBehaviour
     [SerializeField] private GameObject BombPrefab;
     public GameObject FakeBomb;
     public bool BombAttached;
-
+    
+    [Header("Aim"), Space(10)]
+    [SerializeField] private float mouseYSentivity;
+    [SerializeField] private float mouseXSentivity;
+    [SerializeField] private AxisState.SpeedMode speedMode;
+    private float _camXSpeed;
+    private float _camYSpeed;
+    
+    
     private GameObject _currentWeapon;
     private int _currrentWeaponIndex = 0;
     private Coroutine _shooting;
@@ -96,7 +107,7 @@ public class Afonso_PlayerController : MonoBehaviour
     
     
     //Input actions.
-    private InputAction _iRotate;
+    private InputAction _iLook;
     private InputAction _iMove;
     private InputAction _iJump;
     private InputAction _iDash;
@@ -148,6 +159,10 @@ public class Afonso_PlayerController : MonoBehaviour
         //debugGameObject = Instantiate(debugGameObject);
 
         _currentJumps = 0;
+
+
+        _camXSpeed = CinemachineFreeLook.m_XAxis.m_MaxSpeed;
+        _camYSpeed = CinemachineFreeLook.m_YAxis.m_MaxSpeed;
     }
     
     private void Update()
@@ -165,10 +180,7 @@ public class Afonso_PlayerController : MonoBehaviour
         
         //limits the player speed
         SpeedControl();
-        
-        //rotates the player to the direction of the camera if the camera is moving
-        RotatePlayer();
-        
+
         //changes the movement state
         StateHandler();
 
@@ -216,10 +228,20 @@ public class Afonso_PlayerController : MonoBehaviour
             _canJump = true;
             _canJumpTimer = coyoteDuration;
         }
+        
+        /*CinemachineFreeLook.m_YAxis.m_SpeedMode = speedMode;
+        CinemachineFreeLook.m_YAxis.m_MaxSpeed = _camYSpeed * mouseYSentivity;
+        
+        CinemachineFreeLook.m_XAxis.m_SpeedMode = speedMode;
+        CinemachineFreeLook.m_XAxis.m_MaxSpeed = _camXSpeed * mouseXSentivity;*/
 
-        Debug.DrawRay(transform.position, _rb.velocity.normalized, Color.green, 100f);
+        
+        //Debug.Log("a.m_XAxis: " + CinemachineVirtual.GetComponent<CinemachinePOV>().m_HorizontalAxis.m_InputAxisName);
+        Debug.Log("a.m_YAxis: " + CinemachineFreeLook.m_YAxis.Value);
 
-        Debug.Log(BombAttached);
+        //Debug.DrawRay(transform.position, _rb.velocity.normalized, Color.green, 100f);
+
+        //Debug.Log(BombAttached);
     }
 
     private void FixedUpdate()
@@ -227,6 +249,14 @@ public class Afonso_PlayerController : MonoBehaviour
         DetectGround();
         
         MovePlayer();
+        
+        //rotates the player to the direction of the camera if the camera is moving
+        RotatePlayer();
+        
+        
+        Debug.Log("look :" + _iLook.ReadValue<Vector2>());
+        /*CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.Value += _iLook.ReadValue<Vector2>().x;
+        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value += _iLook.ReadValue<Vector2>().y;*/
     }
 
     #endregion
@@ -345,7 +375,7 @@ public class Afonso_PlayerController : MonoBehaviour
         //var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, turnSmoothTime);
          
         
-        if (!_iRotate.triggered) return;
+        if (!_iLook.triggered) return;
         //_moveDirection = (Quaternion.Euler(0f, angle, 0f) * Vector3.forward).normalized;
         var camTransformForward = cam.transform.forward;
         transform.forward = new Vector3(camTransformForward.x, 0f, camTransformForward.z);
@@ -728,8 +758,8 @@ public class Afonso_PlayerController : MonoBehaviour
         _iMove = PlayerControls.Player.Walk;
         _iMove.Enable();
         
-        _iRotate = PlayerControls.Player.Rotate;
-        _iRotate.Enable();
+        _iLook = PlayerControls.Player.Look;
+        _iLook.Enable();
         
         _iJump = PlayerControls.Player.Jump;
         _iJump.performed += JumpInput;
@@ -774,7 +804,7 @@ public class Afonso_PlayerController : MonoBehaviour
     private void DisableInputSystem()
     {
         _iMove.Disable();
-        _iRotate.Disable();
+        _iLook.Disable();
         _iJump.Disable();
         _iDash.Disable();
         _iSprint.Disable();
