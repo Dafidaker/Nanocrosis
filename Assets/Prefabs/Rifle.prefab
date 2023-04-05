@@ -316,7 +316,10 @@ MonoBehaviour:
   MagEmpty: 0
   OutOfAmmo: 0
   Reloading: 0
+  IsEnhanced: 0
   BulletPrefab: {fileID: 3699512862131441609, guid: 69d4100b4ea086747881ccac9fbb81b8, type: 3}
+  EnhancedBulletPrefab: {fileID: 3699512862131441609, guid: a211292957ba443428a313f29652703f, type: 3}
+  CurrentBulletPrefab: {fileID: 0}
   FirePoint: {fileID: 7615206378686247407}
   Pellets: []
   ColoredBits:
@@ -329,6 +332,7 @@ MonoBehaviour:
   NormalMaterial: {fileID: 2100000, guid: c852af001dae0064e9acaa832f1dadb7, type: 2}
   ReloadMaterial: {fileID: 2100000, guid: 07dc66ae04b7f6a43b9674bf0fefb33a, type: 2}
   EmptyMagMaterial: {fileID: 2100000, guid: 5a26de236ce89e94b963be8fa2b7ade6, type: 2}
+  EnhancedMaterial: {fileID: 2100000, guid: 652107f36a28e44479c0b827dee5852a, type: 2}
 --- !u!1 &7615206379024695536
 GameObject:
   m_ObjectHideFlags: 0

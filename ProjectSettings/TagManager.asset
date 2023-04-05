@@ -9,6 +9,8 @@ TagManager:
   - Bomb
   - Gun
   - Explosion
+  - AmmoBuff
+  - BuffPuddle
   layers:
   - Default
   - TransparentFX

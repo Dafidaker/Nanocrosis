@@ -12,7 +12,8 @@ public class ExplosionController : MonoBehaviour
         if (other.GetComponent<TargetController>() != null)
         {
             TargetController d = other.GetComponent<TargetController>();
-            d.CurrentHealthPoints -= BlastDamage;
+            if (!d.ShieldActive) d.CurrentHealthPoints -= BlastDamage;
+            else Debug.Log("Blast can't damage shield");
         }
     }
 }

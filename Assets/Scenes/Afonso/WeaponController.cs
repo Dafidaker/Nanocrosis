@@ -19,7 +19,10 @@ public class WeaponController : MonoBehaviour
     public bool MagEmpty;
     public bool OutOfAmmo;
     public bool Reloading;
+    public bool IsEnhanced;
     public GameObject BulletPrefab;
+    public GameObject EnhancedBulletPrefab;
+    public GameObject CurrentBulletPrefab;
     public Transform FirePoint;
     public List<Quaternion> Pellets;
 
@@ -28,11 +31,14 @@ public class WeaponController : MonoBehaviour
     public Material NormalMaterial;
     public Material ReloadMaterial;
     public Material EmptyMagMaterial;
+    public Material EnhancedMaterial;
 
     private void Start()
     {
         CurrentMag = MagSize;
         CurrentAmmoReserve = AmmoReserve;
+
+        CurrentBulletPrefab = BulletPrefab;
 
         if (SpreadShot)
         {
@@ -50,5 +56,8 @@ public class WeaponController : MonoBehaviour
         else MagEmpty = false;
         if (CurrentAmmoReserve <= 0) OutOfAmmo = true;
         else OutOfAmmo = false;
+
+        if (IsEnhanced) CurrentBulletPrefab = EnhancedBulletPrefab;
+        else CurrentBulletPrefab = BulletPrefab;
     }
 }

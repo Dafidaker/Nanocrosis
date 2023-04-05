@@ -52,7 +52,7 @@ public class BombController : MonoBehaviour
         if (other.GetComponent<TargetController>() != null)
         {
             TargetController d = other.GetComponent<TargetController>();
-            d.CurrentHealthPoints -= ImpactDamage;            
+            if(!d.ShieldActive) d.CurrentHealthPoints -= ImpactDamage;            
         }
         StartCoroutine(Explode());
     }
