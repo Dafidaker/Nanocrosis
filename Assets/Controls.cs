@@ -259,7 +259,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""041ed107-e3d9-45ac-a9fb-14e3ae9f3b2c"",
-                    ""path"": ""<Keyboard>/z"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

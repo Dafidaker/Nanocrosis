@@ -87,6 +87,12 @@ public class Afonso_PlayerController : MonoBehaviour
     private Coroutine _shooting;
     private float _fireCountdown;
 
+    [Header("Melee Attack Variables"), Space(10)]
+    [SerializeField] private GameObject MeleeAttack;
+    [SerializeField] private Transform MeleeAttackInitialPos;
+
+    private float _meleeCountdown;
+
     private Vector3 _delayedForceToApply;
     
     private float _horizontalInput;
@@ -212,6 +218,7 @@ public class Afonso_PlayerController : MonoBehaviour
         }*/
 
         if(_fireCountdown > 0) _fireCountdown -= Time.deltaTime;
+        if(_meleeCountdown > 0) _meleeCountdown -= Time.deltaTime;
 
         if (CanJump())
         {
@@ -744,6 +751,15 @@ public class Afonso_PlayerController : MonoBehaviour
         else Debug.Log("NO BUFFS AVAILABLE");
     }
 
+    private void PerformMeleeAttack(InputAction.CallbackContext context)
+    {
+        if (_meleeCountdown > 0) return;
+
+        _meleeCountdown = 0.3f;
+
+        MeleeAttack.SetActive(true);
+    }
+
     private void EnableInputSystem()
     {
         _iMove = PlayerControls.Player.Walk;
@@ -767,6 +783,7 @@ public class Afonso_PlayerController : MonoBehaviour
         _iSprint.Enable();
 
         _iMelee = PlayerControls.Player.Melee;
+        _iMelee.performed += PerformMeleeAttack;
         _iMelee.Enable();
 
         _iShoot = PlayerControls.Player.Shoot;
@@ -834,6 +851,7 @@ public class Afonso_PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider col)
     {
+        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
         if (col.CompareTag($"Bomb"))
         {
             _currentBomb = col.gameObject;
@@ -852,6 +870,27 @@ public class Afonso_PlayerController : MonoBehaviour
         {
             AvailableBuffs += 2;
             Destroy(col.gameObject);
+        }
+
+        if (col.CompareTag($"AmmoPickup"))
+        {
+            float AmmoRestored = weaponController.AmmoReserve * 0.15f;
+            int RoundedAmmo = Mathf.RoundToInt(AmmoRestored);
+
+            if(weaponController.CurrentAmmoReserve == weaponController.AmmoReserve)
+            {
+                Debug.Log("AMMO RESERVES FULL");
+                return;
+            }
+
+            if (RoundedAmmo + weaponController.CurrentAmmoReserve > weaponController.AmmoReserve)
+            {
+                weaponController.CurrentAmmoReserve = weaponController.AmmoReserve;
+            }
+            else weaponController.CurrentAmmoReserve += RoundedAmmo;
+
+            Destroy(col.gameObject);
+
         }
     }
 

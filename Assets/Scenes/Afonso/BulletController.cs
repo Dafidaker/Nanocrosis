@@ -6,6 +6,7 @@ public class BulletController : MonoBehaviour
 {
     [SerializeField] private float Speed = 100f;
     [SerializeField] private float TimeToDestroy = 5f;
+    [SerializeField] private GameObject EnhancementPickup;
  
 
     public GameObject Gun;
@@ -63,6 +64,8 @@ public class BulletController : MonoBehaviour
             {
                 d.CurrentHealthPoints -= Damage;
             }
+
+            if(d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
         }
         Destroy(gameObject);
     }

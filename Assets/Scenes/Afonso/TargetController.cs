@@ -6,12 +6,14 @@ public class TargetController : MonoBehaviour
 {
     [SerializeField] private float TimeToRespawn;
     [SerializeField] private int MaxHealthPoints;
-    [SerializeField] private bool HasShield;
     [SerializeField] private int MaxShieldHealthPoints;
     [SerializeField] private Material NormalMaterial;
     [SerializeField] private Material ShieldedMaterial;
     [SerializeField] private Material DamageMaterial;
 
+    public Transform AmmoPickupSpawnpoint;
+    public Transform EnhancementPickupSpawnpoint;
+    public bool HasShield;
     public bool IsDead;
     public bool ShieldActive;
     public int CurrentHealthPoints;
@@ -20,6 +22,7 @@ public class TargetController : MonoBehaviour
 
     private MeshRenderer _mr;
     private BoxCollider _bc;
+    private bool _spawnedPickup;
 
     private void Start()
     {
