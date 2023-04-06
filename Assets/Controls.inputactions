@@ -87,13 +87,13 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Rotate",
+                    "name": "Look",
                     "type": "PassThrough",
                     "id": "5e0418e0-5226-4021-9356-08833525ece5",
                     "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": true
+                    "initialStateCheck": false
                 },
                 {
                     "name": "Reload",
@@ -270,11 +270,11 @@
                 {
                     "name": "",
                     "id": "0a3d66ce-1240-42b1-bf95-22736d810c3d",
-                    "path": "<Mouse>/position",
+                    "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Rotate",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

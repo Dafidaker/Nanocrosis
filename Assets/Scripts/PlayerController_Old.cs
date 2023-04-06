@@ -30,7 +30,7 @@ public class PlayerController_Old : MonoBehaviour
     private Vector3 _moveDirection = Vector3.zero;
 
     //Input actions.
-    private InputAction _iRotate;
+    private InputAction _iLook;
     private InputAction _iMove;
     private InputAction _iJump;
     private InputAction _iDash;
@@ -148,8 +148,8 @@ public class PlayerController_Old : MonoBehaviour
         _iMove = PlayerControls.Player.Walk;
         _iMove.Enable();
         
-        _iRotate = PlayerControls.Player.Rotate;
-        _iRotate.Enable();
+        _iLook = PlayerControls.Player.Look;
+        _iLook.Enable();
         
         _iJump = PlayerControls.Player.Jump;
         _iJump.performed += Jump;
@@ -188,7 +188,7 @@ public class PlayerController_Old : MonoBehaviour
     private void DisableInputSystem()
     {
         _iMove.Disable();
-        _iRotate.Disable();
+        _iLook.Disable();
         _iJump.Disable();
         _iDash.Disable();
         _iSprint.Disable();

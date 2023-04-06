@@ -54,7 +54,7 @@ public class ChikaiAgent : MonoBehaviour
     [field: HideInInspector] private bool _bouncing;
     
     [Header("Componenets"), Space(10)]
-    [field: SerializeField] private TargetController targetController;
+    [field: SerializeField] private RespawningTargetController respawningTargetController;
     private Rigidbody _rb;
     
     

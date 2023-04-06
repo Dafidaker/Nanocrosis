@@ -69,11 +69,11 @@ public class FiniteStateMachine : MonoBehaviour
         return NavMeshAgent;
     }
 
-    private void OnGUI()
+    /*private void OnGUI()
     {
         GUI.color = Color.red;
         GUI.Label(new Rect(50, 50, 1000, 1000), currentState.name);
-    }
+    }*/
     
     
 }
