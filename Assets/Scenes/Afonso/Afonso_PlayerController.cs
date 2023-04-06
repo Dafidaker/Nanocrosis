@@ -233,6 +233,8 @@ public class Afonso_PlayerController : MonoBehaviour
             _canJumpTimer = coyoteDuration;
         }
         
+        Debug.DrawRay(cam.position, cam.transform.forward* 100f, Color.red, 0.1f);
+        
     }
 
     private void FixedUpdate()
@@ -423,9 +425,7 @@ public class Afonso_PlayerController : MonoBehaviour
 
         if (weaponController.FullAuto)
         {
-            Debug.Log("shot");
             bullet = Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward)); // BulletParent
-            Debug.DrawRay(FirePoint.position, bullet.transform.forward, Color.red, 2f);
             BulletController bulletController = bullet.GetComponent<BulletController>();
 
             GetTargetBullet(hit, bulletController, bullet);
@@ -661,7 +661,7 @@ public class Afonso_PlayerController : MonoBehaviour
     
     private void DashInput(InputAction.CallbackContext context)
     {
-        Dash();
+        //Dash();
     }
     
     private void Shoot(InputAction.CallbackContext context)

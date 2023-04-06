@@ -64,7 +64,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 0
       flipNormals: 0
-    vertexPathUpToDate: 0
+    vertexPathUpToDate: 1
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
@@ -5001,7 +5001,8 @@ GameObject:
   - component: {fileID: 217872272}
   - component: {fileID: 217872271}
   - component: {fileID: 217872277}
-  m_Layer: 0
+  - component: {fileID: 5574858717280796203}
+  m_Layer: 7
   m_Name: Kuroku
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5024,6 +5025,7 @@ Transform:
   - {fileID: 4835855552950442}
   - {fileID: 150343662}
   - {fileID: 119218462}
+  - {fileID: 7039475988774678476}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5161,6 +5163,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 334bfdbf5d8f3c54cbfc5444443b642c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5574858717280796203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090219386143568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af121bee9d925574199600ad494e18ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  _currentHealth: 0
+  damageText: {fileID: 7617370455128135737, guid: f6544189ea8e14b4bba3171eb11424ab, type: 3}
+  duration: 0.05
+  strenght: 0.07
+  vibrato: 0
+  randomness: 0
+  fadeOut: 1
+  textPosition: {fileID: 7039475988774678476}
+  textDuration: 0.1
 --- !u!1 &1159745215084782
 GameObject:
   m_ObjectHideFlags: 0
@@ -5541,4 +5565,35 @@ Transform:
   - {fileID: 4387939680762156}
   m_Father: {fileID: 4101645566317300}
   m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1301434107273058468
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7039475988774678476}
+  m_Layer: 7
+  m_Name: Text Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7039475988774678476
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1301434107273058468}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4885079432260988}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
