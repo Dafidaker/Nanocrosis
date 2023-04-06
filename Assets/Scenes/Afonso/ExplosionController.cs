@@ -5,6 +5,7 @@ using UnityEngine;
 public class ExplosionController : MonoBehaviour
 {
     [SerializeField] private int BlastDamage;
+    [SerializeField] private GameObject EnhancementPickup;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -14,6 +15,8 @@ public class ExplosionController : MonoBehaviour
             RespawningTargetController d = other.GetComponent<RespawningTargetController>();
             if (!d.ShieldActive) d.CurrentHealthPoints -= BlastDamage;
             else Debug.Log("Blast can't damage shield");
+
+            if (d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
         }
     }
 }

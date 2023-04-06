@@ -31,7 +31,9 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7054963645318976677}
+  - {fileID: 2806966839492993646}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -120,13 +122,78 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TimeToRespawn: 0
   MaxHealthPoints: 0
-  HasShield: 0
   MaxShieldHealthPoints: 0
   NormalMaterial: {fileID: 2100000, guid: 6fd7b84f062e54a4ea88786c8d5071ca, type: 2}
   ShieldedMaterial: {fileID: 2100000, guid: d8146f62f7c2255478077550322d11de, type: 2}
   DamageMaterial: {fileID: 2100000, guid: 2d016ff5ae9c0f647be5b7d0aad5af8a, type: 2}
+  EnhancementPickup: {fileID: 601169438534941172, guid: 2693f94aa7b6af74f9b259151a519a98, type: 3}
+  AmmoPickupSpawnpoint: {fileID: 7054963645318976677}
+  EnhancementPickupSpawnpoint: {fileID: 2806966839492993646}
+  HasShield: 0
   IsDead: 0
   ShieldActive: 0
   CurrentHealthPoints: 0
   CurrentShieldHealthPoints: 0
   CurrentTimeToRespawn: 0
+--- !u!1 &4377399133064918826
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2806966839492993646}
+  m_Layer: 0
+  m_Name: Enhancement Pickup Spawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2806966839492993646
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4377399133064918826}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 201194235411125791}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &5320706518027820088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7054963645318976677}
+  m_Layer: 0
+  m_Name: Ammo Pickup Spawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7054963645318976677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5320706518027820088}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2, y: 0, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 201194235411125791}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

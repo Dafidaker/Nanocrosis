@@ -11,6 +11,8 @@ TagManager:
   - Explosion
   - AmmoBuff
   - BuffPuddle
+  - PlayerMelee
+  - AmmoPickup
   layers:
   - Default
   - TransparentFX

@@ -6,6 +6,7 @@ public class BombController : MonoBehaviour
 {
     [SerializeField] private float Speed = 100f;
     [SerializeField] private float TimeToDestroy = 5f;
+    [SerializeField] private GameObject EnhancementPickup;
 
     private Rigidbody _rb;
 
@@ -51,8 +52,9 @@ public class BombController : MonoBehaviour
         if (other.CompareTag("Player")) return;
         if (other.GetComponent<RespawningTargetController>() != null)
         {
-            RespawningTargetController d = other.GetComponent<RespawningTargetController>();
-            if(!d.ShieldActive) d.CurrentHealthPoints -= ImpactDamage;            
+            TargetController d = other.GetComponent<TargetController>();
+            if(!d.ShieldActive) d.CurrentHealthPoints -= ImpactDamage;
+            if (d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
         }
         StartCoroutine(Explode());
     }
