@@ -30,9 +30,9 @@ public class MeleeAttackController : MonoBehaviour
 
     private void OnTriggerEnter(Collider col)
     {
-        if(col.GetComponent<TargetController>() != null)
+        if(col.GetComponent<RespawningTargetController>() != null)
         {
-            TargetController t = col.GetComponent<TargetController>();
+            RespawningTargetController t = col.GetComponent<RespawningTargetController>();
             if (t.ShieldActive) Debug.Log("Melee cannot damage shield");
             else t.CurrentHealthPoints -= Damage;
             if(t.CurrentHealthPoints <= 0)
