@@ -90,10 +90,8 @@ public class Afonso_PlayerController : MonoBehaviour
     [Header("Aim"), Space(10)]
     [SerializeField] private float mouseYSentivity;
     [SerializeField] private float mouseXSentivity;
-    [SerializeField] private AxisState.SpeedMode speedMode;
     private float _camXSpeed;
     private float _camYSpeed;
-    
     
     private GameObject _currentWeapon;
     private int _currrentWeaponIndex = 0;
@@ -169,10 +167,11 @@ public class Afonso_PlayerController : MonoBehaviour
         //debugGameObject = Instantiate(debugGameObject);
 
         _currentJumps = 0;
+        
+        _camXSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
+        _camYSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
 
-
-        _camXSpeed = CinemachineFreeLook.m_XAxis.m_MaxSpeed;
-        _camYSpeed = CinemachineFreeLook.m_YAxis.m_MaxSpeed;
+        UpdateCamSentivity();
     }
     
     private void Update()
@@ -504,7 +503,7 @@ public class Afonso_PlayerController : MonoBehaviour
             transform.forward = new Vector3(camTransformForward.x, 0f, camTransformForward.z);
         }
     
-        private void StateHandler()
+    private void StateHandler()
         {
             if (_dashing)
             {
@@ -559,7 +558,7 @@ public class Afonso_PlayerController : MonoBehaviour
             _lastMovementState = _movementState;
         }
     
-        private bool OnSlope()
+    private bool OnSlope()
         {
             //if it doesnt hit a slope it returns false 
             if (!Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _slopeHit,0.6f, layerMask )) return false;
@@ -570,7 +569,7 @@ public class Afonso_PlayerController : MonoBehaviour
             return angle > minSlopeAngle && angle != 0;
         }
     
-        private void DetectGround()
+    private void DetectGround()
         {
             isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, layerMask);
             
@@ -580,12 +579,12 @@ public class Afonso_PlayerController : MonoBehaviour
             //if the player is on the ground their jumps will reset
             if (isGrounded) { _currentJumps = 0; }
         }
-        private Vector3 GetSlopeMoveDirection(Vector3 vector)
+    private Vector3 GetSlopeMoveDirection(Vector3 vector)
         {
             return Vector3.ProjectOnPlane(vector, _slopeHit.normal);
         }
     
-        private IEnumerator SmoothlyLerpMoveSpeed()
+    private IEnumerator SmoothlyLerpMoveSpeed()
         {
             float time = 0;
             float difference = Mathf.Abs(_desiredMoveSpeed - _moveSpeed);
@@ -608,7 +607,7 @@ public class Afonso_PlayerController : MonoBehaviour
             _keepMomentum = false;
         }
         
-        private bool CanJump()
+    private bool CanJump()
         {
             //if the player isn't _readyToJump or
             //the nº of jumps that they took are higher or equal to the amount allowed it returns
@@ -619,6 +618,12 @@ public class Afonso_PlayerController : MonoBehaviour
     
             return true;
         }
+
+    private void UpdateCamSentivity()
+    {
+        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseXSentivity;
+        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseYSentivity;
+    }
 
     #endregion
     

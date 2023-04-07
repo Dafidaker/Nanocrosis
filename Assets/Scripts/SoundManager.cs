@@ -23,7 +23,7 @@ public class SoundManager : MonoBehaviour
 
     public void PlaySound(AudioClip clip, float volume)
     {
-        if (volume == 0 ) { return; }
+        if (volume == 0) { return; }
         effectsSource.PlayOneShot(clip, volume);
     }
 }
