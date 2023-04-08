@@ -37,12 +37,14 @@ public class TargetPractice : MonoBehaviour
         }
 
         if (targets.Count < maxAmountTargets) return;
-        
-        foreach (var go in targets.Where(go => go == null))
-        {
-            targets.Remove(go);
-        }
 
+        foreach (var go in targets.ToArray())
+        {
+            if (go == null)
+            {
+                targets.Remove(go);
+            }
+        }
     }
     
 }

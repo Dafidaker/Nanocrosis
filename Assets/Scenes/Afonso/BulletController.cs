@@ -19,10 +19,13 @@ public class BulletController : MonoBehaviour
 
     private Rigidbody _rb;
 
+    [field: SerializeField] private AudioClip clip;
+    [field: SerializeField] private float volume;
 
     private void OnEnable()
     {
         Destroy(gameObject, TimeToDestroy);
+        SoundManager.Instance.PlaySound(clip, volume);
     }
 
     private void Start()
@@ -42,12 +45,36 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log(collision.gameObject.name);
         if(collision.gameObject.CompareTag("bullet") || collision.gameObject.CompareTag("Player")) return;
+        if(collision.gameObject.GetComponent<RespawningTargetController>() != null)
+        {
+            RespawningTargetController d = collision.gameObject.GetComponent<RespawningTargetController>();
+            if (d.ShieldActive && Enhanced)
+            {
+                d.CurrentShieldHealthPoints -= Damage;
+            }
+            else if (d.ShieldActive && !Enhanced)
+            {
+                Debug.Log("HAS SHIELD AND AMMO IS NOT ENHANCED");
+            }
+            else if ((!d.ShieldActive && Enhanced) || (!d.ShieldActive && !Enhanced))
+            {
+                d.CurrentHealthPoints -= Damage;
+            }
+        }
+
+        var HitableScript = collision.gameObject.GetComponent<Hitable>();
+        if (HitableScript != null)
+        {
+            HitableScript.GotHit(Damage);
+        }
         Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log(other.name);
         if(other.CompareTag("bullet") || other.CompareTag("Player")) return;
         if(other.GetComponent<RespawningTargetController>() != null)
         {
@@ -67,6 +94,13 @@ public class BulletController : MonoBehaviour
 
             if(d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
         }
+
+        var HitableScript = other.GetComponent<Hitable>();
+        if (HitableScript != null)
+        {
+            HitableScript.GotHit(Damage);
+        }
+
         Destroy(gameObject);
     }
 }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5507928924103762378}
   - component: {fileID: 5507928924103762389}
   - component: {fileID: 5507928924103762388}
-  - component: {fileID: 5507928924103762391}
+  - component: {fileID: 1681565722933258333}
   m_Layer: 3
   m_Name: TargetSphere
   m_TagString: Untagged
@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5507928924103762378
 MeshFilter:
@@ -106,7 +106,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5507928924103762391
+--- !u!114 &1681565722933258333
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -115,7 +115,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 5507928924103762390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c89bd3c368a47f446a046e32bf5d7c18, type: 3}
+  m_Script: {fileID: 11500000, guid: af121bee9d925574199600ad494e18ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 1
+  currentHealth: 0
+  damageText: {fileID: 7617370455128135737, guid: f6544189ea8e14b4bba3171eb11424ab, type: 3}
+  duration: 0
+  strenght: 0
+  vibrato: 0
+  randomness: 0
+  fadeOut: 0
+  textPosition: {fileID: 5507928924103762379}
+  textDuration: 0
+  clip: {fileID: 8300000, guid: d32ece8a3c1d5a64ca0cba63f80a87c7, type: 3}
+  volume: 0

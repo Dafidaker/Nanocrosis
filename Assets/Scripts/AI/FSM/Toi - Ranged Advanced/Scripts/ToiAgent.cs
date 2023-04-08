@@ -13,6 +13,7 @@ public class ToiAgent : MonoBehaviour
     private FSMNavMeshAgent _fsmNavMeshAgent;
     private FiniteStateMachine finiteStateMachine;
     private NavMeshAgent _agent;
+    private Transform _target;
 
     [Header("States"), Space(10)]
     [field: SerializeField] private State chaseState;
@@ -61,7 +62,8 @@ public class ToiAgent : MonoBehaviour
         _fsmNavMeshAgent = GetComponent<FSMNavMeshAgent>();
         _agent = _fsmNavMeshAgent._agent;
         finiteStateMachine = GetComponent<FiniteStateMachine>();
-
+        _target = _fsmNavMeshAgent.target;
+        
         currentHealth = maxHealth;
         attackTimer = attackCooldown;
     }
@@ -75,6 +77,8 @@ public class ToiAgent : MonoBehaviour
         {
             _meleeAttackPositions.Add(meleeTransform.position);
         }
+        
+        _agent.updateRotation = false;
     }
     
     private void Update()
@@ -89,6 +93,9 @@ public class ToiAgent : MonoBehaviour
         {
             attackTimer = attackCooldown;
         }
+        
+        transform.rotation = Quaternion.Slerp(transform.rotation, 
+            Quaternion.LookRotation(_target.transform.position- transform.position), 0.5f);
     }
 
     private void FixedUpdate()

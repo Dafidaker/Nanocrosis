@@ -276,11 +276,11 @@ public class ChikaiAgent : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
         if (other.CompareTag("Player"))
         {
             other.gameObject.GetComponent<PlayerStats>().DamageTaken(5);
         }
+        
     }
 
     #endregion
