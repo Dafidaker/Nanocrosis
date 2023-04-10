@@ -875,7 +875,6 @@ public class Afonso_PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider col)
     {
-        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
         if (col.CompareTag($"Bomb"))
         {
             _currentBomb = col.gameObject;
@@ -898,23 +897,25 @@ public class Afonso_PlayerController : MonoBehaviour
 
         if (col.CompareTag($"AmmoPickup"))
         {
-            float AmmoRestored = weaponController.AmmoReserve * 0.15f;
-            int RoundedAmmo = Mathf.RoundToInt(AmmoRestored);
-
-            if(weaponController.CurrentAmmoReserve == weaponController.AmmoReserve)
+            foreach (GameObject weapon in Weapons)
             {
-                Debug.Log("AMMO RESERVES FULL");
-                return;
+                WeaponController w = weapon.GetComponent<WeaponController>();
+                float AmmoRestored = w.AmmoReserve * 0.15f;
+                int RoundedAmmo = Mathf.RoundToInt(AmmoRestored);
+
+                if(w.CurrentAmmoReserve == w.AmmoReserve)
+                {
+                    Debug.Log("AMMO RESERVES FULL");
+                    return;
+                }
+
+                if(RoundedAmmo + w.CurrentAmmoReserve > w.AmmoReserve)
+                {
+                    w.CurrentAmmoReserve = w.AmmoReserve;
+                }
+                else w.CurrentAmmoReserve += RoundedAmmo;
+                Destroy(col.gameObject);
             }
-
-            if (RoundedAmmo + weaponController.CurrentAmmoReserve > weaponController.AmmoReserve)
-            {
-                weaponController.CurrentAmmoReserve = weaponController.AmmoReserve;
-            }
-            else weaponController.CurrentAmmoReserve += RoundedAmmo;
-
-            Destroy(col.gameObject);
-
         }
     }
 
