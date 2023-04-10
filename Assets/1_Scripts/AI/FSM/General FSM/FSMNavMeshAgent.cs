@@ -69,7 +69,7 @@ public class FSMNavMeshAgent : MonoBehaviour
         {
             if (_agent.remainingDistance <= _agent.stoppingDistance)
             {
-                if (!_agent.hasPath || _agent.velocity.sqrMagnitude == 0f)
+                if (!_agent.hasPath || _agent.velocity.sqrMagnitude <= 0.1f)
                 {
                     return true;
                 }

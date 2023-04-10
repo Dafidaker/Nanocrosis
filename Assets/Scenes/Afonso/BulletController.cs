@@ -7,7 +7,7 @@ public class BulletController : MonoBehaviour
     [SerializeField] private float Speed = 100f;
     [SerializeField] private float TimeToDestroy = 5f;
     [SerializeField] private GameObject EnhancementPickup;
- 
+    [SerializeField] private LayerMask ItHits;
 
     public GameObject Gun;
 
@@ -21,6 +21,7 @@ public class BulletController : MonoBehaviour
 
     [field: SerializeField] private AudioClip clip;
     [field: SerializeField] private float volume;
+    
 
     private void OnEnable()
     {
@@ -45,7 +46,6 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name);
         if(collision.gameObject.CompareTag("bullet") || collision.gameObject.CompareTag("Player")) return;
         if(collision.gameObject.GetComponent<RespawningTargetController>() != null)
         {
@@ -69,12 +69,25 @@ public class BulletController : MonoBehaviour
         {
             HitableScript.GotHit(Damage);
         }
+
+        if (collision.gameObject.CompareTag("BossPart"))
+        {
+            collision.gameObject.GetComponentInParent<Hitable>().GotHit(Damage);
+        }
         Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if ((ItHits.value & (1 << other.transform.gameObject.layer)) > 0) {
+            
+        }
+        else {
+            return;
+        }
+        
         Debug.Log(other.name);
+        Debug.Log(other.tag);
         if(other.CompareTag("bullet") || other.CompareTag("Player")) return;
         if(other.GetComponent<RespawningTargetController>() != null)
         {
@@ -101,6 +114,10 @@ public class BulletController : MonoBehaviour
             HitableScript.GotHit(Damage);
         }
 
+        if (other.CompareTag("BossPart"))
+        {
+            other.GetComponentInParent<Hitable>().GotHit(Damage);
+        }
         Destroy(gameObject);
     }
 }

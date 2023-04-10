@@ -192,6 +192,9 @@ MonoBehaviour:
   Speed: 200
   TimeToDestroy: 5
   EnhancementPickup: {fileID: 601169438534941172, guid: 2693f94aa7b6af74f9b259151a519a98, type: 3}
+  ItHits:
+    serializedVersion: 2
+    m_Bits: 136
   Gun: {fileID: 7615206379009653064, guid: 96caf1af24998734a96a2cb980a1e650, type: 3}
   Damage: 5
   Enhanced: 0

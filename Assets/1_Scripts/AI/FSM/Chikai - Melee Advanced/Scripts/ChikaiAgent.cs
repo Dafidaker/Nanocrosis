@@ -162,21 +162,21 @@ public class ChikaiAgent : MonoBehaviour
         var agentDrag = _rb.drag;
         _rotateTowardsTarget = false;
         
-        //_agent.velocity = agentVelocity * 2;
-        //_rb.drag = 0.5f;
+        _agent.velocity = agentVelocity * 2;
+        _rb.drag = 0.5f;
 
         isAttacking = true;
         _rotate = true;
         yield return new WaitForSeconds(1f);
         rotationTrigger.enabled = true;
-        _rb.velocity = _fsmNavMeshAgent.DiretionToTarget(true, 1.1f) * rotationAttackVelocity;
+        /*_rb.velocity = _fsmNavMeshAgent.DiretionToTarget(true, 1.1f) * rotationAttackVelocity;
         yield return new WaitForSeconds(1f);
         _rb.velocity = _fsmNavMeshAgent.DiretionToTarget(true, 1.1f)* rotationAttackVelocity;
         yield return new WaitForSeconds(1f);
         _rb.velocity = _fsmNavMeshAgent.DiretionToTarget(true, 1.1f) * rotationAttackVelocity;
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1f);*/
         
-        
+        yield return new WaitForSeconds(3f);
         rotationTrigger.enabled = false;
         _rotate = false;
         _rotateTowardsTarget = true;
