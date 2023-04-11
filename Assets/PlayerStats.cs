@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
-    public int Health;
+    public int MaxHealth;
+    public int CurrentHealth;
 
     [Header("HealthIndicator"), Space(10)] 
     public int minHealth1; 
@@ -41,12 +42,16 @@ public class PlayerStats : MonoBehaviour
     
     private void Start()
     {
+        CurrentHealth = MaxHealth;
         CreateHealthIndicatorsDictionary();
     }
     
     private void Update()
     {
-        
+        if(CurrentHealth <= 0)
+        {
+            Debug.Log("YOU ARE DEAD, NOT BIG SURPRISE");
+        }
     }
 
     private void FixedUpdate()
@@ -60,10 +65,10 @@ public class PlayerStats : MonoBehaviour
 
     public void DamageTaken(int damagedTaken)
     {
-        Health -= damagedTaken;
+        CurrentHealth -= damagedTaken;
         foreach (var healthIndicatorColors in _healthIndicatorColors)
         {
-            if (Health < healthIndicatorColors.Key[0] || Health > healthIndicatorColors.Key[1]) continue;
+            if (CurrentHealth < healthIndicatorColors.Key[0] || CurrentHealth > healthIndicatorColors.Key[1]) continue;
             _currentHealthColor = healthIndicatorColors.Value;
             break;
         }
