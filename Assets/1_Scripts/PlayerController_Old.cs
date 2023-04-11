@@ -82,6 +82,11 @@ public class PlayerController_Old : MonoBehaviour
 
     private void Update()
     {
+        if (PauseManager.paused)
+        {
+            return;
+        }
+        
         _moveDirection = _iMove.ReadValue<Vector3>();
         _moveDirection = _moveDirection.normalized;
         //RotatePlayer();
@@ -104,6 +109,11 @@ public class PlayerController_Old : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (PauseManager.paused)
+        {
+            return;
+        }
+        
         Vector3 velocity = new Vector3(_moveDirection.x * MoveSpeed, _ySpeed * 10, _moveDirection.z * MoveSpeed) * Time.deltaTime * _sprintMultiplier;
 
         _rb.velocity = velocity;

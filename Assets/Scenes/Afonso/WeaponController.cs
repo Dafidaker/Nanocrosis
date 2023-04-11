@@ -52,12 +52,19 @@ public class WeaponController : MonoBehaviour
 
     private void Update()
     {
-        if(CurrentMag <= 0) MagEmpty = true;
-        else MagEmpty = false;
-        if (CurrentAmmoReserve <= 0) OutOfAmmo = true;
-        else OutOfAmmo = false;
+        if (PauseManager.paused)
+        {
+            return;
+        }
+        else
+        {
+            if(CurrentMag <= 0) MagEmpty = true;
+            else MagEmpty = false;
+            if (CurrentAmmoReserve <= 0) OutOfAmmo = true;
+            else OutOfAmmo = false;
 
-        if (IsEnhanced) CurrentBulletPrefab = EnhancedBulletPrefab;
-        else CurrentBulletPrefab = BulletPrefab;
+            if (IsEnhanced) CurrentBulletPrefab = EnhancedBulletPrefab;
+            else CurrentBulletPrefab = BulletPrefab;
+        }
     }
 }
