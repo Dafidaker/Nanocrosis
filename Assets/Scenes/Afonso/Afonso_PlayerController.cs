@@ -102,6 +102,10 @@ public class Afonso_PlayerController : MonoBehaviour
     [SerializeField] private GameObject MeleeAttack;
     [SerializeField] private Transform MeleeAttackInitialPos;
 
+    [Header("Health System"), Space(10)]
+    [SerializeField] private HealthBarController HealthBar;
+    [SerializeField] private Transform RespawnPoint;
+
     private float _meleeCountdown;
 
     private Vector3 _delayedForceToApply;
@@ -111,6 +115,8 @@ public class Afonso_PlayerController : MonoBehaviour
     
     private Vector3 _moveDirection;
     private Rigidbody _rb;
+
+    private PlayerStats _playerStats;
     
     
     //Input actions.
@@ -130,6 +136,8 @@ public class Afonso_PlayerController : MonoBehaviour
 
     //Item interactions.
     private GameObject _currentBomb;
+
+    private bool _damaged;
 
 
     #region Unity Funtions
@@ -167,7 +175,9 @@ public class Afonso_PlayerController : MonoBehaviour
         //debugGameObject = Instantiate(debugGameObject);
 
         _currentJumps = 0;
-        
+
+        _playerStats = GetComponent<PlayerStats>();
+
         _camXSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
         _camYSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
 
@@ -240,7 +250,6 @@ public class Afonso_PlayerController : MonoBehaviour
         }
         
         Debug.DrawRay(cam.position, cam.transform.forward* 100f, Color.red, 0.1f);
-        
     }
 
     private void FixedUpdate()
@@ -673,7 +682,7 @@ public class Afonso_PlayerController : MonoBehaviour
     
     private void DashInput(InputAction.CallbackContext context)
     {
-        //Dash();
+        Dash();
     }
     
     private void Shoot(InputAction.CallbackContext context)
@@ -782,6 +791,17 @@ public class Afonso_PlayerController : MonoBehaviour
         _meleeCountdown = 0.3f;
 
         MeleeAttack.SetActive(true);
+    }
+
+    private IEnumerator DieAndRespawn()
+    {
+        DisableInputSystem();
+        transform.position = RespawnPoint.position;
+        yield return new WaitForSeconds(3f);
+        EnableInputSystem();
+        _playerStats.CurrentHealth += _playerStats.MaxHealth;
+        HealthBar.SetHealth();
+
     }
 
     private void EnableInputSystem()
@@ -917,6 +937,32 @@ public class Afonso_PlayerController : MonoBehaviour
                 Destroy(col.gameObject);
             }
         }
+        /*if (col.CompareTag($"DangerZone"))
+        {
+            if (_damaged) return;
+            _playerStats.CurrentHealth -= 5;
+            HealthBar.SetHealth();
+            _damaged = true;
+            _playerStats.CurrentHealth -= 5;
+            HealthBar.SetHealth();
+        }*/
+    }
+
+    private void OnTriggerStay(Collider col)
+    {
+        if (col.CompareTag($"DangerZone"))
+        {
+            /*if (_damaged) return;
+            _playerStats.CurrentHealth -= 5;
+            HealthBar.SetHealth();
+            _damaged = true;*/
+            _playerStats.DamageTaken(1);
+            HealthBar.SetHealth();
+            if(_playerStats.CurrentHealth <= 0)
+            {
+                StartCoroutine(DieAndRespawn());
+            }
+        }
     }
 
     private void OnTriggerExit(Collider col)
@@ -924,6 +970,11 @@ public class Afonso_PlayerController : MonoBehaviour
         if (col.CompareTag($"Bomb"))
         {
            _currentBomb = null;
+        }
+
+        if (col.CompareTag($"DangerZone"))
+        {
+            _damaged = false;
         }
     }
 }

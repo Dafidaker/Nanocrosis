@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 1991615778312094847}
   - component: {fileID: 1991615778312094786}
   - component: {fileID: 1991615778312094785}
+  - component: {fileID: 5442371619966485377}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -242,6 +243,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGrounded: 0
   debugGameObject: {fileID: 0}
+  CinemachineFreeLook: {fileID: 0}
+  CinemachineVirtual: {fileID: 0}
   walkSpeed: 8
   sprintSpeed: 10
   dashSpeed: 20
@@ -273,10 +276,38 @@ MonoBehaviour:
   - {fileID: 1991615778242999357}
   BombPrefab: {fileID: 236621568437285792, guid: 7017258f83ed7aa4699228f27dc1920f, type: 3}
   AvailableBuffs: 0
+  bulletsHit:
+    serializedVersion: 2
+    m_Bits: 136
   FakeBomb: {fileID: 1991615778062711697}
   BombAttached: 0
+  mouseYSentivity: 0
+  mouseXSentivity: 0
   MeleeAttack: {fileID: 3941732432008125916}
   MeleeAttackInitialPos: {fileID: 6506858050212196655}
+--- !u!114 &5442371619966485377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991615778312094840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b27fae724e73d499961b00e6e3d9c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 100
+  CurrentHealth: 0
+  minHealth1: 0
+  maxHealth1: 0
+  color1: {r: 0, g: 0, b: 0, a: 0}
+  minHealth2: 0
+  maxHealth2: 0
+  color2: {r: 0, g: 0, b: 0, a: 0}
+  minHealth3: 0
+  maxHealth3: 0
+  color3: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &1991615778474437312
 GameObject:
   m_ObjectHideFlags: 0
