@@ -559,13 +559,14 @@ GameObject:
   - component: {fileID: 7910293598782271308}
   - component: {fileID: 7220725514435021438}
   - component: {fileID: 8172632419399782272}
+  - component: {fileID: 815186701}
   m_Layer: 7
   m_Name: Toi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3848166983890627941
 Transform:
   m_ObjectHideFlags: 0
@@ -587,7 +588,7 @@ Transform:
   - {fileID: 2561120762649471511}
   - {fileID: 3431575209015386781}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!195 &8710902807712109221
 NavMeshAgent:
@@ -623,7 +624,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 977ec25ec3cac934dbaba53a334fd16c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patrolWaypoints: []
+  patrolWaypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   target: {fileID: 0}
   chikaiAgent: {fileID: 0}
   kuroruAgent: {fileID: 0}
@@ -648,7 +659,7 @@ MonoBehaviour:
   currentState: {fileID: 0}
   groundAndWallsLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!114 &7910293598782271308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -707,7 +718,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.6
   m_Height: 5.57
@@ -725,7 +736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af121bee9d925574199600ad494e18ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 200
+  maxHealth: 100
   currentHealth: 0
   damageText: {fileID: 7617370455128135737, guid: f6544189ea8e14b4bba3171eb11424ab, type: 3}
   duration: 0.05
@@ -735,6 +746,30 @@ MonoBehaviour:
   fadeOut: 1
   textPosition: {fileID: 2561120762649471511}
   textDuration: 0.1
+  textSize: 1
+  clip: {fileID: 0}
+  volume: 0
+--- !u!65 &815186701
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3848166983890627949}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 5.44, z: 1}
+  m_Center: {x: 0, y: 7, z: 0}
 --- !u!1 &3907037511281662945
 GameObject:
   m_ObjectHideFlags: 0

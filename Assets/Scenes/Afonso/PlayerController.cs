@@ -8,9 +8,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 using Random = UnityEngine.Random;
 
-public class Afonso_PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
-    public static Afonso_PlayerController Instance { get; private set; }
+    public static PlayerController Instance { get; private set; }
     private Controls PlayerControls { get; set; }
 
     [Header("Debug Variables"), Space(10)] 
@@ -179,8 +179,11 @@ public class Afonso_PlayerController : MonoBehaviour
         _playerStats = GetComponent<PlayerStats>();
 
         
-        _camXSpeed = CinemachineVirtual.GetComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
-        _camYSpeed = CinemachineVirtual.GetComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
+        /*_camXSpeed = CinemachineVirtual.GetComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
+        _camYSpeed = CinemachineVirtual.GetComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;*/
+
+        _camXSpeed = 0.05f;
+        _camYSpeed =  0.05f;
 
         UpdateCamSentivity();
     }
@@ -632,8 +635,9 @@ public class Afonso_PlayerController : MonoBehaviour
 
     private void UpdateCamSentivity()
     {
-        CinemachineVirtual.GetComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseXSentivity;
-        CinemachineVirtual.GetComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseYSentivity;
+        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseXSentivity;
+        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseYSentivity;
+        
     }
 
     #endregion

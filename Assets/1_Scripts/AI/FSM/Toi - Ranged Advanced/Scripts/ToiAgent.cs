@@ -59,6 +59,11 @@ public class ToiAgent : MonoBehaviour
 
     private void Awake()
     {
+    }
+    
+    private void Start()
+    {
+        
         _fsmNavMeshAgent = GetComponent<FSMNavMeshAgent>();
         _agent = _fsmNavMeshAgent._agent;
         finiteStateMachine = GetComponent<FiniteStateMachine>();
@@ -66,10 +71,7 @@ public class ToiAgent : MonoBehaviour
         
         currentHealth = maxHealth;
         attackTimer = attackCooldown;
-    }
-    
-    private void Start()
-    {
+        
         _rangedAttacks = new List<ToiRangedAttackController>();
         _meleeAttacks = new List<ToiMeleeAttackController>();
         _meleeAttackPositions = new List<Vector3>();

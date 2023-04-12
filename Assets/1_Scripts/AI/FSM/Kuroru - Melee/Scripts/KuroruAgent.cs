@@ -33,6 +33,7 @@ public class KuroruAgent : MonoBehaviour
         _fsmNavMeshAgent = GetComponent<FSMNavMeshAgent>();
         _agent = _fsmNavMeshAgent._agent;
         ParticleSystem.gameObject.SetActive(false);
+        
         //StartCoroutine(Attack());
     }
     

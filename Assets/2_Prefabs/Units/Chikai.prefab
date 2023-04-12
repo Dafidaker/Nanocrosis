@@ -1015,7 +1015,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8358452084813226909
 Transform:
   m_ObjectHideFlags: 0
@@ -1036,7 +1036,7 @@ Transform:
   - {fileID: 5201246195620327940}
   - {fileID: 9124793413997881700}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2634804480620279877
 MonoBehaviour:
@@ -1062,8 +1062,8 @@ MonoBehaviour:
   distanceToTarget: 0
   attackTimer: 0
   isAttacking: 0
-  antecipationDuration: 2
-  headbuttForce: 0
+  antecipationDuration: 0.5
+  headbuttForce: 50
   headbuttDuration: 1
   headbuttTrigger: {fileID: 5640544717569888670}
   rotationAttackVelocity: 10
@@ -1093,7 +1093,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -1372625422
   m_Radius: 2
-  m_Speed: 7
+  m_Speed: 10
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1245,8 +1245,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af121bee9d925574199600ad494e18ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  _currentHealth: 0
+  maxHealth: 200
+  currentHealth: 0
   damageText: {fileID: 7617370455128135737, guid: f6544189ea8e14b4bba3171eb11424ab, type: 3}
   duration: 0.05
   strenght: 0.07
@@ -1255,6 +1255,9 @@ MonoBehaviour:
   fadeOut: 1
   textPosition: {fileID: 9124793413997881700}
   textDuration: 0.1
+  textSize: 1
+  clip: {fileID: 8300000, guid: 90386fa9df7957c4bb1bfc3318b773cd, type: 3}
+  volume: 0.01
 --- !u!1 &4578856764459428760
 GameObject:
   m_ObjectHideFlags: 0
@@ -1544,7 +1547,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1151794820015833714
 Transform:
   m_ObjectHideFlags: 0

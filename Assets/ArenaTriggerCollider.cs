@@ -13,7 +13,7 @@ public class ArenaTriggerCollider : MonoBehaviour
         Debug.Log(other.name);
         if (other.CompareTag("Player"))
         {
-            if (GameManager.Instance.currentArena.ArenaType == arena) { return; }
+            if (GameManager.Instance.currentArena.arenaType == arena) { return; }
             GameManager.Instance.ChangeArena(arena);
             
         }

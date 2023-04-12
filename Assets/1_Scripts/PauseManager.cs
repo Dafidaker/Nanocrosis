@@ -48,7 +48,7 @@ public class PauseManager : MonoBehaviour
         AudioListener.pause = true;
         paused = true;
         PauseMenu.SetActive(true);
-        GameManager.Instance.player.GetComponent<Afonso_PlayerController>().DisableInputSystem();
+        GameManager.Instance.player.GetComponent<PlayerController>().DisableInputSystem();
     }
 
     public void ResumeGame()
@@ -57,6 +57,6 @@ public class PauseManager : MonoBehaviour
         AudioListener.pause = false;
         paused = false;
         PauseMenu.SetActive(false);
-        GameManager.Instance.player.GetComponent<Afonso_PlayerController>().EnableInputSystem();
+        GameManager.Instance.player.GetComponent<PlayerController>().EnableInputSystem();
     }
 }

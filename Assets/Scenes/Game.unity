@@ -3347,7 +3347,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-179604
+  m_Name: pb_Mesh-242842
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -8816,7 +8816,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-179548
+  m_Name: pb_Mesh-242786
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -12930,7 +12930,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-179656
+  m_Name: pb_Mesh-242894
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -19733,7 +19733,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f730e729457208e4dacfd4941a832a4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnRange: 0
+  spawnRange: 30
   enemySpawns:
   - enemy: 2
     prefab: {fileID: 1424158230}
@@ -19787,8 +19787,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     minDistanceToPlayer: 5
     maxDistanceToPlayer: 10
+    enemySpawnTimer: 0
     increaseTimer: 0.1
-    HeartAmountEnemy: 0
   - enemy: 1
     prefab: {fileID: 348709256}
     maxAmountHeart:
@@ -19877,8 +19877,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     minDistanceToPlayer: 20
     maxDistanceToPlayer: 30
+    enemySpawnTimer: 0
     increaseTimer: 0.5
-    HeartAmountEnemy: 0
   - enemy: 0
     prefab: {fileID: 1779562366}
     maxAmountHeart:
@@ -19949,9 +19949,260 @@ MonoBehaviour:
       m_RotationOrder: 4
     minDistanceToPlayer: 15
     maxDistanceToPlayer: 20
+    enemySpawnTimer: 0
     increaseTimer: 0.5
-    HeartAmountEnemy: 0
-  time: 0
+  enemySpawnsNew:
+  - enemy: 2
+    prefab: {fileID: 1424158230}
+    arena: 2
+    maxAmount:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 2
+        inSlope: 1.4949391
+        outSlope: 1.4949391
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.20918712
+      - serializedVersion: 3
+        time: 5
+        value: 10
+        inSlope: 1.4579381
+        outSlope: 1.4579381
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.11656685
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    minDistanceToPlayer: 5
+    maxDistanceToPlayer: 10
+    enemySpawnTimer: 0
+    increaseTimer: 0.1
+    amountEnemies: 0
+  - enemy: 2
+    prefab: {fileID: 1424158230}
+    arena: 0
+    maxAmount:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 10
+        inSlope: 1.2756462
+        outSlope: 1.2756462
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.10558245
+      - serializedVersion: 3
+        time: 25
+        value: 45
+        inSlope: 1.2403783
+        outSlope: 1.2403783
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.10686371
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    minDistanceToPlayer: 5
+    maxDistanceToPlayer: 10
+    enemySpawnTimer: 0
+    increaseTimer: 0.1
+    amountEnemies: 0
+  - enemy: 0
+    prefab: {fileID: 1779562366}
+    arena: 2
+    maxAmount:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    minDistanceToPlayer: 15
+    maxDistanceToPlayer: 20
+    enemySpawnTimer: 0
+    increaseTimer: 0.5
+    amountEnemies: 0
+  - enemy: 0
+    prefab: {fileID: 1779562366}
+    arena: 0
+    maxAmount:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 5
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 5.01
+        value: 5
+        inSlope: 1
+        outSlope: 1
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 25
+        value: 25
+        inSlope: 1.0132749
+        outSlope: 1.0132749
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.1318286
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    minDistanceToPlayer: 15
+    maxDistanceToPlayer: 20
+    enemySpawnTimer: 0
+    increaseTimer: 0.5
+    amountEnemies: 0
+  - enemy: 1
+    prefab: {fileID: 348709256}
+    arena: 2
+    maxAmount:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3.01
+        value: 2
+        inSlope: 0.29835507
+        outSlope: 0.29835507
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.23623098
+      - serializedVersion: 3
+        time: 7
+        value: 3
+        inSlope: 0.20009233
+        outSlope: 0.20009233
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.17421192
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    minDistanceToPlayer: 20
+    maxDistanceToPlayer: 30
+    enemySpawnTimer: 0
+    increaseTimer: 0.5
+    amountEnemies: 0
+  - enemy: 1
+    prefab: {fileID: 348709256}
+    arena: 0
+    maxAmount:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 4.9
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 5
+        value: 5
+        inSlope: 0.99502486
+        outSlope: 0.99502486
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 25
+        value: 25
+        inSlope: 1.0019364
+        outSlope: 1.0019364
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.12464628
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    minDistanceToPlayer: 20
+    maxDistanceToPlayer: 30
+    enemySpawnTimer: 0
+    increaseTimer: 0.5
+    amountEnemies: 0
+  spawnAngle: 360
+  amountSpawnPositions: 16
+  spawnOn:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &934857154
 GameObject:
   m_ObjectHideFlags: 3
@@ -21149,7 +21400,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-179576
+  m_Name: pb_Mesh-242814
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -21785,7 +22036,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-179792
+  m_Name: pb_Mesh-243030
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -29984,21 +30235,26 @@ MonoBehaviour:
   player: {fileID: 1609188230}
   playerController: {fileID: 0}
   arenas:
-  - ArenaType: 0
-    EnemiesParent: {fileID: 757911166}
-    Enemies: []
-  - ArenaType: 2
-    EnemiesParent: {fileID: 1212159825}
-    Enemies: []
-  - ArenaType: 1
-    EnemiesParent: {fileID: 418493271}
-    Enemies: []
+  - arenaType: 0
+    enemiesParent: {fileID: 757911166}
+    enemies: []
+    enemiesSpawners: []
+  - arenaType: 2
+    enemiesParent: {fileID: 1212159825}
+    enemies: []
+    enemiesSpawners: []
+  - arenaType: 1
+    enemiesParent: {fileID: 418493271}
+    enemies: []
+    enemiesSpawners: []
   playerSpawnPosition: {fileID: 36236160}
   initialArena: 0
   currentArena:
-    ArenaType: 0
-    EnemiesParent: {fileID: 0}
-    Enemies: []
+    arenaType: 0
+    enemiesParent: {fileID: 0}
+    enemies: []
+    enemiesSpawners: []
+  time: 0
 --- !u!21 &1543949744
 Material:
   serializedVersion: 8
@@ -34052,7 +34308,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-179480
+  m_Name: pb_Mesh-242718
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -35000,7 +35256,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-179496
+  m_Name: pb_Mesh-242734
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2

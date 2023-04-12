@@ -36,7 +36,7 @@ public class Hitable : MonoBehaviour
         currentHealth = maxHealth;
         _damageTextMesh = damageText.GetComponentsInChildren<TextMesh>();
         reduceSizes = damageText.GetComponentsInChildren<ReduceSize>();
-        Debug.Log("_damageTextMesh count: " + _damageTextMesh.Length);
+        //Debug.Log("_damageTextMesh count: " + _damageTextMesh.Length);
     }
 
     public void GotHit(int damage)

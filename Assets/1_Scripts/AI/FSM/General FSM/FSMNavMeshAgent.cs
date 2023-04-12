@@ -47,6 +47,7 @@ public class FSMNavMeshAgent : MonoBehaviour
         chikaiAgent = GetComponent<ChikaiAgent>();
         kuroruAgent = GetComponent<KuroruAgent>();
         toiAgent = GetComponent<ToiAgent>();
+        target = GameManager.Instance.player.transform;
     }
     
     private void Update()

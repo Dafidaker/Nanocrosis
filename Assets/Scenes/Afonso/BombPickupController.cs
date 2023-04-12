@@ -11,8 +11,8 @@ public class BombPickupController : MonoBehaviour
     public void Interact()
     {
         if (!_interactable) return;
-        Afonso_PlayerController.Instance.BombAttached = true;
-        Afonso_PlayerController.Instance.FakeBomb.SetActive(true);
+        PlayerController.Instance.BombAttached = true;
+        PlayerController.Instance.FakeBomb.SetActive(true);
         StartCoroutine(Respawn());
     }
 
