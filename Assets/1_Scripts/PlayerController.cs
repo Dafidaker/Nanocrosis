@@ -127,80 +127,94 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
-        HidePlayer();
-        
-        Debug.DrawRay(transform.position, _rb.velocity.normalized, Color.red);  
-        
-        _horizontalInput = _iMove.ReadValue<Vector2>().x;
-        _verticalInput = _iMove.ReadValue<Vector2>().y;
-        
-        //adds drag if player is grounded
-        if (_movementState == MovementState.Sprint || _movementState == MovementState.Walk)
+        if (PauseManager.paused)
         {
-            _rb.drag = groundDrag;
-            if (OnSlope()) { _rb.drag = groundDrag * slopeDragMultiplier;}
-        }
-        else { _rb.drag = 0; }
-        
-        //limits the player speed
-        SpeedControl();
-        
-        //rotates the player to the direction of the camera if the camera is moving
-        RotatePlayer();
-        
-        //changes the movement state
-        StateHandler();
-
-        
-        //'increase' gravity if player is on air and the jump is over
-        if (isJumpOver && _movementState == MovementState.Airborne)
-        {
-            _rb.AddForce(Physics.gravity * fallGravity , ForceMode.Acceleration);
-        }
-
-        //if its on a slope apply more gravity
-        if (OnSlope())
-        {
-            _rb.useGravity = false;
-            _rb.AddForce(_slopeHit.normal * -Physics.gravity.magnitude , ForceMode.Acceleration);
+            return;
         }
         else
         {
-            _rb.useGravity = true;
-        }
-
-        //if the dash cooldown hasn't ended count it down
-        if (_dashCooldownTimer > 0) _dashCooldownTimer -= Time.deltaTime;
+            HidePlayer();
         
-        if (_jumpInputTimer > 0) _jumpInputTimer -= Time.deltaTime;
-        else _jumpWasPressed = false;
-
-        if (_canJumpTimer > 0) _canJumpTimer -= Time.deltaTime;
-        else _canJump = false;
+            Debug.DrawRay(transform.position, _rb.velocity.normalized, Color.red);  
         
-        //if the jump was pressed in the (jumpbuffering) duration and the player can jump they jump
-        if (_jumpWasPressed && CanJump()) Jump();
+            _horizontalInput = _iMove.ReadValue<Vector2>().x;
+            _verticalInput = _iMove.ReadValue<Vector2>().y;
+        
+            //adds drag if player is grounded
+            if (_movementState == MovementState.Sprint || _movementState == MovementState.Walk)
+            {
+                _rb.drag = groundDrag;
+                if (OnSlope()) { _rb.drag = groundDrag * slopeDragMultiplier;}
+            }
+            else { _rb.drag = 0; }
+        
+            //limits the player speed
+            SpeedControl();
+        
+            //rotates the player to the direction of the camera if the camera is moving
+            RotatePlayer();
+        
+            //changes the movement state
+            StateHandler();
 
-        /*//if they can jump it saves that they can jump for the coyoteDuration
-        if (CanJump() && !_canJump)
-        {
-            _canJump = true;
-            Invoke(nameof(EndCoyoteTime), coyoteDuration);
-        }*/
+        
+            //'increase' gravity if player is on air and the jump is over
+            if (isJumpOver && _movementState == MovementState.Airborne)
+            {
+                _rb.AddForce(Physics.gravity * fallGravity , ForceMode.Acceleration);
+            }
 
-        if (CanJump())
-        {
-            _canJump = true;
-            _canJumpTimer = coyoteDuration;
+            //if its on a slope apply more gravity
+            if (OnSlope())
+            {
+                _rb.useGravity = false;
+                _rb.AddForce(_slopeHit.normal * -Physics.gravity.magnitude , ForceMode.Acceleration);
+            }
+            else
+            {
+                _rb.useGravity = true;
+            }
+
+            //if the dash cooldown hasn't ended count it down
+            if (_dashCooldownTimer > 0) _dashCooldownTimer -= Time.deltaTime;
+        
+            if (_jumpInputTimer > 0) _jumpInputTimer -= Time.deltaTime;
+            else _jumpWasPressed = false;
+
+            if (_canJumpTimer > 0) _canJumpTimer -= Time.deltaTime;
+            else _canJump = false;
+        
+            //if the jump was pressed in the (jumpbuffering) duration and the player can jump they jump
+            if (_jumpWasPressed && CanJump()) Jump();
+
+            /*//if they can jump it saves that they can jump for the coyoteDuration
+            if (CanJump() && !_canJump)
+            {
+                _canJump = true;
+                Invoke(nameof(EndCoyoteTime), coyoteDuration);
+            }*/
+
+            if (CanJump())
+            {
+                _canJump = true;
+                _canJumpTimer = coyoteDuration;
+            }
         }
         
     }
 
     private void FixedUpdate()
     {
-        DetectGround();
+        if (PauseManager.paused)
+        {
+            return;
+        }
+        else
+        {
+            DetectGround();
         
-        MovePlayer();
+            MovePlayer();
+        }
     }
 
     #endregion
@@ -491,7 +505,7 @@ public class PlayerController : MonoBehaviour
     {
         Dash();
     }
-    private void EnableInputSystem()
+    public void EnableInputSystem()
     {
         _iMove = PlayerControls.Player.Walk;
         _iMove.Enable();
@@ -529,7 +543,7 @@ public class PlayerController : MonoBehaviour
         _iCritical = PlayerControls.Player.CriticalMesures;
         _iCritical.Enable();
     }
-    private void DisableInputSystem()
+    public void DisableInputSystem()
     {
         _iMove.Disable();
         _iLook.Disable();

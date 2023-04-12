@@ -26,6 +26,11 @@ public class PathLine : MonoBehaviour{
 
     private void Update()
     {
+        if (PauseManager.paused)
+        {
+            return;
+        }
+        
         if (transform.position != currentPostion)
         {
             DifPosition = currentPostion - transform.position;

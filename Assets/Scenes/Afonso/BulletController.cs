@@ -18,6 +18,7 @@ public class BulletController : MonoBehaviour
     public bool Enhanced;
 
     private Rigidbody _rb;
+    private bool _spawnedWithShotgun;
 
     [field: SerializeField] private AudioClip clip;
     [field: SerializeField] private float volume;
@@ -26,7 +27,7 @@ public class BulletController : MonoBehaviour
     private void OnEnable()
     {
         Destroy(gameObject, TimeToDestroy);
-        SoundManager.Instance.PlaySound(clip, volume);
+        //SoundManager.Instance.PlaySound(clip, volume);
     }
 
     private void Start()
@@ -42,6 +43,8 @@ public class BulletController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        _spawnedWithShotgun = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -79,15 +82,17 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if ((ItHits.value & (1 << other.transform.gameObject.layer)) > 0) {
+        if ((ItHits.value & (1 << other.transform.gameObject.layer)) > 0) 
+        {
             
         }
-        else {
+        else 
+        {
             return;
         }
         
-        Debug.Log(other.name);
-        Debug.Log(other.tag);
+        //Debug.Log(other.name);
+        //Debug.Log(other.tag);
         if(other.CompareTag("bullet") || other.CompareTag("Player")) return;
         if(other.GetComponent<RespawningTargetController>() != null)
         {
@@ -105,7 +110,19 @@ public class BulletController : MonoBehaviour
                 d.CurrentHealthPoints -= Damage;
             }
 
-            if(d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
+            if(d.CurrentHealthPoints <= 0 && d.HasShield)
+            {
+                if(Gun.GetComponent<WeaponController>().Name == "Shotgun")
+                {
+                    if (!_spawnedWithShotgun)
+                    {
+                        Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
+                        _spawnedWithShotgun = true;
+                    }
+                }
+                else Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
+
+            } 
         }
 
         var HitableScript = other.GetComponent<Hitable>();

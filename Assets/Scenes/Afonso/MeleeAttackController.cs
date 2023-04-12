@@ -22,10 +22,6 @@ public class MeleeAttackController : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
-        if (!gameObject.activeInHierarchy)
-        {
-            transform.position = InitialPos.position;
-        }
     }
 
     private void OnTriggerEnter(Collider col)
