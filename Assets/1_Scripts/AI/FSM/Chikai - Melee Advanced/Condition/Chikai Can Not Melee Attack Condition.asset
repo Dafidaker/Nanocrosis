@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   negation: 1
   checkForWalls: 1
-  viewAngle: 180
-  viewDistance: 6
+  viewAngle: 360
+  viewDistance: 5

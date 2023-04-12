@@ -786,7 +786,7 @@ public class Afonso_PlayerController : MonoBehaviour
 
     private void EnableInputSystem()
     {
-        _iMove = PlayerControls.Player.Walk;
+            _iMove = PlayerControls.Player.Walk;
         _iMove.Enable();
         
         _iLook = PlayerControls.Player.Look;

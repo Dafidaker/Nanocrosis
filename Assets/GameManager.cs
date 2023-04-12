@@ -9,14 +9,23 @@ public class GameManager : MonoBehaviour
     
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public GameObject player;
-    
-    // Start is called before the first frame update
-    void Start()
+    [field: SerializeField] private Transform playerSpawnPosition;
+    [field: SerializeField] private Arena initialArena;
+    [field: HideInInspector] public Arena currentArena;
+    public enum Arena
     {
-        Instance = this;
+        Lungs,
+        Artery,
+        Heart
     }
 
-    // Update is called once per frame
+    private void Start()
+    {
+        Instance = this;
+        //player.transform.position = playerSpawnPosition.position;
+        currentArena = initialArena;
+    }
+    
     void Update()
     {
         
