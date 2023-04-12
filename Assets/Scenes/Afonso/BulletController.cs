@@ -27,7 +27,7 @@ public class BulletController : MonoBehaviour
     private void OnEnable()
     {
         Destroy(gameObject, TimeToDestroy);
-        //SoundManager.Instance.PlaySound(clip, volume);
+        SoundManager.Instance.PlaySound(clip, volume);
     }
 
     private void Start()

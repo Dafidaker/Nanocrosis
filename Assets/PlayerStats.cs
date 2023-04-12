@@ -24,9 +24,6 @@ public class PlayerStats : MonoBehaviour
     private Dictionary<int[], Color> _healthIndicatorColors;
     private Color _currentHealthColor;
 
-
-    private Coroutine _die;
-
     #region Unity Functions
 
     private void OnEnable()
@@ -68,6 +65,11 @@ public class PlayerStats : MonoBehaviour
 
     public void DamageTaken(int damagedTaken)
     {
+        if (GameManager.Instance.playerController.dying)
+        {
+            return;
+        }
+        
         CurrentHealth -= damagedTaken;
         foreach (var healthIndicatorColors in _healthIndicatorColors)
         {
@@ -77,9 +79,9 @@ public class PlayerStats : MonoBehaviour
         }
         healthBarController.SetHealth();
 
-        if (CurrentHealth <)
+        if (CurrentHealth <= 0 )
         {
-            
+            StartCoroutine(GameManager.Instance.playerController.DieAndRespawn());
         }
     }
     

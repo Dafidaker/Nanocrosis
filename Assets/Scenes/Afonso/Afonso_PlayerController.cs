@@ -138,7 +138,7 @@ public class Afonso_PlayerController : MonoBehaviour
     private GameObject _currentBomb;
 
     private bool _damaged;
-
+    public bool dying;
 
     #region Unity Funtions
 
@@ -178,14 +178,16 @@ public class Afonso_PlayerController : MonoBehaviour
 
         _playerStats = GetComponent<PlayerStats>();
 
-        _camXSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
-        _camYSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
+        
+        _camXSpeed = CinemachineVirtual.GetComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
+        _camYSpeed = CinemachineVirtual.GetComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
 
         UpdateCamSentivity();
     }
     
     private void Update()
     {
+
         _horizontalInput = _iMove.ReadValue<Vector2>().x;
         _verticalInput = _iMove.ReadValue<Vector2>().y;
         
@@ -630,8 +632,8 @@ public class Afonso_PlayerController : MonoBehaviour
 
     private void UpdateCamSentivity()
     {
-        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseXSentivity;
-        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseYSentivity;
+        CinemachineVirtual.GetComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseXSentivity;
+        CinemachineVirtual.GetComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseYSentivity;
     }
 
     #endregion
@@ -793,20 +795,21 @@ public class Afonso_PlayerController : MonoBehaviour
         MeleeAttack.SetActive(true);
     }
 
-    private IEnumerator DieAndRespawn()
+    public IEnumerator DieAndRespawn()
     {
+        dying = true;
         DisableInputSystem();
         transform.position = RespawnPoint.position;
         yield return new WaitForSeconds(3f);
         EnableInputSystem();
         _playerStats.CurrentHealth += _playerStats.MaxHealth;
         HealthBar.SetHealth();
-
+        dying = false;
     }
 
-    private void EnableInputSystem()
+    public void EnableInputSystem()
     {
-            _iMove = PlayerControls.Player.Walk;
+        _iMove = PlayerControls.Player.Walk;
         _iMove.Enable();
         
         _iLook = PlayerControls.Player.Look;
@@ -858,7 +861,7 @@ public class Afonso_PlayerController : MonoBehaviour
         _iEnhanceAmmo.Enable();
 
     }
-    private void DisableInputSystem()
+    public void DisableInputSystem()
     {
         _iMove.Disable();
         _iLook.Disable();
