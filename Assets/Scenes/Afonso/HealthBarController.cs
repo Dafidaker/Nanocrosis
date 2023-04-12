@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class HealthBarController : MonoBehaviour
 {
-    [SerializeField] private GameObject Player;
+    private GameObject Player;
     [SerializeField] private Slider Slider;
     [SerializeField] private Gradient Gradient;
     [SerializeField] private Image Fill;
@@ -13,7 +13,9 @@ public class HealthBarController : MonoBehaviour
 
     private void Start()
     {
+        Player = GameManager.Instance.player.gameObject;
         _playerStats = Player.GetComponent<PlayerStats>();
+        
         Slider.maxValue = _playerStats.MaxHealth;
         Slider.value = _playerStats.MaxHealth;
         Fill.color = Gradient.Evaluate(1f);

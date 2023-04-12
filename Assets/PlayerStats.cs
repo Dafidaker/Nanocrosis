@@ -6,7 +6,8 @@ public class PlayerStats : MonoBehaviour
 {
     public int MaxHealth;
     public int CurrentHealth;
-
+    [field: SerializeField] private HealthBarController healthBarController;
+    
     [Header("HealthIndicator"), Space(10)] 
     public int minHealth1; 
     public int maxHealth1;
@@ -23,6 +24,8 @@ public class PlayerStats : MonoBehaviour
     private Dictionary<int[], Color> _healthIndicatorColors;
     private Color _currentHealthColor;
 
+
+    private Coroutine _die;
 
     #region Unity Functions
 
@@ -71,6 +74,12 @@ public class PlayerStats : MonoBehaviour
             if (CurrentHealth < healthIndicatorColors.Key[0] || CurrentHealth > healthIndicatorColors.Key[1]) continue;
             _currentHealthColor = healthIndicatorColors.Value;
             break;
+        }
+        healthBarController.SetHealth();
+
+        if (CurrentHealth <)
+        {
+            
         }
     }
     
