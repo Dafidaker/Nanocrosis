@@ -79,10 +79,17 @@ public class PlayerStats : MonoBehaviour
         }
         healthBarController.SetHealth();
 
+<<<<<<< Updated upstream
         if (CurrentHealth <= 0 )
         {
             StartCoroutine(GameManager.Instance.playerController.DieAndRespawn());
         }
+=======
+        /*if (CurrentHealth <)
+        {
+            
+        }*/
+>>>>>>> Stashed changes
     }
     
     #endregion
