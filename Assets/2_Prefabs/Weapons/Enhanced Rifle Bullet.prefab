@@ -130,8 +130,8 @@ MonoBehaviour:
   Gun: {fileID: 7615206379009653064, guid: 96caf1af24998734a96a2cb980a1e650, type: 3}
   Damage: 5
   Enhanced: 1
-  clip: {fileID: 0}
-  volume: 0
+  clip: {fileID: 8300000, guid: 75adfe9a619833445a701305b983e548, type: 3}
+  volume: 0.01
 --- !u!54 &3611978850171806414
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -3,51 +3,93 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using DG.Tweening;
+using Enums;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Hitable : MonoBehaviour
 {
+    [Header("Events"), Space(5)] 
+    private GameEvent enemyDied;
+    
+    
+    [Header("Enemy Stats"), Space(5)] 
+    public Enemy enemyType;
+    public bool isItEnemy;
+    public bool canHaveShield;
+    
+    [Header("Health Stats"), Space(5)] 
     public int maxHealth;
-    public int currentHealth;
-    public GameObject damageText;
-    private TextMesh[] _damageTextMesh;
-    private ReduceSize[] reduceSizes;
-
-    private Tween _shaking;
-
-    [Header("Hit Animation"), Space(10)] 
+    [field: HideInInspector] public int currentHealth;
+        
+    [Header("Shield Stats"), Space(5)] 
+    public int maxShieldHealth;
+    [field: HideInInspector] public int currentShieldHealth;
+    [field: HideInInspector] public bool hasShield;
+    [field: HideInInspector] public bool shieldIsActive;
+    [field: SerializeField] private float shieldCooldown;
+    
+    
+    [Header("Hit Animation"), Space(5)] 
+    [field: SerializeField] private bool animate;
     [field: SerializeField] private float duration;
-    [field: SerializeField] private float strenght;
+    [field: SerializeField] private float strength;
     [field: SerializeField] private float vibrato;
     [field: SerializeField] private float randomness;
     [field: SerializeField] private bool fadeOut;
     
-    [Header("Damage Text Pop up"), Space(10)] 
+    [Header("Damage Text Pop up"), Space(5)] 
+    public GameObject damageText;
     [field: SerializeField] private Transform textPosition;
     [field: SerializeField] private float textDuration;
     [field: SerializeField] private float textSize = 1;
-    
-    [Header("Death Sound"), Space(10)] 
+    private TextMesh[] _damageTextMesh;
+    private ReduceSize[] _reduceSizes;
+
+
+    // Death Drops
+    private GameObject _ammo;
+    private GameObject _specialAmmo;
+        
+        
+    [Header("Death Sound"), Space(5)] 
+    [field: SerializeField] private bool doSound;
     [field: SerializeField] private AudioClip clip;
     [field: SerializeField] private float volume;
     
+    
+    private Tween _shaking;
     private void Start()
     {
         currentHealth = maxHealth;
         _damageTextMesh = damageText.GetComponentsInChildren<TextMesh>();
-        reduceSizes = damageText.GetComponentsInChildren<ReduceSize>();
-        //Debug.Log("_damageTextMesh count: " + _damageTextMesh.Length);
+        _reduceSizes = damageText.GetComponentsInChildren<ReduceSize>();
+
+        _ammo = GameManager.Instance.ammo;
+        _specialAmmo = GameManager.Instance.specialAmmo;
+
+        enemyDied = GameEvents.Instance.enemyDied;
+    }
+
+    private void OnDestroy()
+    {
+        if (_shaking != null)
+        {
+            _shaking.Kill();
+        }
     }
 
     public void GotHit(int damage)
     {
+        //todo add the distinction between bullets / enhanced bullets / knife
         currentHealth -= damage;
+        
         foreach (var textMesh in _damageTextMesh)
         {
             textMesh.text = damage.ToString();
         }
 
-        foreach (var reduce in reduceSizes)
+        foreach (var reduce in _reduceSizes)
         {
             reduce.duration = textDuration;
         }
@@ -59,8 +101,12 @@ public class Hitable : MonoBehaviour
         {
             Death();
         }
+
+        if (animate)
+        {
+            _shaking = transform.DOShakeScale(duration, strength, 0, 0, fadeOut);
+        }
         
-        _shaking = transform.DOShakeScale(duration, strenght, 0, 0, fadeOut);
     }
 
     public float GetCurrentHealthPercentage()
@@ -75,7 +121,11 @@ public class Hitable : MonoBehaviour
     
     private void Death()
     {
-        SoundManager.Instance.PlaySound(clip,volume);
+        if (Random.Range(0f, 1f) < 0.1f) { Instantiate(_ammo, transform.position, Quaternion.identity); }
+        if (hasShield) { Instantiate(_specialAmmo, transform.position, Quaternion.identity); }
+        if (isItEnemy) { enemyDied.Ping(this, null); }
+        
+        if(doSound) SoundManager.Instance.PlaySound(clip,volume);
         Destroy(gameObject);
     }
 }

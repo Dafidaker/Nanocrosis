@@ -10,17 +10,23 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     
+    [Header("Prefab"), Space(5)] 
     public CinemachineVirtualCamera cinemachineVirtualCamera;
     public GameObject player;
+    public GameObject ammo;
+    public GameObject specialAmmo;
     [field: HideInInspector] public PlayerController playerController;
-
-    public ArenaClass[] arenas;
     
-    [field: SerializeField] private Transform playerSpawnPosition;
+    [Header("Arenas"), Space(5)]
+    public ArenaClass[] arenas;
     [field: SerializeField] private Arena initialArena;
     [field: HideInInspector] public ArenaClass currentArena;
     
-    [field: HideInInspector] public float time;
+    [Header("Transforms"), Space(5)]
+    [field: SerializeField] private Transform playerSpawnPosition;
+    
+    
+    [field: HideInInspector] public float seconds;
     
     private void Awake()
     {
@@ -33,7 +39,6 @@ public class GameManager : MonoBehaviour
             arenaClass.enemies = new List<GameObject>();
             foreach (Transform child in arenaClass.enemiesParent.transform)
             {
-                Debug.Log(child.name);
                 arenaClass.enemies.Add(child.gameObject);
             }
             
@@ -44,57 +49,59 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        foreach (var enemySpawn in EnemyManager.Instance.enemySpawnsNew)
+        foreach (var enemySpawn in EnemyManager.Instance.enemySpawns)
         {
             GetArena(enemySpawn.arena).enemiesSpawners.Add(enemySpawn);
-        }
-        
-        foreach (var arenaClass in arenas)
-        {
-            Debug.Log("Arena: " + arenaClass.arenaType);
-            Debug.Log("Enemies: " + arenaClass.enemiesSpawners.Count);
         }
     }
 
     void Update()
     {
-        time += Time.deltaTime;
+        seconds += Time.deltaTime;
     }
 
     public void ChangeArena(Arena newArena)
     {
         //if there is a current arena it disables those enemies
-        if (currentArena != null)
+        if (currentArena.enemiesParent != null)
         {
-            foreach (var enemy in currentArena.enemies)
+            foreach (Transform enemy in currentArena.enemiesParent.transform)
             {
                 if (enemy == null)
                 {
-                    currentArena.enemies.Remove(enemy);
+                    currentArena.enemies.Remove(enemy.gameObject);
                     continue;
                 }
-                enemy.SetActive(false);
+                enemy.gameObject.SetActive(false);
             }
             
         }
+        Debug.Log("Old: " + currentArena.arenaType + " New: " + newArena);
         
         //gets the arena and it makes the enemies on that arena active
         currentArena = GetArena(newArena);
-        foreach (var enemy in currentArena.enemies)
+        
+        foreach (Transform enemy in currentArena.enemiesParent.transform)
         {
             if (enemy == null)
             {
-                currentArena.enemies.Remove(enemy);
+                currentArena.enemies.Remove(enemy.gameObject);
                 continue;
             }
-            enemy.SetActive(true);
+            enemy.gameObject.SetActive(true);
         }
     }
-
-
-    private ArenaClass GetArena(Arena arenaType)
+    
+    public ArenaClass GetArena(Arena arenaType)
     {
         return arenas.FirstOrDefault(arenaClass => arenaClass.arenaType == arenaType);
+    }
+
+    public void GameEnded(bool win)
+    {
+        Time.timeScale = 0;
+        var msm = win ? "you won" : "you lost";
+        Debug.Log(msm);
     }
 }
 
@@ -103,8 +110,8 @@ public class ArenaClass
 {
     public Arena arenaType;
     public GameObject enemiesParent;
-    [field: HideInInspector] public List<GameObject> enemies;
-    public List<ArenaEnemySpawner> enemiesSpawners;
+    [HideInInspector] public List<GameObject> enemies;
+    [HideInInspector] public List<ArenaEnemySpawner> enemiesSpawners;
     
 }
 

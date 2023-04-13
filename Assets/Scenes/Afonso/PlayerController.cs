@@ -254,7 +254,7 @@ public class PlayerController : MonoBehaviour
             _canJumpTimer = coyoteDuration;
         }
         
-        Debug.DrawRay(cam.position, cam.transform.forward* 100f, Color.red, 0.1f);
+        //Debug.DrawRay(cam.position, cam.transform.forward* 100f, Color.red, 0.1f);
     }
 
     private void FixedUpdate()
@@ -891,13 +891,13 @@ public class PlayerController : MonoBehaviour
         GUI.Box(new Rect(0, 100, Screen.width * 0.2f, Screen.height * 0.1f), "_jumpWasPressed: " + _jumpWasPressed);*/
 
         //Weapons
-        GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().Name);
+        /*GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().Name);
         GUI.Box(new Rect(0, Screen.height * 0.2f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentMag.ToString());
         GUI.Box(new Rect(0, Screen.height * 0.3f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentAmmoReserve.ToString());
         GUI.Box(new Rect(0, Screen.height * 0.4f, Screen.width * 0.2f, Screen.height * 0.1f), "Magazine Empty: " +  _currentWeapon.GetComponent<WeaponController>().MagEmpty);
         GUI.Box(new Rect(0, Screen.height * 0.5f, Screen.width * 0.2f, Screen.height * 0.1f), "Out of Ammo: " + _currentWeapon.GetComponent<WeaponController>().OutOfAmmo);
         GUI.Box(new Rect(0, Screen.height * 0.6f, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + _currentWeapon.GetComponent<WeaponController>().Reloading);
-        GUI.Box(new Rect(0, Screen.height * 0.7f, Screen.width * 0.2f, Screen.height * 0.1f), "Available Buffs: " + AvailableBuffs);
+        GUI.Box(new Rect(0, Screen.height * 0.7f, Screen.width * 0.2f, Screen.height * 0.1f), "Available Buffs: " + AvailableBuffs);*/
     }
 
     private void OnTriggerEnter(Collider col)

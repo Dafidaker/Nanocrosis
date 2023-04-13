@@ -65,6 +65,8 @@ public class PlayerStats : MonoBehaviour
 
     public void DamageTaken(int damagedTaken)
     {
+        return;
+        
         if (GameManager.Instance.playerController.dying)
         {
             return;

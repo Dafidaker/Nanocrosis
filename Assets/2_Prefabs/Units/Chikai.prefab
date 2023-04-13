@@ -1015,7 +1015,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8358452084813226909
 Transform:
   m_ObjectHideFlags: 0
@@ -1036,7 +1036,7 @@ Transform:
   - {fileID: 5201246195620327940}
   - {fileID: 9124793413997881700}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2634804480620279877
 MonoBehaviour:
@@ -1245,17 +1245,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af121bee9d925574199600ad494e18ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isItEnemy: 1
+  enemyType: 0
+  canHaveShield: 1
   maxHealth: 200
   currentHealth: 0
-  damageText: {fileID: 7617370455128135737, guid: f6544189ea8e14b4bba3171eb11424ab, type: 3}
+  maxShieldHealth: 100
+  currentShieldHealth: 0
+  hasShield: 0
+  shieldIsActive: 0
+  shieldCooldown: 20
+  animate: 1
   duration: 0.05
-  strenght: 0.07
+  strength: 0
   vibrato: 0
   randomness: 0
   fadeOut: 1
+  damageText: {fileID: 7617370455128135737, guid: f6544189ea8e14b4bba3171eb11424ab, type: 3}
   textPosition: {fileID: 9124793413997881700}
   textDuration: 0.1
   textSize: 1
+  doSound: 0
   clip: {fileID: 8300000, guid: 90386fa9df7957c4bb1bfc3318b773cd, type: 3}
   volume: 0.01
 --- !u!1 &4578856764459428760
