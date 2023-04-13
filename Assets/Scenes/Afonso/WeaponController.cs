@@ -33,11 +33,13 @@ public class WeaponController : MonoBehaviour
     public Material EmptyMagMaterial;
     public Material EnhancedMaterial;
 
-    private void Start()
+    private void Awake()
     {
         CurrentMag = MagSize;
         CurrentAmmoReserve = AmmoReserve;
-
+    }
+    private void Start()
+    {
         CurrentBulletPrefab = BulletPrefab;
 
         if (SpreadShot)

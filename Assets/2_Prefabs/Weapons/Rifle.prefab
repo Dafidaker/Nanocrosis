@@ -305,8 +305,8 @@ MonoBehaviour:
   Name: Rifle
   MagSize: 30
   CurrentMag: 0
-  AmmoReserve: 300
-  CurrentAmmoReserve: 0
+  AmmoReserve: 210
+  CurrentAmmoReserve: 210
   ReloadTime: 2
   FireRate: 0.1
   FullAuto: 1

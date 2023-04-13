@@ -81,10 +81,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float MissDistance = 25f;
     [SerializeField] private GameObject[] Weapons;
     [SerializeField] private GameObject BombPrefab;
-    [SerializeField] private int AvailableBuffs;
     [SerializeField] private LayerMask bulletsHit;
+    [SerializeField] private WeaponInfoController WeaponUI;
+    [SerializeField] private PickupInfoController PickupUI;
     public GameObject FakeBomb;
     public bool BombAttached;
+    public int AvailableBuffs;
     
     
     [Header("Aim"), Space(10)]
@@ -93,7 +95,7 @@ public class PlayerController : MonoBehaviour
     private float _camXSpeed;
     private float _camYSpeed;
     
-    private GameObject _currentWeapon;
+    public GameObject CurrentWeapon;
     private int _currrentWeaponIndex = 0;
     private Coroutine _shooting;
     private float _fireCountdown;
@@ -157,8 +159,8 @@ public class PlayerController : MonoBehaviour
         PlayerControls = new Controls();
         Instance = this;
         Settings.GameStart(); //todo change this to a game controller or something :)
-        _currentWeapon = Weapons[_currrentWeaponIndex];
-        FirePoint = _currentWeapon.GetComponent<WeaponController>().FirePoint;
+        CurrentWeapon = Weapons[_currrentWeaponIndex];
+        FirePoint = CurrentWeapon.GetComponent<WeaponController>().FirePoint;
         FakeBomb.SetActive(false);
     }
     
@@ -167,9 +169,9 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _rb.freezeRotation = true;
 
-        _currentWeapon.SetActive(true);
+        CurrentWeapon.SetActive(true);
 
-        _fireCountdown = _currentWeapon.GetComponent<WeaponController>().FireRate;
+        _fireCountdown = CurrentWeapon.GetComponent<WeaponController>().FireRate;
         
         Cursor.lockState = CursorLockMode.Locked;
         //debugGameObject = Instantiate(debugGameObject);
@@ -411,11 +413,13 @@ public class PlayerController : MonoBehaviour
     
     private IEnumerator FullAuto()
     {
-        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+        WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
 
         while (!weaponController.Reloading)
         {
             SemiAutoFire();
+            WeaponUI.SetValues();
+            if (weaponController.CurrentMag <= weaponController.MagSize * 0.3f) WeaponUI.LowAmmo();
             yield return new WaitForSeconds(weaponController.FireRate);
         }
     }
@@ -426,10 +430,13 @@ public class PlayerController : MonoBehaviour
         _fireCountdown = w.FireRate;
 
         SemiAutoFire();
+
+        WeaponUI.SetValues();
+        if (w.CurrentMag <= w.MagSize * 0.3f) WeaponUI.LowAmmo();
     }
     private void SemiAutoFire()
     {
-        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+        WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
 
         if (weaponController.CurrentMag <= 0 && _shooting != null)
         {
@@ -497,6 +504,12 @@ public class PlayerController : MonoBehaviour
             if(!w.IsEnhanced) bit.GetComponent<MeshRenderer>().material = w.NormalMaterial;
             else bit.GetComponent<MeshRenderer>().material = w.EnhancedMaterial;
         }
+
+        WeaponUI.SetValues();
+        if (w.CurrentMag > w.MagSize * 0.3f) WeaponUI.ResetMagColor();
+        else WeaponUI.LowAmmo();
+
+        if (w.CurrentAmmoReserve <= w.AmmoReserve * 0.3) WeaponUI.LowReserve();
 
         w.Reloading = false;
     }
@@ -693,7 +706,7 @@ public class PlayerController : MonoBehaviour
     
     private void Shoot(InputAction.CallbackContext context)
     {
-        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+        WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
 
         RaycastHit hit = default;
 
@@ -708,6 +721,7 @@ public class PlayerController : MonoBehaviour
                 {
                     bit.GetComponent<MeshRenderer>().material = weaponController.EmptyMagMaterial;
                 }
+                StartCoroutine(WeaponUI.FlashMag());
                 return;
             }
 
@@ -725,6 +739,7 @@ public class PlayerController : MonoBehaviour
             GetTargetBomb(hit, bombController, bomb);
             FakeBomb.SetActive(false);
             BombAttached = false;
+            WeaponUI.BombUnattached();
         }
     }
     private void ShootEndedInput(InputAction.CallbackContext context)
@@ -734,16 +749,20 @@ public class PlayerController : MonoBehaviour
     
     private void Reload(InputAction.CallbackContext context)
     {
-        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+        WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
 
         if (weaponController.CurrentMag < weaponController.MagSize && weaponController.CurrentAmmoReserve > 0 && !weaponController.Reloading)
         {
             StartCoroutine(ReloadCountdown(weaponController));
         }
         else if (weaponController.CurrentMag == weaponController.MagSize) Debug.Log("MAG FULL");
-        else if (weaponController.CurrentAmmoReserve <= 0) Debug.Log("OUT OF AMMO");
+        else if (weaponController.CurrentAmmoReserve <= 0)
+        {
+            Debug.Log("OUT OF AMMO");
+            StartCoroutine(WeaponUI.FlashReserve());
+        }
 
-        foreach(GameObject bit in weaponController.ColoredBits)
+        foreach (GameObject bit in weaponController.ColoredBits)
         {
             if (weaponController.Reloading) bit.GetComponent<MeshRenderer>().material = weaponController.ReloadMaterial;
             else bit.GetComponent<MeshRenderer>().material = weaponController.NormalMaterial;
@@ -753,29 +772,36 @@ public class PlayerController : MonoBehaviour
     }
     private void CycleWeapons(InputAction.CallbackContext context)
     {
-        _currentWeapon.SetActive(false);
+        CurrentWeapon.SetActive(false);
         _currrentWeaponIndex++;
         if (_currrentWeaponIndex >= Weapons.Length)
         {
             _currrentWeaponIndex = 0;
-            _currentWeapon.SetActive(false);
-            _currentWeapon = Weapons[_currrentWeaponIndex];
-            _currentWeapon.SetActive(true);
+            CurrentWeapon.SetActive(false);
+            CurrentWeapon = Weapons[_currrentWeaponIndex];
+            CurrentWeapon.SetActive(true);
         }
-        _currentWeapon = Weapons[_currrentWeaponIndex];
-        _currentWeapon.SetActive(true);
+        CurrentWeapon = Weapons[_currrentWeaponIndex];
+        WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
+        CurrentWeapon.SetActive(true);
         StopCoroutine(_shooting);
+        WeaponUI.SetValues();
+        if (weaponController.CurrentMag > weaponController.MagSize * 0.3f) WeaponUI.ResetMagColor();
+        else WeaponUI.LowAmmo();
+        if (weaponController.CurrentAmmoReserve > weaponController.AmmoReserve * 0.3f) WeaponUI.ResetReserveColor();
+        else WeaponUI.LowReserve();
     }
     private void Interact(InputAction.CallbackContext context)
     {
         if(_currentBomb != null)
         {
             _currentBomb.GetComponent<BombPickupController>().Interact();
+            WeaponUI.BombAttached();
         }
     }
     private void EnhanceWeapon(InputAction.CallbackContext context)
     {
-        WeaponController weaponController = _currentWeapon.GetComponent<WeaponController>();
+        WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
         if (AvailableBuffs > 0)
         {
             weaponController.IsEnhanced = true;
@@ -786,8 +812,13 @@ public class PlayerController : MonoBehaviour
             }
 
             AvailableBuffs--;
+            PickupUI.SetValue();
         }
-        else Debug.Log("NO BUFFS AVAILABLE");
+        else
+        {
+            Debug.Log("NO BUFFS AVAILABLE");
+            StartCoroutine(PickupUI.Flash());
+        }
     }
 
     private void PerformMeleeAttack(InputAction.CallbackContext context)
@@ -806,7 +837,7 @@ public class PlayerController : MonoBehaviour
         transform.position = RespawnPoint.position;
         yield return new WaitForSeconds(3f);
         EnableInputSystem();
-        _playerStats.CurrentHealth += _playerStats.MaxHealth;
+        _playerStats.CurrentHealth = _playerStats.MaxHealth;
         HealthBar.SetHealth();
         dying = false;
     }
@@ -891,12 +922,12 @@ public class PlayerController : MonoBehaviour
         GUI.Box(new Rect(0, 100, Screen.width * 0.2f, Screen.height * 0.1f), "_jumpWasPressed: " + _jumpWasPressed);*/
 
         //Weapons
-        /*GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().Name);
-        GUI.Box(new Rect(0, Screen.height * 0.2f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentMag.ToString());
-        GUI.Box(new Rect(0, Screen.height * 0.3f, Screen.width * 0.2f, Screen.height * 0.1f), _currentWeapon.GetComponent<WeaponController>().CurrentAmmoReserve.ToString());
-        GUI.Box(new Rect(0, Screen.height * 0.4f, Screen.width * 0.2f, Screen.height * 0.1f), "Magazine Empty: " +  _currentWeapon.GetComponent<WeaponController>().MagEmpty);
-        GUI.Box(new Rect(0, Screen.height * 0.5f, Screen.width * 0.2f, Screen.height * 0.1f), "Out of Ammo: " + _currentWeapon.GetComponent<WeaponController>().OutOfAmmo);
-        GUI.Box(new Rect(0, Screen.height * 0.6f, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + _currentWeapon.GetComponent<WeaponController>().Reloading);
+        /*GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.2f, Screen.height * 0.1f), CurrentWeapon.GetComponent<WeaponController>().Name);
+        GUI.Box(new Rect(0, Screen.height * 0.2f, Screen.width * 0.2f, Screen.height * 0.1f), CurrentWeapon.GetComponent<WeaponController>().CurrentMag.ToString());
+        GUI.Box(new Rect(0, Screen.height * 0.3f, Screen.width * 0.2f, Screen.height * 0.1f), CurrentWeapon.GetComponent<WeaponController>().CurrentAmmoReserve.ToString());
+        GUI.Box(new Rect(0, Screen.height * 0.4f, Screen.width * 0.2f, Screen.height * 0.1f), "Magazine Empty: " +  CurrentWeapon.GetComponent<WeaponController>().MagEmpty);
+        GUI.Box(new Rect(0, Screen.height * 0.5f, Screen.width * 0.2f, Screen.height * 0.1f), "Out of Ammo: " + CurrentWeapon.GetComponent<WeaponController>().OutOfAmmo);
+        GUI.Box(new Rect(0, Screen.height * 0.6f, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + CurrentWeapon.GetComponent<WeaponController>().Reloading);
         GUI.Box(new Rect(0, Screen.height * 0.7f, Screen.width * 0.2f, Screen.height * 0.1f), "Available Buffs: " + AvailableBuffs);*/
     }
 
@@ -912,6 +943,7 @@ public class PlayerController : MonoBehaviour
             if (AvailableBuffs < 1)
             {
                 AvailableBuffs += 1;
+                PickupUI.SetValue();
             }
             else Debug.Log("Collect Pickup to go above 1");
         }
@@ -919,11 +951,22 @@ public class PlayerController : MonoBehaviour
         if (col.CompareTag($"AmmoBuff"))
         {
             AvailableBuffs += 2;
+            PickupUI.SetValue();
             Destroy(col.gameObject);
         }
 
         if (col.CompareTag($"AmmoPickup"))
         {
+            WeaponController w1 = Weapons[0].GetComponent<WeaponController>();
+            WeaponController w2 = Weapons[1].GetComponent<WeaponController>();
+
+            Debug.Log((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve));
+
+            if ((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve))
+            {
+                Debug.Log("ALL AMMO RESERVES FULL");
+                return;
+            }
             foreach (GameObject weapon in Weapons)
             {
                 WeaponController w = weapon.GetComponent<WeaponController>();
@@ -932,15 +975,16 @@ public class PlayerController : MonoBehaviour
 
                 if(w.CurrentAmmoReserve == w.AmmoReserve)
                 {
-                    Debug.Log("AMMO RESERVES FULL");
-                    return;
+                    Debug.Log(w.Name + ": AMMO RESERVES FULL");
                 }
 
-                if(RoundedAmmo + w.CurrentAmmoReserve > w.AmmoReserve)
+                else if (RoundedAmmo + w.CurrentAmmoReserve > w.AmmoReserve)
                 {
                     w.CurrentAmmoReserve = w.AmmoReserve;
                 }
                 else w.CurrentAmmoReserve += RoundedAmmo;
+                WeaponUI.SetValues();
+                if (w.CurrentAmmoReserve > w.AmmoReserve * 0.3f) WeaponUI.ResetReserveColor();
                 Destroy(col.gameObject);
             }
         }

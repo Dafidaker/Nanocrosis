@@ -2333,6 +2333,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &116131594 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8829312317385366613, guid: 4e9e33ef512e1104a88cc62ed71ee022, type: 3}
+  m_PrefabInstance: {fileID: 5891609061635912864}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 975ec45b872279e4a88d377c0bc55768, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!21 &120492599
 Material:
   serializedVersion: 8
@@ -4563,7 +4574,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-103986
+  m_Name: pb_Mesh-2392
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -6014,7 +6025,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-103958
+  m_Name: pb_Mesh-2364
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -7345,7 +7356,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-104174
+  m_Name: pb_Mesh-2580
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -7937,6 +7948,38 @@ Material:
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+--- !u!1 &364216114
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 364216115}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &364216115
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364216114}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.1473637, y: -62.371788, z: -5.903141}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1848818660}
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!21 &370752390
 Material:
   serializedVersion: 8
@@ -11201,7 +11244,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-103930
+  m_Name: pb_Mesh-2336
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -15957,7 +16000,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-103862
+  m_Name: pb_Mesh-2268
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -18294,6 +18337,17 @@ Material:
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+--- !u!114 &777777617 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 438910460784349682, guid: 4e9e33ef512e1104a88cc62ed71ee022, type: 3}
+  m_PrefabInstance: {fileID: 5891609061635912864}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94526e7ab7903fe42a67c2e62e300f0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!21 &782871867
 Material:
   serializedVersion: 8
@@ -24933,6 +24987,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1991615778312094840, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
   m_PrefabInstance: {fileID: 1991615778494560099}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1119532558 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
+  m_PrefabInstance: {fileID: 1991615778494560099}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119532556}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2483456fd850c85468c8a34effdfcc22, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!21 &1119687257
 Material:
   serializedVersion: 8
@@ -41172,7 +41237,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-104038
+  m_Name: pb_Mesh-2444
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -43560,6 +43625,62 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1848818659
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1848818660}
+  - component: {fileID: 1848818661}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1848818660
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848818659}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 364216115}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1848818661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1848818659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b12d0af11feabfb478306c42b93c35e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cinemachineVirtualCamera: {fileID: 44402963}
+  player: {fileID: 1119532556}
+  playerController: {fileID: 0}
+  arenas: []
+  playerSpawnPosition: {fileID: 224408351}
+  initialArena: 0
+  currentArena:
+    arenaType: 0
+    enemiesParent: {fileID: 0}
+    enemies: []
+    enemiesSpawners: []
+  time: 0
 --- !u!21 &1850577392
 Material:
   serializedVersion: 8
@@ -45056,7 +45177,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-103878
+  m_Name: pb_Mesh-2284
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -48577,6 +48698,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 955082667}
     - target: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
+      propertyPath: PickupUI
+      value: 
+      objectReference: {fileID: 777777617}
+    - target: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
+      propertyPath: WeaponUI
+      value: 
+      objectReference: {fileID: 116131594}
+    - target: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
       propertyPath: HealthBar
       value: 
       objectReference: {fileID: 2085415726}
@@ -48668,6 +48797,10 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 266
       objectReference: {fileID: 0}
+    - target: {fileID: 5442371619966485377, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
+      propertyPath: healthBarController
+      value: 
+      objectReference: {fileID: 2085415726}
     - target: {fileID: 5739487391126613130, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -49306,6 +49439,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 438910460784349682, guid: 4e9e33ef512e1104a88cc62ed71ee022, type: 3}
+      propertyPath: Player
+      value: 
+      objectReference: {fileID: 1119532558}
     - target: {fileID: 5891609059685769102, guid: 4e9e33ef512e1104a88cc62ed71ee022, type: 3}
       propertyPath: Player
       value: 
