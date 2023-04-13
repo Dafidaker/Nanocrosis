@@ -126,7 +126,6 @@ MonoBehaviour:
   NormalMaterial: {fileID: 2100000, guid: 6fd7b84f062e54a4ea88786c8d5071ca, type: 2}
   ShieldedMaterial: {fileID: 2100000, guid: d8146f62f7c2255478077550322d11de, type: 2}
   DamageMaterial: {fileID: 2100000, guid: 2d016ff5ae9c0f647be5b7d0aad5af8a, type: 2}
-  EnhancementPickup: {fileID: 601169438534941172, guid: 2693f94aa7b6af74f9b259151a519a98, type: 3}
   AmmoPickupSpawnpoint: {fileID: 7054963645318976677}
   EnhancementPickupSpawnpoint: {fileID: 2806966839492993646}
   HasShield: 0

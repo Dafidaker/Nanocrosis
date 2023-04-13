@@ -485,8 +485,8 @@ MonoBehaviour:
   Name: Shotgun
   MagSize: 8
   CurrentMag: 0
-  AmmoReserve: 56
-  CurrentAmmoReserve: 56
+  AmmoReserve: 80
+  CurrentAmmoReserve: 0
   ReloadTime: 3
   FireRate: 0.75
   FullAuto: 0

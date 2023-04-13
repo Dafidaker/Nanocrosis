@@ -18,6 +18,7 @@ public class BulletController : MonoBehaviour
     public bool Enhanced;
 
     private Rigidbody _rb;
+    private bool _spawnedWithShotgun;
 
     [field: SerializeField] private AudioClip clip;
     [field: SerializeField] private float volume;
@@ -42,6 +43,8 @@ public class BulletController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        _spawnedWithShotgun = false;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -107,19 +110,19 @@ public class BulletController : MonoBehaviour
                 d.CurrentHealthPoints -= Damage;
             }
 
-            /*if(d.CurrentHealthPoints <= 0 && d.HasShield)
+            if(d.CurrentHealthPoints <= 0 && d.HasShield)
             {
                 if(Gun.GetComponent<WeaponController>().Name == "Shotgun")
                 {
-                    bool spawnedWithShotgun = false;
-                    if (!spawnedWithShotgun)
+                    if (!_spawnedWithShotgun)
                     {
                         Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
-                        spawnedWithShotgun = true;
+                        _spawnedWithShotgun = true;
                     }
                 }
                 else Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
-            }*/
+
+            } 
         }
 
         var HitableScript = other.GetComponent<Hitable>();
