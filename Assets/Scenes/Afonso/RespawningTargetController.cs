@@ -10,6 +10,7 @@ public class RespawningTargetController : MonoBehaviour
     [SerializeField] private Material NormalMaterial;
     [SerializeField] private Material ShieldedMaterial;
     [SerializeField] private Material DamageMaterial;
+    [SerializeField] private GameObject EnhancementPickup;
 
     public Transform AmmoPickupSpawnpoint;
     public Transform EnhancementPickupSpawnpoint;
@@ -53,6 +54,10 @@ public class RespawningTargetController : MonoBehaviour
             _bc.enabled = false;
             _mr.enabled = false;
             CurrentTimeToRespawn -= Time.deltaTime;
+            if (HasShield)
+            {
+                SpawnPickup();
+            }
         }
 
         if (CurrentTimeToRespawn <= 0)
@@ -67,6 +72,7 @@ public class RespawningTargetController : MonoBehaviour
                 ShieldActive = true;
                 CurrentShieldHealthPoints = MaxShieldHealthPoints;
                 _mr.material = ShieldedMaterial;
+                _spawnedPickup = false;
             }
         }
 
@@ -74,6 +80,16 @@ public class RespawningTargetController : MonoBehaviour
         {
             ShieldActive = false;
             _mr.material = NormalMaterial;
+        }
+
+    }
+
+    public void SpawnPickup()
+    {
+        if (!_spawnedPickup)
+        {
+            Instantiate(EnhancementPickup, EnhancementPickupSpawnpoint.position, Quaternion.identity);
+            _spawnedPickup = true;
         }
     }
 }
