@@ -144,7 +144,6 @@ public class ChikaiAgent : MonoBehaviour
     {
         if (!isAttacking)
         {
-            Debug.Log("ChikaiAgent _ Ranged Attack");
             StartCoroutine(PerformRangeAttack());
         }
     }
@@ -300,11 +299,11 @@ public class ChikaiAgent : MonoBehaviour
 
         var targetsFuturePosition =
             _fsmNavMeshAgent.TargetFuturePosition(_target.GetComponent<Rigidbody>(), 1.3f);
-        for (float time = 0; time < 1; time += Time.deltaTime * jumpSpeed)
+        for (float seconds = 0; seconds < 1; seconds += Time.deltaTime * jumpSpeed)
         {
-            transform.position = Vector3.Lerp(startingPosition, targetsFuturePosition, time) 
-                                 + Vector3.up * HeightCurve.Evaluate(time);
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_target.position- transform.position), time );
+            transform.position = Vector3.Lerp(startingPosition, targetsFuturePosition, seconds) 
+                                 + Vector3.up * HeightCurve.Evaluate(seconds);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(_target.position- transform.position), seconds );
             yield return null;
         }
         

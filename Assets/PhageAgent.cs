@@ -218,7 +218,6 @@ public class PhageAgent : MonoBehaviour
         //when the attack is finishied with the animation
         while (_agent.isStopped && go != null)
         {
-            Debug.Log(go);
             yield return null;
         }
 

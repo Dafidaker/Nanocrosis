@@ -256,7 +256,7 @@ public class PlayerController : MonoBehaviour
             _canJumpTimer = coyoteDuration;
         }
         
-        Debug.DrawRay(cam.position, cam.transform.forward* 100f, Color.red, 0.1f);
+        //Debug.DrawRay(cam.position, cam.transform.forward* 100f, Color.red, 0.1f);
     }
 
     private void FixedUpdate()

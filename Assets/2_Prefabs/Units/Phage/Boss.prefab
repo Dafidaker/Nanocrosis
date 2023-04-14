@@ -4979,17 +4979,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af121bee9d925574199600ad494e18ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 3
+  isItEnemy: 1
+  canHaveShield: 1
   maxHealth: 1000
   currentHealth: 0
-  damageText: {fileID: 7617370455128135737, guid: f6544189ea8e14b4bba3171eb11424ab, type: 3}
+  maxShieldHealth: 200
+  currentShieldHealth: 0
+  hasShield: 0
+  shieldIsActive: 0
+  shieldCooldown: 100
+  animate: 0
   duration: 0.05
-  strenght: 0.07
+  strength: 0
   vibrato: 0
   randomness: 0
   fadeOut: 1
+  damageText: {fileID: 7617370455128135737, guid: f6544189ea8e14b4bba3171eb11424ab, type: 3}
   textPosition: {fileID: 3700678900359122724}
   textDuration: 0.1
   textSize: 100
+  doSound: 0
   clip: {fileID: 0}
   volume: 0
 --- !u!54 &2591901241471402092

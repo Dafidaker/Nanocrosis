@@ -73,7 +73,7 @@ namespace PathCreation.Examples {
                 verts[vertIndex + 6] = verts[vertIndex + 2];
                 verts[vertIndex + 7] = verts[vertIndex + 3];
 
-                // Set uv on y axis to path time (0 at start of path, up to 1 at end of path)
+                // Set uv on y axis to path seconds (0 at start of path, up to 1 at end of path)
                 uvs[vertIndex + 0] = new Vector2 (0, path.times[i]);
                 uvs[vertIndex + 1] = new Vector2 (1, path.times[i]);
 

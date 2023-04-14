@@ -10,12 +10,12 @@ public class ArenaTriggerCollider : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.name);
         if (other.CompareTag("Player"))
         {
             if (GameManager.Instance.currentArena.arenaType == arena) { return; }
-            GameManager.Instance.ChangeArena(arena);
             
+            Debug.Log("---CHANGE ARENA----");
+            GameManager.Instance.ChangeArena(arena);
         }
     }
 }
