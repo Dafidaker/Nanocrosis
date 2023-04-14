@@ -484,7 +484,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Shotgun
   MagSize: 8
-  CurrentMag: 0
+  CurrentMag: 8
   AmmoReserve: 56
   CurrentAmmoReserve: 56
   ReloadTime: 3
@@ -511,6 +511,7 @@ MonoBehaviour:
   ReloadMaterial: {fileID: 2100000, guid: 07dc66ae04b7f6a43b9674bf0fefb33a, type: 2}
   EmptyMagMaterial: {fileID: 2100000, guid: 5a26de236ce89e94b963be8fa2b7ade6, type: 2}
   EnhancedMaterial: {fileID: 2100000, guid: 652107f36a28e44479c0b827dee5852a, type: 2}
+  Cam: {fileID: 0}
 --- !u!1 &2418608199575065669
 GameObject:
   m_ObjectHideFlags: 0

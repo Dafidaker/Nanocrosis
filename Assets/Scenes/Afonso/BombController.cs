@@ -7,6 +7,7 @@ public class BombController : MonoBehaviour
     [SerializeField] private float Speed = 100f;
     [SerializeField] private float TimeToDestroy = 5f;
     [SerializeField] private GameObject EnhancementPickup;
+    [SerializeField] private LayerMask ItHits;
 
     private Rigidbody _rb;
 
@@ -49,13 +50,33 @@ public class BombController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if ((ItHits.value & (1 << other.transform.gameObject.layer)) > 0)
+        {
+
+        }
+        else
+        {
+            return;
+        }
+
         if (other.CompareTag("Player")) return;
         if (other.GetComponent<RespawningTargetController>() != null)
         {
-            TargetController d = other.GetComponent<TargetController>();
+            RespawningTargetController d = other.GetComponent<RespawningTargetController>();
             if(!d.ShieldActive) d.CurrentHealthPoints -= ImpactDamage;
             //if (d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
         }
         StartCoroutine(Explode());
+
+        var HitableScript = other.GetComponent<Hitable>();
+        if (HitableScript != null)
+        {
+            HitableScript.GotHit(ImpactDamage);
+        }
+
+        if (other.CompareTag("BossPart"))
+        {
+            other.GetComponentInParent<Hitable>().GotHit(ImpactDamage);
+        }
     }
 }

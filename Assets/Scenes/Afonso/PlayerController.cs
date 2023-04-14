@@ -770,7 +770,7 @@ public class PlayerController : MonoBehaviour
             if (weaponController.Reloading) bit.GetComponent<MeshRenderer>().material = weaponController.ReloadMaterial;
             else bit.GetComponent<MeshRenderer>().material = weaponController.NormalMaterial;
         }
-
+        WeaponUI.ResetEnhancedWeapon();
         weaponController.IsEnhanced = false;
     }
     private void CycleWeapons(InputAction.CallbackContext context)
@@ -793,6 +793,17 @@ public class PlayerController : MonoBehaviour
         else WeaponUI.LowAmmo();
         if (weaponController.CurrentAmmoReserve > weaponController.AmmoReserve * 0.3f) WeaponUI.ResetReserveColor();
         else WeaponUI.LowReserve();
+        if (weaponController.IsEnhanced && !(weaponController.CurrentMag <= weaponController.MagSize * 0.3f)) WeaponUI.EnhancedWeapon();
+        else if (weaponController.IsEnhanced && (weaponController.CurrentMag <= weaponController.MagSize * 0.3f))
+        {
+            WeaponUI.EnhancedWeapon();
+            WeaponUI.LowAmmo();
+        }
+        if (!weaponController.IsEnhanced)
+        {
+            WeaponUI.ResetEnhancedWeapon();
+            if (weaponController.CurrentMag <= weaponController.MagSize * 0.3f) WeaponUI.LowAmmo();
+        }
     }
     private void Interact(InputAction.CallbackContext context)
     {
@@ -805,7 +816,7 @@ public class PlayerController : MonoBehaviour
     private void EnhanceWeapon(InputAction.CallbackContext context)
     {
         WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
-        if (AvailableBuffs > 0)
+        if (AvailableBuffs > 0 && weaponController.CurrentMag > 0 && !weaponController.IsEnhanced)
         {
             weaponController.IsEnhanced = true;
 
@@ -816,11 +827,21 @@ public class PlayerController : MonoBehaviour
 
             AvailableBuffs--;
             PickupUI.SetValue();
+            WeaponUI.EnhancedWeapon();
         }
-        else
+        else if(weaponController.CurrentMag <= 0)
+        {
+            Debug.Log("CAN'T ENHANCED WITH AN EMPTY MAG");
+            StartCoroutine(WeaponUI.FlashMag());
+        }
+        else if (AvailableBuffs <= 0)
         {
             Debug.Log("NO BUFFS AVAILABLE");
             StartCoroutine(PickupUI.Flash());
+        }
+        else if (weaponController.IsEnhanced)
+        {
+            Debug.Log("THIS WEAPON IS ALREADY ENHANCED");
         }
     }
 

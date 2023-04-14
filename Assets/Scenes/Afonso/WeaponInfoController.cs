@@ -12,11 +12,14 @@ public class WeaponInfoController : MonoBehaviour
     [SerializeField] private GameObject BombText;
     private GameObject _player;
     private WeaponController _weaponController;
+    private Color _enhancedColor;
 
     private void Start()
     {
         _player = GameManager.Instance.player.gameObject;
         _weaponController = _player.GetComponent<PlayerController>().CurrentWeapon.GetComponent<WeaponController>();
+
+        _enhancedColor = new Color(1f, 0.34f, 0f);
 
         WeaponName.SetText(_weaponController.Name);
         Mag.SetText(_weaponController.MagSize.ToString());
@@ -85,5 +88,17 @@ public class WeaponInfoController : MonoBehaviour
     {
         BombText.SetActive(false);
         GunStats.SetActive(true);
+    }
+
+    public void EnhancedWeapon()
+    {
+        Mag.color = _enhancedColor;
+        WeaponName.color = _enhancedColor;
+    }
+
+    public void ResetEnhancedWeapon()
+    {
+        Mag.color = Color.white;
+        WeaponName.color = Color.white;
     }
 }
