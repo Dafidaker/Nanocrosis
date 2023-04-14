@@ -34,7 +34,7 @@ public class MeleeAttackController : MonoBehaviour
             if(t.CurrentHealthPoints <= 0)
             {
                 Instantiate(AmmoPickup, t.AmmoPickupSpawnpoint.position, Quaternion.identity);
-                if (t.HasShield) Instantiate(EnhancementPickup, t.EnhancementPickupSpawnpoint.position, Quaternion.identity);
+                //if (t.HasShield) Instantiate(EnhancementPickup, t.EnhancementPickupSpawnpoint.position, Quaternion.identity);
             }
         }
     }

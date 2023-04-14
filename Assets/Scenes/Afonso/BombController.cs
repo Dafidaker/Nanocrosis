@@ -54,7 +54,7 @@ public class BombController : MonoBehaviour
         {
             TargetController d = other.GetComponent<TargetController>();
             if(!d.ShieldActive) d.CurrentHealthPoints -= ImpactDamage;
-            if (d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
+            //if (d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
         }
         StartCoroutine(Explode());
     }

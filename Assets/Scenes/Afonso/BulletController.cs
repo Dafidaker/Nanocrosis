@@ -110,7 +110,7 @@ public class BulletController : MonoBehaviour
                 d.CurrentHealthPoints -= Damage;
             }
 
-            if(d.CurrentHealthPoints <= 0 && d.HasShield)
+            /*if(d.CurrentHealthPoints <= 0 && d.HasShield)
             {
                 if(Gun.GetComponent<WeaponController>().Name == "Shotgun")
                 {
@@ -122,7 +122,7 @@ public class BulletController : MonoBehaviour
                 }
                 else Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
 
-            } 
+            } */
         }
 
         var HitableScript = other.GetComponent<Hitable>();

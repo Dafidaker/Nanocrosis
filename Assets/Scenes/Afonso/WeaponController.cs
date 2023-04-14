@@ -33,6 +33,8 @@ public class WeaponController : MonoBehaviour
     public Material EmptyMagMaterial;
     public Material EnhancedMaterial;
 
+    //[SerializeField] private Transform Cam;
+
     private void Awake()
     {
         CurrentMag = MagSize;
@@ -67,6 +69,8 @@ public class WeaponController : MonoBehaviour
 
             if (IsEnhanced) CurrentBulletPrefab = EnhancedBulletPrefab;
             else CurrentBulletPrefab = BulletPrefab;
+
+            //transform.LookAt(Cam);
         }
     }
 }

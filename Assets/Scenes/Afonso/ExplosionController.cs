@@ -16,7 +16,7 @@ public class ExplosionController : MonoBehaviour
             if (!d.ShieldActive) d.CurrentHealthPoints -= BlastDamage;
             else Debug.Log("Blast can't damage shield");
 
-            if (d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
+            //if (d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
         }
     }
 }
