@@ -275,16 +275,25 @@ MonoBehaviour:
   - {fileID: 1991615780051499079}
   - {fileID: 1991615778242999357}
   BombPrefab: {fileID: 236621568437285792, guid: 7017258f83ed7aa4699228f27dc1920f, type: 3}
-  AvailableBuffs: 0
   bulletsHit:
     serializedVersion: 2
     m_Bits: 136
+  WeaponUI: {fileID: 0}
+  PickupUI: {fileID: 0}
   FakeBomb: {fileID: 1991615778062711697}
   BombAttached: 0
+  AvailableBuffs: 0
   mouseYSentivity: 0
   mouseXSentivity: 0
+  CurrentWeapon: {fileID: 0}
   MeleeAttack: {fileID: 3941732432008125916}
   MeleeAttackInitialPos: {fileID: 6506858050212196655}
+  HealthBar: {fileID: 0}
+  RespawnPoint: {fileID: 0}
+  AliveUI: {fileID: 0}
+  DeadUI: {fileID: 0}
+  TimeToRepair: 10
+  dying: 0
 --- !u!114 &5442371619966485377
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,6 +308,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 100
   CurrentHealth: 0
+  healthBarController: {fileID: 0}
   minHealth1: 0
   maxHealth1: 0
   color1: {r: 0, g: 0, b: 0, a: 0}

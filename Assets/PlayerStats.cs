@@ -79,7 +79,7 @@ public class PlayerStats : MonoBehaviour
         }
         healthBarController.SetHealth();
 
-        if (CurrentHealth <= 0 )
+        if (CurrentHealth <= 0)
         {
             StartCoroutine(GameManager.Instance.playerController.DieAndRespawn());
         }

@@ -107,6 +107,9 @@ public class PlayerController : MonoBehaviour
     [Header("Health System"), Space(10)]
     [SerializeField] private HealthBarController HealthBar;
     [SerializeField] private Transform RespawnPoint;
+    [SerializeField] private GameObject AliveUI;
+    [SerializeField] private GameObject DeadUI;
+    public float TimeToRepair;
 
     private float _meleeCountdown;
 
@@ -834,12 +837,15 @@ public class PlayerController : MonoBehaviour
     {
         dying = true;
         DisableInputSystem();
-        transform.position = RespawnPoint.position;
-        yield return new WaitForSeconds(3f);
+        AliveUI.SetActive(false);
+        DeadUI.SetActive(true);
+        yield return new WaitForSeconds(TimeToRepair);
+        dying = false;
+        AliveUI.SetActive(true);
+        DeadUI.SetActive(false);
         EnableInputSystem();
         _playerStats.CurrentHealth = _playerStats.MaxHealth;
         HealthBar.SetHealth();
-        dying = false;
     }
 
     public void EnableInputSystem()
@@ -1010,10 +1016,6 @@ public class PlayerController : MonoBehaviour
             _damaged = true;*/
             _playerStats.DamageTaken(1);
             HealthBar.SetHealth();
-            if(_playerStats.CurrentHealth <= 0)
-            {
-                StartCoroutine(DieAndRespawn());
-            }
         }
     }
 

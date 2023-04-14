@@ -4574,7 +4574,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2392
+  m_Name: pb_Mesh-1850
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -6025,7 +6025,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2364
+  m_Name: pb_Mesh-1822
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -7356,7 +7356,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2580
+  m_Name: pb_Mesh-2038
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -11244,7 +11244,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2336
+  m_Name: pb_Mesh-1794
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -16000,7 +16000,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2268
+  m_Name: pb_Mesh-1726
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -19560,7 +19560,7 @@ GameObject:
   - component: {fileID: 807817080}
   - component: {fileID: 807817079}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Cube of Death
   m_TagString: DangerZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41237,7 +41237,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2444
+  m_Name: pb_Mesh-1902
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -41733,6 +41733,16 @@ Material:
     - _UVMappingMask: {r: 1, g: 0, b: 0, a: 0}
     - _UVMappingMaskEmissive: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+--- !u!1 &1759514341 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4229905633457288476, guid: 4e9e33ef512e1104a88cc62ed71ee022, type: 3}
+  m_PrefabInstance: {fileID: 5891609061635912864}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1769536918 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8758842635852515583, guid: 4e9e33ef512e1104a88cc62ed71ee022, type: 3}
+  m_PrefabInstance: {fileID: 5891609061635912864}
+  m_PrefabAsset: {fileID: 0}
 --- !u!21 &1774263154
 Material:
   serializedVersion: 8
@@ -43671,16 +43681,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cinemachineVirtualCamera: {fileID: 44402963}
   player: {fileID: 1119532556}
+  ammo: {fileID: 0}
+  specialAmmo: {fileID: 0}
   playerController: {fileID: 0}
   arenas: []
-  playerSpawnPosition: {fileID: 224408351}
   initialArena: 0
   currentArena:
     arenaType: 0
     enemiesParent: {fileID: 0}
     enemies: []
     enemiesSpawners: []
-  time: 0
+  playerSpawnPosition: {fileID: 224408351}
+  seconds: 0
 --- !u!21 &1850577392
 Material:
   serializedVersion: 8
@@ -45177,7 +45189,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh-2284
+  m_Name: pb_Mesh-1742
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -48693,10 +48705,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1991615778242999299, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
+      propertyPath: Cam
+      value: 
+      objectReference: {fileID: 955082667}
     - target: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
       propertyPath: cam
       value: 
       objectReference: {fileID: 955082667}
+    - target: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
+      propertyPath: DeadUI
+      value: 
+      objectReference: {fileID: 1769536918}
+    - target: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
+      propertyPath: AliveUI
+      value: 
+      objectReference: {fileID: 1759514341}
     - target: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
       propertyPath: PickupUI
       value: 
@@ -48717,6 +48741,10 @@ PrefabInstance:
       propertyPath: RespawnPoint
       value: 
       objectReference: {fileID: 1551744637}
+    - target: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
+      propertyPath: TimeToRepair
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 1991615778312094785, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
       propertyPath: mouseXSentivity
       value: 3
@@ -48781,6 +48809,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1991615780051499077, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
+      propertyPath: Cam
+      value: 
+      objectReference: {fileID: 955082667}
     - target: {fileID: 2945687326447511814, guid: 0249c5eea7b62184e9e39ac0a707f8e1, type: 3}
       propertyPath: Damage
       value: 15
