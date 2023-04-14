@@ -64,9 +64,7 @@ public class PlayerStats : MonoBehaviour
     #region Public Funtions
 
     public void DamageTaken(int damagedTaken)
-    {
-        return;
-        
+    {   
         if (GameManager.Instance.playerController.dying)
         {
             return;

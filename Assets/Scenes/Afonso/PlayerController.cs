@@ -1003,6 +1003,7 @@ public class PlayerController : MonoBehaviour
     {
         if (col.CompareTag($"DangerZone"))
         {
+            Debug.Log("DAMAGE");
             /*if (_damaged) return;
             _playerStats.CurrentHealth -= 5;
             HealthBar.SetHealth();

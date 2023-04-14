@@ -33,7 +33,7 @@ public class WeaponController : MonoBehaviour
     public Material EmptyMagMaterial;
     public Material EnhancedMaterial;
 
-    //[SerializeField] private Transform Cam;
+    [SerializeField] private Transform Cam;
 
     private void Awake()
     {
@@ -70,7 +70,7 @@ public class WeaponController : MonoBehaviour
             if (IsEnhanced) CurrentBulletPrefab = EnhancedBulletPrefab;
             else CurrentBulletPrefab = BulletPrefab;
 
-            //transform.LookAt(Cam);
+            //transform.forward = Cam.forward;
         }
     }
 }
