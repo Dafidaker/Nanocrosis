@@ -77,8 +77,8 @@ NavMeshProjectSettings:
     agentHeight: 2
     agentSlope: 45
     agentClimb: 1.55
-    ledgeDropHeight: 0
-    maxJumpAcrossDistance: 0
+    ledgeDropHeight: 10
+    maxJumpAcrossDistance: 10
     minRegionArea: 2
     manualCellSize: 0
     cellSize: 0.16666667
@@ -127,8 +127,8 @@ NavMeshProjectSettings:
       m_Flags: 0
   - serializedVersion: 3
     agentTypeID: 1479372276
-    agentRadius: 4.5
-    agentHeight: 9.25
+    agentRadius: 2
+    agentHeight: 5.44
     agentSlope: 45
     agentClimb: 2.5
     ledgeDropHeight: 0
@@ -144,7 +144,7 @@ NavMeshProjectSettings:
     debug:
       m_Flags: 0
   m_SettingNames:
-  - Humanoid
+  - ' Kuroru'
   - Chikai
   - Phage
   - Phage Minion

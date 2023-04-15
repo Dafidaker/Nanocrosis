@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f89927339c11a9442a6709a8dbaa3498, type: 3}
-  m_Name: Toi [6]NotWithinRangedAttack
+  m_Name: Toi [2]WhitinEvade and NotWithtinMeleeAttack and AttackIsComplete
   m_EditorClassIdentifier: 
   andDecisions:
-  - {fileID: 11400000, guid: ba76e8db875becb4b8c1615bcb003ce2, type: 2}
+  - {fileID: 11400000, guid: d418e3087ca57c2479194c68fed4d401, type: 2}
+  - {fileID: 11400000, guid: 23c7993565255ff4a95002857093f5d1, type: 2}
   - {fileID: 11400000, guid: 11fa900a9d732b04a84b02734afd8489, type: 2}
   andOrDecisions:
     combinedConditions: []
     operation: 
     combinedConditionsResults: 
   action: {fileID: 0}
-  targetState: {fileID: 11400000, guid: 1b42fab6dae5dd141baef1ab45bd58da, type: 2}
+  targetState: {fileID: 11400000, guid: 58159a430185fcf449db1832855c29d3, type: 2}

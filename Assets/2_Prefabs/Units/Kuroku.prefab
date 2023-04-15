@@ -5000,7 +5000,6 @@ GameObject:
   - component: {fileID: 217872273}
   - component: {fileID: 217872272}
   - component: {fileID: 217872271}
-  - component: {fileID: 217872277}
   - component: {fileID: 5574858717280796203}
   m_Layer: 7
   m_Name: Kuroku
@@ -5087,7 +5086,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 8
+  m_Speed: 6
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -5151,18 +5150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pathFollower: {fileID: 150343665}
   ParticleSystem: {fileID: 150343664}
---- !u!114 &217872277
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1090219386143568}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 334bfdbf5d8f3c54cbfc5444443b642c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  damage: 5
 --- !u!114 &5574858717280796203
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -29,7 +29,7 @@ public class HitEnemiesCollider : MonoBehaviour
         var HitableScript = other.GetComponent<Hitable>();
         if (HitableScript != null)
         {
-            HitableScript.GotHit(bulletController.Damage);
+            //HitableScript.GotHit(bulletController.Damage);
         }
 
         Destroy(gameObject);

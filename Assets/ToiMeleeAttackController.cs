@@ -16,12 +16,14 @@ public class ToiMeleeAttackController : MonoBehaviour
     private bool _isInPath;
     private Vector3? _closestNode;
     private int _currentNodeIndex;
-    
-    [Header("Attack Specifications"),Space(10)] 
+
+    [Header("Attack Specifications"), Space(10)] 
+    [field: SerializeField] private LayerMask itHits;
     [field: SerializeField] private float forceLeaving;
     [field: SerializeField] private float speedRotating;
     [field: SerializeField] public float timeRotating;
     [field: SerializeField] private float maxDistanceTraveled;
+    [field: SerializeField] private int damage;
     private Vector3 _oldPosition;
     private float _distanceTraveled;
     
@@ -129,10 +131,14 @@ public class ToiMeleeAttackController : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
+        if (!((itHits.value & (1 << other.transform.gameObject.layer)) > 0)) { return; }
+        
         if (other.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerStats>().DamageTaken(5);
+            other.gameObject.GetComponent<PlayerStats>().DamageTaken(damage);
         }
+        
+        Destroy(gameObject);
     }
     
     

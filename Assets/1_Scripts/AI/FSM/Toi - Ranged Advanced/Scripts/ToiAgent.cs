@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,23 +48,30 @@ public class ToiAgent : MonoBehaviour
     
     #region Unity Functions
 
-    private void OnEnable()
+    private void OnDestroy()
     {
-        
-    }
-    
-    private void OnDisable()
-    {
-        
+        foreach (var attack in _rangedAttacks.ToArray())
+        {
+            if (attack == null)
+            {
+                _rangedAttacks.Remove(attack);
+                continue;
+            }
+            Destroy(attack.gameObject);
+        }
+        foreach (var attack in _meleeAttacks.ToArray())
+        {
+            if (attack == null)
+            {
+                _meleeAttacks.Remove(attack);
+                continue;
+            }
+            Destroy(attack.gameObject);
+        }
     }
 
-    private void Awake()
+    public void CalledStart()
     {
-    }
-    
-    private void Start()
-    {
-        
         _fsmNavMeshAgent = GetComponent<FSMNavMeshAgent>();
         _agent = _fsmNavMeshAgent._agent;
         finiteStateMachine = GetComponent<FiniteStateMachine>();
@@ -96,8 +104,8 @@ public class ToiAgent : MonoBehaviour
             attackTimer = attackCooldown;
         }
         
-        transform.rotation = Quaternion.Slerp(transform.rotation, 
-            Quaternion.LookRotation(_target.transform.position- transform.position), 0.5f);
+        var newRotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(new Vector3(_target.transform.position.x , transform.position.y , _target.transform.position.z) - transform.position), 0.5f);
+        transform.rotation = newRotation;
     }
 
     private void FixedUpdate()
@@ -107,7 +115,7 @@ public class ToiAgent : MonoBehaviour
 
     #endregion
 
-    #region Utilities
+    #region Attack Logic
     
     private IEnumerator PerformRangedAttack()
     {
@@ -117,8 +125,10 @@ public class ToiAgent : MonoBehaviour
         foreach (var t in rangedAttackPositions)
         {
             var temp = Instantiate(rangedAttackPrefab, t.position, t.rotation);
-            _rangedAttacks.Add(temp.GetComponent<ToiRangedAttackController>());
-            StartCoroutine(temp.GetComponent<ToiRangedAttackController>().Attack());
+            var tempScript = temp.GetComponent<ToiRangedAttackController>();
+            tempScript.followPosition = t;
+            _rangedAttacks.Add(tempScript);
+            tempScript.attack = StartCoroutine(tempScript.Attack());
             yield return new WaitForSeconds(1f);
         }
 
@@ -143,7 +153,6 @@ public class ToiAgent : MonoBehaviour
     {
         _agent.isStopped = true;
         isAttacking = true;
-        Debug.Log("yahah");
         
         for (int i = 0; i < meleeAttackTransforms.Length; i++)
         {

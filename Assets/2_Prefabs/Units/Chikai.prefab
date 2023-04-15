@@ -1066,10 +1066,12 @@ MonoBehaviour:
   headbuttForce: 50
   headbuttDuration: 1
   headbuttTrigger: {fileID: 5640544717569888670}
+  damageHeadbutt: 10
   rotationAttackVelocity: 10
   rotation: {x: 0, y: 360, z: 0}
   rotationSpeed: 1.5
   rotationTrigger: {fileID: 3386601288717749546}
+  damageRotation: 5
   rangeAttackSpeed: 5
   jumpSpeed: 1
   heightCurve:
@@ -1245,8 +1247,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af121bee9d925574199600ad494e18ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isItEnemy: 1
   enemyType: 0
+  isItEnemy: 1
   canHaveShield: 1
   maxHealth: 200
   currentHealth: 0

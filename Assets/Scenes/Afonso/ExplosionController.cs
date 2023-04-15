@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Enums;
 using UnityEngine;
 
 public class ExplosionController : MonoBehaviour
@@ -32,12 +33,12 @@ public class ExplosionController : MonoBehaviour
         var HitableScript = other.GetComponent<Hitable>();
         if (HitableScript != null)
         {
-            HitableScript.GotHit(BlastDamage);
+            HitableScript.GotHit(BlastDamage ,PlayerAttacks.Explositon);
         }
 
         if (other.CompareTag("BossPart"))
         {
-            other.GetComponentInParent<Hitable>().GotHit(BlastDamage);
+            other.GetComponentInParent<Hitable>().GotHit(BlastDamage ,PlayerAttacks.Explositon);
         }
     }
 }

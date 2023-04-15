@@ -12,7 +12,6 @@ public class Hitable : MonoBehaviour
     [Header("Events"), Space(5)] 
     private GameEvent enemyDied;
     
-    
     [Header("Enemy Stats"), Space(5)] 
     public Enemy enemyType;
     public bool isItEnemy;
@@ -79,8 +78,10 @@ public class Hitable : MonoBehaviour
         }
     }
 
-    public void GotHit(int damage)
+    public void GotHit(int damage, PlayerAttacks attackType)
     {
+        //Debug.Log("the attack type: " + attackType);
+        
         //todo add the distinction between bullets / enhanced bullets / knife
         currentHealth -= damage;
         
@@ -99,7 +100,7 @@ public class Hitable : MonoBehaviour
         
         if (currentHealth <= 0)
         {
-            Death();
+            Death(attackType);
         }
 
         if (animate)
@@ -119,11 +120,13 @@ public class Hitable : MonoBehaviour
         return (float)Math.Round((decimal)((maxHealth - currentHealth)*100 / maxHealth), 2);
     }
     
-    private void Death()
+    private void Death(PlayerAttacks attackType)
     {
-        if (Random.Range(0f, 1f) < 0.1f) { Instantiate(_ammo, transform.position, Quaternion.identity); }
+        if (Random.Range(0f, 1f) < 0.05f) { Instantiate(_ammo, transform.position, Quaternion.identity); }
         if (hasShield) { Instantiate(_specialAmmo, transform.position, Quaternion.identity); }
+        if (attackType == PlayerAttacks.Knife) { Instantiate(_ammo, transform.position, Quaternion.identity); }
         if (isItEnemy) { enemyDied.Ping(this, null); }
+        
         
         if(doSound) SoundManager.Instance.PlaySound(clip,volume);
         Destroy(gameObject);

@@ -8,6 +8,7 @@ public class KuroruAgent : MonoBehaviour
 {
     public PathFollower pathFollower;
     public ParticleSystem ParticleSystem;
+    [field: SerializeField] private int damage;
     
     private FSMNavMeshAgent _fsmNavMeshAgent;
     private NavMeshAgent _agent;
@@ -30,16 +31,13 @@ public class KuroruAgent : MonoBehaviour
 
     private void Awake()
     {
+    }
+    
+    public void CalledStart()
+    {
         _fsmNavMeshAgent = GetComponent<FSMNavMeshAgent>();
         _agent = _fsmNavMeshAgent._agent;
         ParticleSystem.gameObject.SetActive(false);
-        
-        //StartCoroutine(Attack());
-    }
-    
-    private void Start()
-    {
-        
     }
     
     private void Update()
@@ -96,9 +94,9 @@ public class KuroruAgent : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player")) 
         {
-            other.GetComponent<PlayerStats>().DamageTaken(5);
+            other.GetComponent<PlayerStats>().DamageTaken(damage);
         }
     }
 }

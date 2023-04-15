@@ -10,8 +10,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     
-    [Header("Prefab"), Space(5)] 
-    public CinemachineVirtualCamera cinemachineVirtualCamera;
+    [Header("Prefab"), Space(5)]
     public GameObject player;
     public GameObject ammo;
     public GameObject specialAmmo;
@@ -21,10 +20,16 @@ public class GameManager : MonoBehaviour
     public ArenaClass[] arenas;
     [field: SerializeField] private Arena initialArena;
     [field: HideInInspector] public ArenaClass currentArena;
+    [field: SerializeField] public bool spawnEnemies;
     
     [Header("Transforms"), Space(5)]
     [field: SerializeField] private Transform playerSpawnPosition;
     
+    
+    [Header("Camera"), Space(5)] 
+    public CinemachineVirtualCamera CinemachineVirtual;
+    private float _camXSpeed;
+    private float _camYSpeed;
     
     [field: HideInInspector] public float seconds;
     
@@ -53,6 +58,11 @@ public class GameManager : MonoBehaviour
         {
             GetArena(enemySpawn.arena).enemiesSpawners.Add(enemySpawn);
         }
+        
+        _camXSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
+        _camYSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
+        
+        updateMouseSentivity(null, Settings.MouseSentivity);
     }
 
     void Update()
@@ -103,6 +113,19 @@ public class GameManager : MonoBehaviour
         var msm = win ? "you won" : "you lost";
         Debug.Log(msm);
     }
+
+    public ArenaEnemySpawner GetArenaEnemySpawner(List<ArenaEnemySpawner> arenaType,Enemy enemyType )
+    {
+        return arenaType.FirstOrDefault(enemySpawner => enemySpawner.enemy == enemyType);
+    }
+
+    public void updateMouseSentivity(Component sender, object data)
+    {
+        if (data is not Vector2) return;
+        Vector2 mouseSentivity = (Vector2)data;
+        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseSentivity.x;
+        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseSentivity.y;
+    }
 }
 
 [System.Serializable]
@@ -110,6 +133,7 @@ public class ArenaClass
 {
     public Arena arenaType;
     public GameObject enemiesParent;
+    public Transform[] waypoints;
     [HideInInspector] public List<GameObject> enemies;
     [HideInInspector] public List<ArenaEnemySpawner> enemiesSpawners;
     

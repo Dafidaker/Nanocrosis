@@ -5,22 +5,23 @@ using UnityEngine;
 
 public class ToiRangedAttackController : MonoBehaviour
 {
+    public Coroutine attack;
+    
     [field: SerializeField] private Vector3 finalSize;
     [field: SerializeField] private float bulletForce;
-    [field: SerializeField] private LayerMask Ground_Floor_Player;
+    [field: SerializeField] private int damage;
+    [field: SerializeField] private LayerMask itHits;
     private bool _fullSize;
 
-    public bool animateBall;
-
-    public GameObject particalSystem;
-
-    private Rigidbody _rb;
-
+    [field: HideInInspector] public bool animateBall;
+    [field: HideInInspector] public Transform followPosition;
+    
     [field: SerializeField, Header("Distance Traveled"),Space(10)] private float maxDistance;
     private Vector3 _oldPosition;
     private float _distanceTraveled;
-
-
+    
+    private bool IsMoving;
+    private Rigidbody _rb;
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
@@ -29,7 +30,15 @@ public class ToiRangedAttackController : MonoBehaviour
         
         _oldPosition = transform.position;
     }
-    
+
+    private void OnDestroy()
+    {
+        if (attack != null)
+        {
+            StopCoroutine(attack);
+        }
+    }
+
     private void ResetBall()
     {
         transform.localScale = new Vector3(0f, 0f, 0f);
@@ -49,6 +58,11 @@ public class ToiRangedAttackController : MonoBehaviour
             _fullSize = true;
         }
 
+        if (!IsMoving)
+        {
+            transform.position = followPosition.position;   
+        }
+        
         CalculateDistance();
     }
 
@@ -81,6 +95,7 @@ public class ToiRangedAttackController : MonoBehaviour
 
     public void ShootRangedAttack(Vector3 direction)
     {
+        IsMoving = true;
         _rb.velocity = direction * bulletForce;
     }
 
@@ -89,9 +104,13 @@ public class ToiRangedAttackController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!((itHits.value & (1 << other.transform.gameObject.layer)) > 0)) { return; }
+        
         if (other.CompareTag("Player"))
         {
             other.gameObject.GetComponent<PlayerStats>().DamageTaken(5);
         }
+        
+        Destroy(gameObject);
     }
 }

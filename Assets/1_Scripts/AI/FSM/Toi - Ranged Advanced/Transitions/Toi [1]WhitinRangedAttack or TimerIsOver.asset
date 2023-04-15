@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f89927339c11a9442a6709a8dbaa3498, type: 3}
-  m_Name: Toi [1]WhitinRangedAttack and TimerIsOver
+  m_Name: Toi [1]WhitinRangedAttack or TimerIsOver
   m_EditorClassIdentifier: 
   andDecisions: []
   andOrDecisions:
@@ -20,6 +20,6 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 44682affd0162504a9cdaabdeca886d6, type: 2}
       operation: 0100000001000000
     operation: 01000000
-    combinedConditionsResults: 00
+    combinedConditionsResults: 01
   action: {fileID: 0}
   targetState: {fileID: 11400000, guid: e027293e6e1cb804b885b5a0c41f2c43, type: 2}

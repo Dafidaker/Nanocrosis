@@ -5,6 +5,13 @@ using Enums;
 using UnityEngine;
 
 [System.Serializable]
+public struct EnemyHealing
+{
+    public Enemy enemy;
+    public float healing;
+}
+
+[System.Serializable]
 public struct EnemyPercentage
 {
     public Enemy enemy;
@@ -20,8 +27,15 @@ public struct ArenaPercentage
 public class ObjectiveManager : MonoBehaviour
 {
     public static ObjectiveManager Instance;
+
+
+    [Header("Debug Objective"), Space(5)] 
+    [field: SerializeField] private float[] minutes;
+    [field: SerializeField] private Arena selectedArena;
     
+    [Header("Objective Stats"), Space(5)] 
     public float maxValue;
+    public float initialValue;
     public float currentValue;
     private ArenaClass _lungs;
     public EnemyPercentage[] enemyPercentageInspector;
@@ -29,10 +43,16 @@ public class ObjectiveManager : MonoBehaviour
     
     public ArenaPercentage[] arenaMultiplierInspector;
     private Dictionary<Arena, float> _arenaMultiplier;
+    
+    public EnemyHealing[] enemyHealingInspector;
+    private Dictionary<Enemy, float> _enemyHealing;
 
     public float passiveHealingValue;
     public float updateUnlimitedObjectiveCooldown;
     private WaitForSeconds _unlimitedObjectiveWaitForSeconds;
+    
+    
+    
     private void Awake()
     {
         Instance = this;
@@ -40,7 +60,7 @@ public class ObjectiveManager : MonoBehaviour
     
     private void Start()
     {
-        currentValue = maxValue;
+        currentValue = initialValue;
         _lungs = GameManager.Instance.GetArena(Arena.Lungs);
 
         _unlimitedObjectiveWaitForSeconds = new WaitForSeconds(updateUnlimitedObjectiveCooldown);
@@ -56,6 +76,15 @@ public class ObjectiveManager : MonoBehaviour
         {
             _arenaMultiplier.Add(arenaPercentage.arena , arenaPercentage.multiplier);
         }
+        
+        _enemyHealing = new Dictionary<Enemy, float>();
+        foreach (var enemyHealing in enemyHealingInspector)
+        {
+            _enemyHealing.Add(enemyHealing.enemy , enemyHealing.healing);
+        }
+
+        //GetValueRemoved(minutes, selectedArena);
+        
         
         StartCoroutine(UpdateUnlimitedObjective());
     }
@@ -77,7 +106,7 @@ public class ObjectiveManager : MonoBehaviour
 
             currentValue -= amountOfEnemies * weight;
             
-            Debug.Log("Enemy: " + enemySpawner.enemy + "\namountOfEnemies: " + enemySpawner.enemies.Count + "\nAdd to Value: " + amountOfEnemies * weight);
+            //Debug.Log("Enemy: " + enemySpawner.enemy + "\namountOfEnemies: " + enemySpawner.enemies.Count + "\nAdd to Value: " + amountOfEnemies * weight);
         }
 
         if (currentValue <= 0 )
@@ -95,7 +124,24 @@ public class ObjectiveManager : MonoBehaviour
         return currentValue / maxValue;
     }
 
-    public void CheckForPhageDeath(Component sender, object data)
+    public void UpdateObjective(Component sender, object data) 
+    {
+        if (sender is Hitable && GameManager.Instance.currentArena.arenaType == Arena.Lungs)
+        {
+            var enemyType = sender.GetComponent<Hitable>().enemyType;
+            if (enemyType == Enemy.Phage) { return; }
+            var healingValue = _enemyHealing[enemyType];
+            
+            Debug.Log("healed: " + healingValue);
+            
+            if (currentValue + healingValue <= maxValue)
+            {
+                currentValue += healingValue;
+            }
+        }
+    }
+    
+    public void CheckForPhageDeath(Component sender, object data) 
     {
         if (sender is Hitable && sender.GetComponent<Hitable>().enemyType == Enemy.Phage)
         {
@@ -105,5 +151,67 @@ public class ObjectiveManager : MonoBehaviour
             GameManager.Instance.GameEnded(true);
             
         }
+    }
+
+    public void GetValueRemoved(float[] Minutes,Arena arenaType )
+    {
+        float positiveHealth = passiveHealingValue;
+        
+        float kurokuWeight = _enemyPercentage[Enemy.Kuroru];
+        float chikaiWeight = _enemyPercentage[Enemy.Chikai];
+        float toiWeight  = _enemyPercentage[Enemy.Toi];
+
+        float arenaMultiplier = _arenaMultiplier[arenaType];
+
+        var arena = GameManager.Instance.GetArena(arenaType);
+
+        var kuroruAmountCurve = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Kuroru).maxAmount;
+        var chikaiAmountCurve = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Chikai).maxAmount;
+        var toiAmountCurve = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Toi).maxAmount;
+
+        foreach (var minute in Minutes)
+        {
+            float maxKuroruAmount;
+            if (minute > kuroruAmountCurve[kuroruAmountCurve.length - 1].time)
+            {
+                maxKuroruAmount = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Kuroru).maxAmount.Evaluate(kuroruAmountCurve[kuroruAmountCurve.length - 1].time);
+            }
+            else
+            {
+                maxKuroruAmount = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Kuroru).maxAmount.Evaluate(minute);
+            }
+            
+            float maxChikaiAmount;
+            if (minute > chikaiAmountCurve[chikaiAmountCurve.length - 1].time)
+            {
+                maxChikaiAmount = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Chikai).maxAmount.Evaluate(chikaiAmountCurve[chikaiAmountCurve.length - 1].time);
+            }
+            else
+            {
+                maxChikaiAmount = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Chikai).maxAmount.Evaluate(minute);
+            }
+            
+            float maxToiAmount;
+            if (minute > toiAmountCurve[toiAmountCurve.length - 1].time)
+            {
+                maxToiAmount = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Toi).maxAmount.Evaluate(toiAmountCurve[toiAmountCurve.length - 1].time);
+            }
+            else
+            {
+                maxToiAmount = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Toi).maxAmount.Evaluate(minute);
+            }
+            
+        
+            float valueLost = positiveHealth - ((maxKuroruAmount * kurokuWeight) * arenaMultiplier) - ((maxChikaiAmount * chikaiWeight) * arenaMultiplier) - ((maxToiAmount * toiWeight) * arenaMultiplier);
+        
+            Debug.Log("");
+            Debug.Log("MINUTE " + minute + " - MINUTE " + minute + " - MINUTE " + minute);
+            Debug.Log("At minute " + minute + " the value lost every " + updateUnlimitedObjectiveCooldown + " seconds is " + valueLost);
+            Debug.Log("Each Minute the value lost is " + (60 / updateUnlimitedObjectiveCooldown) * valueLost);
+            Debug.Log("Would go from " + maxValue + " to 0 in " + ((maxValue / valueLost) * updateUnlimitedObjectiveCooldown)/ 60 + " mins" );
+            Debug.Log("At minute " + minute + " there will be " + maxKuroruAmount + " kurokus, " + maxChikaiAmount + " chikais "+ maxToiAmount +" tois "); 
+        }
+        
+        
     }
 }

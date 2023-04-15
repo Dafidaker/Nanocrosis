@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
     [field: SerializeField] private float dashSpeedChangeFactor;
     private float _dashCooldownTimer;
     private bool _dashing;
+    private Coroutine _momentumCoroutine;
     
     [Header("Rotate Player"), Space(10)] 
     public Transform cam;
@@ -161,7 +162,7 @@ public class PlayerController : MonoBehaviour
     {
         PlayerControls = new Controls();
         Instance = this;
-        Settings.GameStart(); //todo change this to a game controller or something :)
+        //Settings.GameStart(); //todo change this to a game controller or something :)
         CurrentWeapon = Weapons[_currrentWeaponIndex];
         FirePoint = CurrentWeapon.GetComponent<WeaponController>().FirePoint;
         FakeBomb.SetActive(false);
@@ -184,11 +185,13 @@ public class PlayerController : MonoBehaviour
         _playerStats = GetComponent<PlayerStats>();
 
         
-        /*_camXSpeed = CinemachineVirtual.GetComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
-        _camYSpeed = CinemachineVirtual.GetComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;*/
+        _camXSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
+        _camYSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
 
-        _camXSpeed = 0.05f;
-        _camYSpeed =  0.05f;
+        Debug.Log("_camXSpeed" + _camXSpeed);
+        Debug.Log("_camYSpeed" + _camYSpeed);
+        /*_camXSpeed = 0.05f;
+        _camYSpeed =  0.05f;*/
 
         UpdateCamSentivity();
     }
@@ -574,12 +577,12 @@ public class PlayerController : MonoBehaviour
             {
                 if (_keepMomentum)
                 {
-                    StopAllCoroutines();
-                    StartCoroutine(SmoothlyLerpMoveSpeed());
+                    if (_momentumCoroutine != null) { StopCoroutine(_momentumCoroutine); }
+                    _momentumCoroutine = StartCoroutine(SmoothlyLerpMoveSpeed());
                 }
                 else
                 {
-                    StopAllCoroutines();
+                    if (_momentumCoroutine != null) { StopCoroutine(_momentumCoroutine); }
                     _moveSpeed = _desiredMoveSpeed;
                 }
             }
@@ -987,7 +990,7 @@ public class PlayerController : MonoBehaviour
             WeaponController w1 = Weapons[0].GetComponent<WeaponController>();
             WeaponController w2 = Weapons[1].GetComponent<WeaponController>();
 
-            Debug.Log((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve));
+           // Debug.Log((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve));
 
             if ((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve))
             {

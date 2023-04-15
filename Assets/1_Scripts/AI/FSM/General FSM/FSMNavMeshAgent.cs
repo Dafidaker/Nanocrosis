@@ -1,13 +1,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Enums;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public class FSMNavMeshAgent : MonoBehaviour
 {
-    public Transform[] patrolWaypoints;
+    public List<Transform> patrolWaypoints;
     public Transform target;
     
     //different Agents
@@ -48,6 +49,22 @@ public class FSMNavMeshAgent : MonoBehaviour
         kuroruAgent = GetComponent<KuroruAgent>();
         toiAgent = GetComponent<ToiAgent>();
         target = GameManager.Instance.player.transform;
+
+        if (chikaiAgent != null)
+        {
+            chikaiAgent.CalledStart();
+        }
+        else if (kuroruAgent != null)
+        {
+            kuroruAgent.CalledStart();
+        }
+        else if (toiAgent != null)
+        {
+            toiAgent.CalledStart();
+        }
+
+        GetWaypoints();
+
     }
     
     private void Update()
@@ -63,6 +80,12 @@ public class FSMNavMeshAgent : MonoBehaviour
     #endregion
 
     #region Utilities
+
+    private void GetWaypoints()
+    {
+        patrolWaypoints = new List<Transform>();
+        patrolWaypoints.AddRange(GameManager.Instance.currentArena.waypoints);
+    }
     
     public bool IsAtDestination()
     {

@@ -32,21 +32,24 @@ public class EnemyManager : MonoBehaviour
 
     private void Update()
     {
-        SpawnEnemies();
+        if (GameManager.Instance.spawnEnemies)
+        {
+            SpawnEnemies();
+        }
     }
 
     public void UpdateEnemyList(Component sender, object data)
     {
-        if (sender is Hitable)
+        /*if (sender is Hitable)
         {
             Debug.Log("killed a enemy: " + sender.GetComponent<Hitable>().enemyType);
         }
         else
         {
             Debug.Log("killed a enemy");
-        }
+        }*/
         
-        
+         
         foreach (var enemySpawn in GameManager.Instance.currentArena.enemiesSpawners)
         {
             enemySpawn.enemies ??= new List<GameObject>();
@@ -109,7 +112,6 @@ public class EnemyManager : MonoBehaviour
     private void SpawnEnemy(ArenaEnemySpawner enemySpawn)
     {
         var playerTransform = GameManager.Instance.player.transform;
-        var camTrans = GameManager.Instance.cinemachineVirtualCamera.transform.forward;
         var spawnAmount = 1;
         
         var spawnRange = Random.Range(enemySpawn.minDistanceToPlayer, enemySpawn.maxDistanceToPlayer);
@@ -120,7 +122,6 @@ public class EnemyManager : MonoBehaviour
         vector = Quaternion.Euler(0f, -spawnAngle/2, 0f) * vector;
         
         //Debug.DrawRay(playerTransform.position, vector, Color.yellow , 100f);
-        
         
         spawnOrigins.Add(playerTransform.position + vector);
 
@@ -136,7 +137,7 @@ public class EnemyManager : MonoBehaviour
         foreach (var vector3 in spawnOrigins)
         { 
             //Debug.DrawRay(vector3,Vector3.down, Color.white,100f);
-           Instantiate(debugGameObject, vector3, Quaternion.identity);
+           //Instantiate(debugGameObject, vector3, Quaternion.identity);
            Physics.Raycast(vector3, Vector3.down, out var hit, spawnOn);
            
            if (hit.point.y <= vector3.y)
@@ -147,7 +148,7 @@ public class EnemyManager : MonoBehaviour
 
         if (raycastHits.Count == 0)
         {
-            Debug.Log("no possible position to spawn the Enemy");
+            //Debug.Log("no possible position to spawn the Enemy");
             return;
         }
         

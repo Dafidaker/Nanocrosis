@@ -7,7 +7,7 @@ public class ToiEvade : Action
 {
     public override void Act(FiniteStateMachine fsm)
     {
-        //Debug.Log("Attack");
+        Debug.Log("evade");
         fsm.GetNavMeshAgent().toiAgent.EvadeAction();
     }
 }

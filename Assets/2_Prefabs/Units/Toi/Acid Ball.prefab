@@ -4841,9 +4841,9 @@ GameObject:
   - component: {fileID: 1274866931983595737}
   - component: {fileID: 4729208472002513249}
   - component: {fileID: 4751072851207977896}
-  - component: {fileID: -3064978654285250086}
+  - component: {fileID: 8924305497658551106}
   m_Layer: 0
-  m_Name: ToiMeleeAttack
+  m_Name: Acid Ball
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4893,7 +4893,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0c487d398d967a8459ef169a61fe1b93, type: 2}
+  - {fileID: 2100000, guid: a1e97cbf2538241b691aae8243b5fb10, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4963,7 +4963,7 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &-3064978654285250086
+--- !u!114 &8924305497658551106
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4972,12 +4972,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 8798475704629104677}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4920183d67279354f9c661145103e568, type: 3}
+  m_Script: {fileID: 11500000, guid: c6675b53a34d55242b0b98711c31924e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pathNodes: []
-  toiTransform: {fileID: 0}
-  forceLeaving: 7
-  speedRotating: 2
-  timeRotating: 3
-  maxDistanceTraveled: 300
+  finalSize: {x: 1, y: 1, z: 1}
+  bulletForce: 25
+  damage: 5
+  itHits:
+    serializedVersion: 2
+    m_Bits: 264
+  animateBall: 0
+  followPosition: {fileID: 0}
+  maxDistance: 300

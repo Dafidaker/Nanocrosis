@@ -132,7 +132,7 @@ public class PhageAgent : MonoBehaviour
     {
         _currentWaypointIndex++;
 
-        if (_currentWaypointIndex > _fsmNavMeshAgent.patrolWaypoints.Length - 1)
+        if (_currentWaypointIndex > _fsmNavMeshAgent.patrolWaypoints.Count - 1)
         {
             _currentWaypointIndex = 0;
         }
@@ -142,10 +142,10 @@ public class PhageAgent : MonoBehaviour
     
     private void DefineRandomWaypoint()
     {
-        var newWaypointIndex = Random.Range(0, _fsmNavMeshAgent.patrolWaypoints.Length);
+        var newWaypointIndex = Random.Range(0, _fsmNavMeshAgent.patrolWaypoints.Count);
         while (newWaypointIndex == _currentWaypointIndex)
         {
-            newWaypointIndex = Random.Range(0, _fsmNavMeshAgent.patrolWaypoints.Length);
+            newWaypointIndex = Random.Range(0, _fsmNavMeshAgent.patrolWaypoints.Count);
         }
 
         _currentWaypointIndex = newWaypointIndex;

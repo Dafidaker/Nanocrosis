@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Enums;
 using UnityEngine;
 
 public class MeleeAttackController : MonoBehaviour
@@ -36,6 +37,17 @@ public class MeleeAttackController : MonoBehaviour
                 Instantiate(AmmoPickup, t.AmmoPickupSpawnpoint.position, Quaternion.identity);
                 //if (t.HasShield) Instantiate(EnhancementPickup, t.EnhancementPickupSpawnpoint.position, Quaternion.identity);
             }
+        }
+        
+        var HitableScript = col.GetComponent<Hitable>();
+        if (HitableScript != null)
+        {
+            HitableScript.GotHit(Damage ,PlayerAttacks.Knife);
+        }
+
+        if (col.CompareTag("BossPart"))
+        {
+            col.GetComponentInParent<Hitable>().GotHit(Damage ,PlayerAttacks.Knife);
         }
     }
 

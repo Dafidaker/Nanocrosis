@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Enums;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour
@@ -70,12 +71,22 @@ public class BulletController : MonoBehaviour
         var HitableScript = collision.gameObject.GetComponent<Hitable>();
         if (HitableScript != null)
         {
-            HitableScript.GotHit(Damage);
+            if (Gun.GetComponent<WeaponController>().IsEnhanced)
+            {
+                HitableScript.GotHit(Damage, PlayerAttacks.BulletEnhanced);
+            }
+            HitableScript.GotHit(Damage,PlayerAttacks.Bullet);
         }
 
         if (collision.gameObject.CompareTag("BossPart"))
         {
-            collision.gameObject.GetComponentInParent<Hitable>().GotHit(Damage);
+            var hitable = collision.gameObject.GetComponentInParent<Hitable>();
+            
+            if (Gun.GetComponent<WeaponController>().IsEnhanced)
+            {
+                hitable.GotHit(Damage, PlayerAttacks.BulletEnhanced);
+            }
+            hitable.GotHit(Damage,PlayerAttacks.Bullet);
         }
         Destroy(gameObject);
     }
@@ -125,15 +136,26 @@ public class BulletController : MonoBehaviour
             } */
         }
 
+        
+        
         var HitableScript = other.GetComponent<Hitable>();
         if (HitableScript != null)
         {
-            HitableScript.GotHit(Damage);
+            if (Gun.GetComponent<WeaponController>().IsEnhanced)
+            {
+                HitableScript.GotHit(Damage, PlayerAttacks.BulletEnhanced);
+            }
+            HitableScript.GotHit(Damage,PlayerAttacks.Bullet);
         }
 
+        HitableScript = other.GetComponentInParent<Hitable>();
         if (other.CompareTag("BossPart"))
         {
-            other.GetComponentInParent<Hitable>().GotHit(Damage);
+            if (Gun.GetComponent<WeaponController>().IsEnhanced)
+            {
+                HitableScript.GotHit(Damage, PlayerAttacks.BulletEnhanced);
+            }
+            HitableScript.GotHit(Damage,PlayerAttacks.Bullet);
         }
         Destroy(gameObject);
     }

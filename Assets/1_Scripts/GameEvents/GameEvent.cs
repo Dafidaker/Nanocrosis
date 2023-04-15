@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game Event")]
 public class GameEvent : ScriptableObject
 {
-    [field: HideInInspector]public List<GameEventListener> listeners = new List<GameEventListener>();
+    [field: HideInInspector] public List<GameEventListener> listeners = new List<GameEventListener>();
 
     public void Ping(Component sender, object data)
     {

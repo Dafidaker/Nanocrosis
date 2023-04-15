@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2935083062273067152}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Seeking Attack Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4613932020470920237}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2735426011150019588}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Explosive Minions Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,7 +89,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1523140362112830296}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.5, y: -1, z: 11}
+  m_LocalPosition: {x: -1.5, y: -1, z: 19.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -105,7 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3700678900359122724}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Damage Text Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -136,7 +136,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5607156809680401174}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Acid Shot Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -167,7 +167,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9057155838182362079}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Transforms
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +203,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7780688226361528907}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Unexpected Bomb Spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -239,7 +239,7 @@ GameObject:
   - component: {fileID: 6196073679915051699}
   - component: {fileID: 6196073679915051698}
   - component: {fileID: 6196073679915051697}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1733,7 +1733,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2357
+  m_VersionIndex: 2861
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1849,7 +1849,7 @@ GameObject:
   - component: {fileID: 6196073679961103857}
   - component: {fileID: 6196073679961103856}
   - component: {fileID: 6196073679961103871}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3343,7 +3343,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2369
+  m_VersionIndex: 2873
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3459,9 +3459,9 @@ GameObject:
   - component: {fileID: 6196073680301464748}
   - component: {fileID: 6196073680301464747}
   - component: {fileID: 6196073680301464746}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Base
-  m_TagString: Untagged
+  m_TagString: BossPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3768,7 +3768,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 19665
+  m_VersionIndex: 20142
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -3882,9 +3882,9 @@ GameObject:
   - component: {fileID: 6196073680585425746}
   - component: {fileID: 6196073680585425745}
   - component: {fileID: 6196073680585425744}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: BossPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4554,7 +4554,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 1334
+  m_VersionIndex: 1832
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -4670,7 +4670,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6196073680893191060}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4712,13 +4712,13 @@ GameObject:
   - component: {fileID: 8719793088861465613}
   - component: {fileID: 4418708978046202357}
   - component: {fileID: 2591901241471402092}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6196073680993574888
 Transform:
   m_ObjectHideFlags: 0
@@ -4734,7 +4734,7 @@ Transform:
   - {fileID: 4613932020470920237}
   - {fileID: 9057155838182362079}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6196073680993574889
 MonoBehaviour:
@@ -4773,7 +4773,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   debugPrefab: {fileID: 2632104514498547327, guid: 111b877274783fb42bcc9eb32ba1a272, type: 3}
-  timeBetweenAttacks: 3
+  timeBetweenAttacks: 5
   explosiveMinionsSpawn: {fileID: 2735426011150019588}
   explosiveMinionsAmount:
     serializedVersion: 2
@@ -4837,7 +4837,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   minionPrefab: {fileID: 6196073680993574807, guid: f8a7612c4708ff14c831480062e67969, type: 3}
   timeBetweenSpawningEachMinion: 2
-  explosiveMinionsCooldown: 1000
+  explosiveMinionsCooldown: 10
   seekingModifications:
     serializedVersion: 2
     m_Curve: []
@@ -4926,7 +4926,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -334000983
   m_Radius: 14.5
-  m_Speed: 100
+  m_Speed: 6
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 10
@@ -4989,7 +4989,7 @@ MonoBehaviour:
   hasShield: 0
   shieldIsActive: 0
   shieldCooldown: 100
-  animate: 0
+  animate: 1
   duration: 0.05
   strength: 0
   vibrato: 0
@@ -4997,8 +4997,8 @@ MonoBehaviour:
   fadeOut: 1
   damageText: {fileID: 7617370455128135737, guid: f6544189ea8e14b4bba3171eb11424ab, type: 3}
   textPosition: {fileID: 3700678900359122724}
-  textDuration: 0.1
-  textSize: 100
+  textDuration: 0.4
+  textSize: 3
   doSound: 0
   clip: {fileID: 0}
   volume: 0
@@ -5043,9 +5043,9 @@ GameObject:
   - component: {fileID: 6196073681108090285}
   - component: {fileID: 6196073681108090284}
   - component: {fileID: 6196073681108090283}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: BossPart
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5351,7 +5351,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 19715
+  m_VersionIndex: 20198
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -5465,7 +5465,7 @@ GameObject:
   - component: {fileID: 6196073681149250192}
   - component: {fileID: 6196073681149250207}
   - component: {fileID: 6196073681149250206}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6959,7 +6959,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2360
+  m_VersionIndex: 2861
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -7075,7 +7075,7 @@ GameObject:
   - component: {fileID: 6196073681227033738}
   - component: {fileID: 6196073681227033737}
   - component: {fileID: 6196073681227033736}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8569,7 +8569,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2363
+  m_VersionIndex: 2864
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -8685,7 +8685,7 @@ GameObject:
   - component: {fileID: 6196073681688855507}
   - component: {fileID: 6196073681688855506}
   - component: {fileID: 6196073681688855505}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10179,7 +10179,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2354
+  m_VersionIndex: 2855
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -10295,7 +10295,7 @@ GameObject:
   - component: {fileID: 6196073681853478858}
   - component: {fileID: 6196073681853478857}
   - component: {fileID: 6196073681853478856}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Legs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11789,7 +11789,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 2366
+  m_VersionIndex: 2867
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []

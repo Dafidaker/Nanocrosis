@@ -32,18 +32,21 @@ public class ChikaiAgent : MonoBehaviour
     [field: HideInInspector]public float attackTimer;
     [field: HideInInspector] public bool isAttacking;
     private bool _rotateTowardsTarget;
+    private int _attackDamage;
 
     [Header("Ranged Headbutt Attack"), Space(10)]
     [field: SerializeField] private float antecipationDuration;
     [field: SerializeField] private float headbuttForce;
     [field: SerializeField] private float headbuttDuration;
     [field: SerializeField] private BoxCollider headbuttTrigger;
+    [field: SerializeField]private int damageHeadbutt;
     
     [Header("Rotation Attack"), Space(10)]
     [field: SerializeField] private float rotationAttackVelocity;
     [field: SerializeField] private Vector3 rotation;
     [field: SerializeField] private float rotationSpeed;
     [field: SerializeField] private BoxCollider rotationTrigger;
+    [field: SerializeField]private int damageRotation;
     private bool _rotate;
     
     [Header("Pouce Attack"), Space(10)]
@@ -72,15 +75,16 @@ public class ChikaiAgent : MonoBehaviour
 
     private void Awake()
     {
+    }
+    
+    public void CalledStart()
+    {
         _fsmNavMeshAgent = GetComponent<FSMNavMeshAgent>();
         _agent = _fsmNavMeshAgent._agent;
         finiteStateMachine = GetComponent<FiniteStateMachine>();
         _rb = GetComponent<Rigidbody>();
         _target = _fsmNavMeshAgent.target;
-    }
-    
-    private void Start()
-    {
+        
         currentHealth = maxHealth;
 
     }
@@ -99,7 +103,7 @@ public class ChikaiAgent : MonoBehaviour
         }
 
         if (_rotateTowardsTarget) transform.rotation = Quaternion.Slerp(transform.rotation, 
-                    Quaternion.LookRotation(_target.transform.position- transform.position), 0.5f);
+                    Quaternion.LookRotation(_target.transform.position - transform.position), 0.5f);
         
     }
 
@@ -134,7 +138,6 @@ public class ChikaiAgent : MonoBehaviour
     {
         if (!isAttacking)
         {
-            Debug.Log("ChikaiAgent _ Melee Attack");
             StartCoroutine(PerformMeleeAttack());
         }
         _agent.SetDestination(_fsmNavMeshAgent.target.position);
@@ -154,6 +157,7 @@ public class ChikaiAgent : MonoBehaviour
 
     private IEnumerator PerformMeleeAttack()
     {
+        _attackDamage = damageRotation;
         isAttacking = true;
         _agent.updateRotation = false;
         //_agent.isStopped = false;
@@ -221,7 +225,7 @@ public class ChikaiAgent : MonoBehaviour
     }
     private IEnumerator PerformRangeAttack()
     {
-        
+        _attackDamage = damageHeadbutt;
         isAttacking = true;
         _agent.updateRotation = false;
         _agent.isStopped = true;
@@ -265,8 +269,6 @@ public class ChikaiAgent : MonoBehaviour
         _agent.isStopped = false;
         isAttacking = false;
         
-        
-        
     }
     
     #endregion
@@ -277,7 +279,8 @@ public class ChikaiAgent : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            other.gameObject.GetComponent<PlayerStats>().DamageTaken(5);
+            other.gameObject.GetComponent<PlayerStats>().DamageTaken(_attackDamage);
+            other.GetComponent<Rigidbody>().AddForce(-GameManager.Instance.player.transform.forward  * 100f , ForceMode.Impulse);
         }
         
     }

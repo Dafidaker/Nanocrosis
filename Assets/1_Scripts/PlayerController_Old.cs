@@ -110,7 +110,7 @@ public class PlayerController_Old : MonoBehaviour
     private void Awake()
     {
         PlayerControls = new Controls();
-        Settings.GameStart(); //todo change this to a game controller or something :)
+        //Settings.GameStart(); //todo change this to a game controller or something :)
     }
     
     private void Start()
