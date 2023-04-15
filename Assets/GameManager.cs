@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour
     
     
     [field: HideInInspector] public float seconds;
+
+    public bool GamePaused;
     
     private void Awake()
     {
