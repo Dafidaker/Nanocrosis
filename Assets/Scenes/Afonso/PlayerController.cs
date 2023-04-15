@@ -670,6 +670,11 @@ public class PlayerController : MonoBehaviour
     
     private void SprintInput(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
         if (Settings.IsSprintToggle)
         {
             _isSprinting = !_isSprinting;
@@ -682,6 +687,12 @@ public class PlayerController : MonoBehaviour
     }
     private void SprintEndedInput(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
+
         if (!Settings.IsSprintToggle)
         {
             _isSprinting = false;
@@ -690,6 +701,11 @@ public class PlayerController : MonoBehaviour
     
     private void JumpInput(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
         _jumpWasPressed = true;
         _jumpInputTimer = jumpBufferingDuration;
         
@@ -702,16 +718,31 @@ public class PlayerController : MonoBehaviour
     }
     private void JumpEndedInput(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
         isJumpOver = true;
     }
     
     private void DashInput(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
         Dash();
     }
     
     private void Shoot(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
         WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
 
         RaycastHit hit = default;
@@ -750,16 +781,27 @@ public class PlayerController : MonoBehaviour
     }
     private void ShootEndedInput(InputAction.CallbackContext context)
     {
-         if(_shooting != null) StopCoroutine(_shooting);
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
+        if (_shooting != null) StopCoroutine(_shooting);
     }
     
     private void Reload(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        } 
         WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
 
         if (weaponController.CurrentMag < weaponController.MagSize && weaponController.CurrentAmmoReserve > 0 && !weaponController.Reloading)
         {
             StartCoroutine(ReloadCountdown(weaponController));
+            WeaponUI.ResetEnhancedWeapon();
         }
         else if (weaponController.CurrentMag == weaponController.MagSize) Debug.Log("MAG FULL");
         else if (weaponController.CurrentAmmoReserve <= 0)
@@ -773,11 +815,18 @@ public class PlayerController : MonoBehaviour
             if (weaponController.Reloading) bit.GetComponent<MeshRenderer>().material = weaponController.ReloadMaterial;
             else bit.GetComponent<MeshRenderer>().material = weaponController.NormalMaterial;
         }
-        WeaponUI.ResetEnhancedWeapon();
+        
         weaponController.IsEnhanced = false;
     }
     private void CycleWeapons(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
+        StopCoroutine(WeaponUI.FlashMag());
+        StopCoroutine(WeaponUI.FlashReserve());
         CurrentWeapon.SetActive(false);
         _currrentWeaponIndex++;
         if (_currrentWeaponIndex >= Weapons.Length)
@@ -810,7 +859,12 @@ public class PlayerController : MonoBehaviour
     }
     private void Interact(InputAction.CallbackContext context)
     {
-        if(_currentBomb != null)
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
+        if (_currentBomb != null)
         {
             _currentBomb.GetComponent<BombPickupController>().Interact();
             WeaponUI.BombAttached();
@@ -818,6 +872,11 @@ public class PlayerController : MonoBehaviour
     }
     private void EnhanceWeapon(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
         WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
         if (AvailableBuffs > 0 && weaponController.CurrentMag > 0 && !weaponController.IsEnhanced)
         {
@@ -850,6 +909,11 @@ public class PlayerController : MonoBehaviour
 
     private void PerformMeleeAttack(InputAction.CallbackContext context)
     {
+        if (GameManager.Instance.GamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
         if (_meleeCountdown > 0) return;
 
         _meleeCountdown = 0.3f;

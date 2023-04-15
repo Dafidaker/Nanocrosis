@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     private float _camYSpeed;
     
     [field: HideInInspector] public float seconds;
+
+    public bool GamePaused;
     
     private void Awake()
     {
