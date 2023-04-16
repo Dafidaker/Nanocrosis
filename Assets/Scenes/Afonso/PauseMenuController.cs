@@ -68,6 +68,7 @@ public class PauseMenuController : MonoBehaviour
         SettingsMenu.SetActive(false);
         AreYouSureWindow.SetActive(false);
         AliveUI.SetActive(true);
+        AreYouSureWindow.SetActive(false);
         Time.timeScale = 1;
     }
 
