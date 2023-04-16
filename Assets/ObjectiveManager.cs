@@ -63,6 +63,8 @@ public class ObjectiveManager : MonoBehaviour
         currentValue = initialValue;
         _lungs = GameManager.Instance.GetArena(Arena.Lungs);
 
+        GameEvents.Instance.lungsHealthChanged.Ping(null, null);
+        
         _unlimitedObjectiveWaitForSeconds = new WaitForSeconds(updateUnlimitedObjectiveCooldown);
         
         _enemyPercentage = new Dictionary<Enemy, float>();
@@ -83,7 +85,7 @@ public class ObjectiveManager : MonoBehaviour
             _enemyHealing.Add(enemyHealing.enemy , enemyHealing.healing);
         }
 
-        //GetValueRemoved(minutes, selectedArena);
+        GetValueRemoved(minutes, selectedArena);
         
         
         StartCoroutine(UpdateUnlimitedObjective());
@@ -113,6 +115,8 @@ public class ObjectiveManager : MonoBehaviour
         {
             GameManager.Instance.GameEnded(false);
         }
+        
+        GameEvents.Instance.lungsHealthChanged.Ping(null, null);
         
         yield return _unlimitedObjectiveWaitForSeconds;
         
@@ -153,17 +157,15 @@ public class ObjectiveManager : MonoBehaviour
         }
     }
 
-    public void GetValueRemoved(float[] Minutes,Arena arenaType )
+    public void GetValueRemoved(float[] Minutes,Arena arenaMultiplierType  )
     {
         float positiveHealth = passiveHealingValue;
         
         float kurokuWeight = _enemyPercentage[Enemy.Kuroru];
         float chikaiWeight = _enemyPercentage[Enemy.Chikai];
         float toiWeight  = _enemyPercentage[Enemy.Toi];
-
-        float arenaMultiplier = _arenaMultiplier[arenaType];
-
-        var arena = GameManager.Instance.GetArena(arenaType);
+        
+        var arena = GameManager.Instance.GetArena(Arena.Lungs);
 
         var kuroruAmountCurve = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Kuroru).maxAmount;
         var chikaiAmountCurve = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Chikai).maxAmount;
@@ -201,14 +203,22 @@ public class ObjectiveManager : MonoBehaviour
                 maxToiAmount = GameManager.Instance.GetArenaEnemySpawner(arena.enemiesSpawners, Enemy.Toi).maxAmount.Evaluate(minute);
             }
             
-        
+            float arenaMultiplier = _arenaMultiplier[Arena.Heart];
             float valueLost = positiveHealth - ((maxKuroruAmount * kurokuWeight) * arenaMultiplier) - ((maxChikaiAmount * chikaiWeight) * arenaMultiplier) - ((maxToiAmount * toiWeight) * arenaMultiplier);
-        
+            
+            arenaMultiplier = _arenaMultiplier[Arena.Lungs];
+            float valueLostLungs = positiveHealth - ((maxKuroruAmount * kurokuWeight) * arenaMultiplier) - ((maxChikaiAmount * chikaiWeight) * arenaMultiplier) - ((maxToiAmount * toiWeight) * arenaMultiplier);
             Debug.Log("");
             Debug.Log("MINUTE " + minute + " - MINUTE " + minute + " - MINUTE " + minute);
-            Debug.Log("At minute " + minute + " the value lost every " + updateUnlimitedObjectiveCooldown + " seconds is " + valueLost);
+            //Debug.Log("At minute " + minute + " the value lost every " + updateUnlimitedObjectiveCooldown + " seconds is " + -valueLost);
+            Debug.Log("HEART - HEART - HEART - HEART - HEART - HEART ");
             Debug.Log("Each Minute the value lost is " + (60 / updateUnlimitedObjectiveCooldown) * valueLost);
-            Debug.Log("Would go from " + maxValue + " to 0 in " + ((maxValue / valueLost) * updateUnlimitedObjectiveCooldown)/ 60 + " mins" );
+            Debug.Log("Would go from " + maxValue + " to 0 in " + -((maxValue / valueLost) * updateUnlimitedObjectiveCooldown)/ 60 + " mins" );
+            Debug.Log("At minute " + minute + " there will be " + maxKuroruAmount + " kurokus, " + maxChikaiAmount + " chikais "+ maxToiAmount +" tois "); 
+            
+            Debug.Log("LUNGS - LUNGS - LUNGS - LUNGS - LUNGS - LUNGS ");
+            Debug.Log("Each Minute the value lost is " + (60 / updateUnlimitedObjectiveCooldown) * valueLostLungs);
+            Debug.Log("Would go from " + maxValue + " to 0 in " + -((maxValue / valueLostLungs) * updateUnlimitedObjectiveCooldown)/ 60 + " mins" );
             Debug.Log("At minute " + minute + " there will be " + maxKuroruAmount + " kurokus, " + maxChikaiAmount + " chikais "+ maxToiAmount +" tois "); 
         }
         

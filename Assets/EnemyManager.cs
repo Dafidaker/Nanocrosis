@@ -33,8 +33,7 @@ public class EnemyManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log("Phage Health "+ GameManager.Instance.phage.GetCurrentHealthPercentage());
-        
+
         if (GameManager.Instance.spawnEnemies)
         {
             SpawnEnemies();
@@ -252,20 +251,20 @@ public class EnemyManager : MonoBehaviour
     
     private void OnGUI()
     {
-        var a = GameManager.Instance.currentArena.enemiesSpawners;
         
-        GUI.Box(new Rect(Screen.width * 0.5f - Screen.width * 0.05f, 0, Screen.width * 0.1f, Screen.height * 0.05f), "Time:" +
+        
+        /*GUI.Box(new Rect(Screen.width * 0.5f - Screen.width * 0.05f, 0, Screen.width * 0.1f, Screen.height * 0.05f), "Time:" +
             TimeSpan.FromSeconds(GameManager.Instance.seconds).ToString(@"mm\:ss"));
         
-        /*GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.2f, Screen.height * 0.05f), "Enemy:" + a[0].enemy);
+        GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.2f, Screen.height * 0.05f), "Enemy:" + a[0].enemy);
         GUI.Box(new Rect(0, Screen.height * 0.15f, Screen.width * 0.2f, Screen.height * 0.05f),"Amount: " + a[0].amountEnemies);
         GUI.Box(new Rect(0, Screen.height * 0.2f, Screen.width * 0.2f, Screen.height * 0.05f), "MaxAmount: " + a[0].maxAmount.Evaluate(GameManager.Instance.seconds /60 ));
-        GUI.Box(new Rect(0, Screen.height * 0.25f, Screen.width * 0.2f, Screen.height * 0.05f), "Timer: " + a[0].enemySpawnTimer);*/
+        GUI.Box(new Rect(0, Screen.height * 0.25f, Screen.width * 0.2f, Screen.height * 0.05f), "Timer: " + a[0].enemySpawnTimer);
         
         GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.12f, Screen.height * 0.05f), "Lungs State: " +
             Math.Round(ObjectiveManager.Instance.GetPercentageOfCurrentValue() * 100, 2));
         GUI.Box(new Rect(0, Screen.height * 0.2f, Screen.width * 0.12f, Screen.height * 0.05f), "Phage Health: " +
-            GameManager.Instance.phage.GetCurrentHealthPercentage()*100 + "%");
+            GameManager.Instance.phage.GetCurrentHealthPercentage()*100 + "%");*/
         
     }
 }

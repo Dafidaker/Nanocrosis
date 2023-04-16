@@ -9,6 +9,8 @@ public class GameEvents : MonoBehaviour
 
     public GameEvent enemyDied;
     public GameEvent mouseSentivityChanged;
+    public GameEvent bossTookDamage;
+    public GameEvent lungsHealthChanged;
     private void Awake()
     {
         Instance = this;

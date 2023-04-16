@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Enums;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
@@ -188,11 +187,7 @@ public class PlayerController : MonoBehaviour
         
         _camXSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
         _camYSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
-
-        Debug.Log("_camXSpeed" + _camXSpeed);
-        Debug.Log("_camYSpeed" + _camYSpeed);
-        /*_camXSpeed = 0.05f;
-        _camYSpeed =  0.05f;*/
+        
 
         UpdateCamSentivity();
     }
@@ -1045,6 +1040,7 @@ public class PlayerController : MonoBehaviour
             {
                 ObjectiveManager.Instance.currentValue += add;
             }
+            GameEvents.Instance.lungsHealthChanged.Ping(null, null);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6)) // removed lung health
         {
@@ -1054,6 +1050,8 @@ public class PlayerController : MonoBehaviour
             {
                 GameManager.Instance.GameEnded(false);
             }
+            
+            GameEvents.Instance.lungsHealthChanged.Ping(null, null);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7)) // get ammo
         {

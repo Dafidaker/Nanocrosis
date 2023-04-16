@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +16,10 @@ public class PauseMenuController : MonoBehaviour
     [SerializeField] private GameObject AliveUI;
     [SerializeField] private GameObject WinScreen;
     [SerializeField] private GameObject LoseScreen;
+    
+    [SerializeField] private TextMeshProUGUI LungsHealth;
+    [SerializeField] private TextMeshProUGUI PhageHealth;
+    [SerializeField] private TextMeshProUGUI TimeUi;
     private Controls _playerControls;
     private InputAction _menu;
 
@@ -34,6 +41,11 @@ public class PauseMenuController : MonoBehaviour
     private void OnDisable()
     {
         _menu.Disable();
+    }
+
+    private void Update()
+    {
+        TimeUi.text = TimeSpan.FromSeconds(GameManager.Instance.seconds).ToString(@"mm\:ss");
     }
 
     private void PauseGame(InputAction.CallbackContext context)
@@ -104,4 +116,18 @@ public class PauseMenuController : MonoBehaviour
         Debug.Log("GAME CLOSED");
         Application.Quit();
     }
+
+    public void UpdateLungsUi(Component sender, object data)
+    {
+        LungsHealth.text =  Math.Round(ObjectiveManager.Instance.GetPercentageOfCurrentValue() * 100, 2).ToString(CultureInfo.CurrentCulture)+ "%";
+    }
+    
+    public void UpdatePhageUi(Component sender, object data)
+    {
+        PhageHealth.text = (GameManager.Instance.phage.GetCurrentHealthPercentage() * 100).ToString(CultureInfo.CurrentCulture) + "%";
+    }
+    
+    
+    
+    
 }

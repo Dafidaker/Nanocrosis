@@ -114,6 +114,7 @@ public class Hitable : MonoBehaviour
         {
             damage = 0;
         }
+        
 
         if (hasShield && shieldIsActive)
         {
@@ -146,6 +147,11 @@ public class Hitable : MonoBehaviour
         
         var go =Instantiate(damageText, textPosition.position, Quaternion.identity, transform);
         go.transform.localScale *= textSize;
+        
+        if (enemyType == Enemy.Phage)
+        {
+            GameEvents.Instance.bossTookDamage.Ping(this,null);
+        }
         
         if (currentHealth <= 0)
         {
