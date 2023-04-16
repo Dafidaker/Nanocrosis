@@ -6,14 +6,22 @@ public class BombPickupController : MonoBehaviour
 {
     [SerializeField] private float TimeToRespawn;
     [SerializeField] private GameObject Center;
-
+    [SerializeField] private bool respawn;
+    
     private bool _interactable = true;
     public void Interact()
     {
         if (!_interactable) return;
         PlayerController.Instance.BombAttached = true;
         PlayerController.Instance.FakeBomb.SetActive(true);
-        StartCoroutine(Respawn());
+        if (respawn)
+        {
+            StartCoroutine(Respawn());
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private IEnumerator Respawn()

@@ -40,15 +40,21 @@ public class MeleeAttackController : MonoBehaviour
         }
         
         var HitableScript = col.GetComponent<Hitable>();
+        if (HitableScript == null)
+        {
+            HitableScript = col.GetComponentInParent<Hitable>();
+        }
+        
         if (HitableScript != null)
         {
             HitableScript.GotHit(Damage ,PlayerAttacks.Knife);
         }
-
-        if (col.CompareTag("BossPart"))
+        
+        
+        /*if (col.CompareTag("BossPart"))
         {
             col.GetComponentInParent<Hitable>().GotHit(Damage ,PlayerAttacks.Knife);
-        }
+        }*/
     }
 
     private void OnDisable()

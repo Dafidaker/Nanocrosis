@@ -71,14 +71,28 @@ public class BulletController : MonoBehaviour
         var HitableScript = collision.gameObject.GetComponent<Hitable>();
         if (HitableScript != null)
         {
-            if (Gun.GetComponent<WeaponController>().IsEnhanced)
+            PlayerAttacks playerAttacks = PlayerAttacks.Bullet;
+            if (Enhanced)
             {
-                HitableScript.GotHit(Damage, PlayerAttacks.BulletEnhanced);
+                playerAttacks = PlayerAttacks.BulletEnhanced;
             }
-            HitableScript.GotHit(Damage,PlayerAttacks.Bullet);
+
+            HitableScript.GotHit(Damage, playerAttacks);
+        }
+        else
+        {
+            HitableScript = collision.gameObject.GetComponentInParent<Hitable>();
+            
+            PlayerAttacks playerAttacks = PlayerAttacks.Bullet;
+            if (Enhanced)
+            {
+                playerAttacks = PlayerAttacks.BulletEnhanced;
+            }
+
+            HitableScript.GotHit(Damage, playerAttacks);
         }
 
-        if (collision.gameObject.CompareTag("BossPart"))
+        /*if (collision.gameObject.CompareTag("BossPart"))
         {
             var hitable = collision.gameObject.GetComponentInParent<Hitable>();
             
@@ -87,12 +101,14 @@ public class BulletController : MonoBehaviour
                 hitable.GotHit(Damage, PlayerAttacks.BulletEnhanced);
             }
             hitable.GotHit(Damage,PlayerAttacks.Bullet);
-        }
+        }*/
         Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        //Debug.Log("bullet hit: " + other.name);
+        
         if ((ItHits.value & (1 << other.transform.gameObject.layer)) > 0) 
         {
             
@@ -102,8 +118,7 @@ public class BulletController : MonoBehaviour
             return;
         }
         
-        //Debug.Log(other.name);
-        //Debug.Log(other.tag);
+        
         if(other.CompareTag("bullet") || other.CompareTag("Player")) return;
         if(other.GetComponent<RespawningTargetController>() != null)
         {
@@ -120,35 +135,32 @@ public class BulletController : MonoBehaviour
             {
                 d.CurrentHealthPoints -= Damage;
             }
-
-            /*if(d.CurrentHealthPoints <= 0 && d.HasShield)
-            {
-                if(Gun.GetComponent<WeaponController>().Name == "Shotgun")
-                {
-                    if (!_spawnedWithShotgun)
-                    {
-                        Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
-                        _spawnedWithShotgun = true;
-                    }
-                }
-                else Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
-
-            } */
         }
-
         
         
         var HitableScript = other.GetComponent<Hitable>();
+        var parentHitableScript = other.gameObject.GetComponentInParent<Hitable>();
         if (HitableScript != null)
         {
-            if (Gun.GetComponent<WeaponController>().IsEnhanced)
+            if (Enhanced)
             {
                 HitableScript.GotHit(Damage, PlayerAttacks.BulletEnhanced);
             }
             HitableScript.GotHit(Damage,PlayerAttacks.Bullet);
         }
+        else if(parentHitableScript != null)
+        {
+            PlayerAttacks playerAttacks = PlayerAttacks.Bullet;
+            if (Enhanced)
+            {
+                playerAttacks = PlayerAttacks.BulletEnhanced;
+            }
 
-        HitableScript = other.GetComponentInParent<Hitable>();
+            parentHitableScript.GotHit(Damage, playerAttacks);
+        }
+        
+
+        /*HitableScript = other.GetComponentInParent<Hitable>();
         if (other.CompareTag("BossPart"))
         {
             if (Gun.GetComponent<WeaponController>().IsEnhanced)
@@ -156,7 +168,7 @@ public class BulletController : MonoBehaviour
                 HitableScript.GotHit(Damage, PlayerAttacks.BulletEnhanced);
             }
             HitableScript.GotHit(Damage,PlayerAttacks.Bullet);
-        }
+        }*/
         Destroy(gameObject);
     }
 }

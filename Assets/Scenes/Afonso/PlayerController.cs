@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Enums;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
@@ -198,9 +199,10 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
-
         _horizontalInput = _iMove.ReadValue<Vector2>().x;
         _verticalInput = _iMove.ReadValue<Vector2>().y;
+
+        Hacks();
         
         //adds drag if player is grounded
         if (_movementState == MovementState.Sprint || _movementState == MovementState.Walk)
@@ -670,7 +672,7 @@ public class PlayerController : MonoBehaviour
     
     private void SprintInput(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -687,7 +689,7 @@ public class PlayerController : MonoBehaviour
     }
     private void SprintEndedInput(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -701,7 +703,7 @@ public class PlayerController : MonoBehaviour
     
     private void JumpInput(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -718,7 +720,7 @@ public class PlayerController : MonoBehaviour
     }
     private void JumpEndedInput(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -728,7 +730,7 @@ public class PlayerController : MonoBehaviour
     
     private void DashInput(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -738,7 +740,7 @@ public class PlayerController : MonoBehaviour
     
     private void Shoot(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -781,7 +783,7 @@ public class PlayerController : MonoBehaviour
     }
     private void ShootEndedInput(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -791,7 +793,7 @@ public class PlayerController : MonoBehaviour
     
     private void Reload(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -820,7 +822,7 @@ public class PlayerController : MonoBehaviour
     }
     private void CycleWeapons(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -859,7 +861,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Interact(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -872,7 +874,7 @@ public class PlayerController : MonoBehaviour
     }
     private void EnhanceWeapon(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -909,7 +911,7 @@ public class PlayerController : MonoBehaviour
 
     private void PerformMeleeAttack(InputAction.CallbackContext context)
     {
-        if (GameManager.Instance.GamePaused)
+        if (GameManager.Instance.gamePaused)
         {
             Debug.Log("GAME IS PAUSED");
             return;
@@ -1009,6 +1011,95 @@ public class PlayerController : MonoBehaviour
     
     #endregion
 
+
+    public void Hacks()
+    {
+        if (!Input.GetKey(KeyCode.LeftAlt)) { return; }
+        Debug.Log("alt");
+        if (Input.GetKeyDown(KeyCode.Alpha1)) // go to lungs 
+        {
+            GameManager.Instance.ChangeArena(Arena.Lungs);
+            transform.position = GameManager.Instance.lungsPlayerSpawnPosition.position;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2)) // go to heart 
+        {
+            GameManager.Instance.ChangeArena(Arena.Heart);
+            transform.position = GameManager.Instance.heartPlayerSpawnPosition.position;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3)) // kill phage 
+        {
+            GameManager.Instance.phage.GotHit(GameManager.Instance.phage.maxHealth + 10, PlayerAttacks.BulletEnhanced);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4)) // kill phage shield
+        {
+            if (GameManager.Instance.phage.shieldIsActive)
+            {
+                GameManager.Instance.phage.GotHit(GameManager.Instance.phage.maxShieldHealth +10, PlayerAttacks.BulletEnhanced);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5)) // added lung health
+        {
+            var add = ObjectiveManager.Instance.maxValue * 0.05f;
+            
+            if (ObjectiveManager.Instance.currentValue + add <= ObjectiveManager.Instance.maxValue)
+            {
+                ObjectiveManager.Instance.currentValue += add;
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6)) // removed lung health
+        {
+            ObjectiveManager.Instance.currentValue -= ObjectiveManager.Instance.maxValue * 0.05f;
+            
+            if (ObjectiveManager.Instance.currentValue <= 0 )
+            {
+                GameManager.Instance.GameEnded(false);
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha7)) // get ammo
+        {
+            WeaponController w1 = Weapons[0].GetComponent<WeaponController>();
+            WeaponController w2 = Weapons[1].GetComponent<WeaponController>();
+
+            // Debug.Log((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve));
+
+            if ((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve))
+            {
+                Debug.Log("ALL AMMO RESERVES FULL");
+                return;
+            }
+            foreach (GameObject weapon in Weapons)
+            {
+                WeaponController w = weapon.GetComponent<WeaponController>();
+                float AmmoRestored = w.AmmoReserve * 0.15f;
+                int RoundedAmmo = Mathf.RoundToInt(AmmoRestored);
+
+                if(w.CurrentAmmoReserve == w.AmmoReserve)
+                {
+                    Debug.Log(w.Name + ": AMMO RESERVES FULL");
+                }
+
+                else if (RoundedAmmo + w.CurrentAmmoReserve > w.AmmoReserve)
+                {
+                    w.CurrentAmmoReserve = w.AmmoReserve;
+                }
+                else w.CurrentAmmoReserve += RoundedAmmo;
+                WeaponUI.SetValues();
+                if (w.CurrentAmmoReserve > w.AmmoReserve * 0.3f) WeaponUI.ResetReserveColor();
+            }
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha8)) // get special ammo
+        {
+            AvailableBuffs += 2;
+            PickupUI.SetValue();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha9)) // get bomb
+        {
+            _currentBomb = Instantiate(GameManager.Instance.bomb);
+            _currentBomb.GetComponent<BombPickupController>().Interact();
+            WeaponUI.BombAttached();
+        }
+    }
+    
     private void OnGUI()
     {
         /*GUI.Box(new Rect(0, 0, Screen.width * 0.2f, Screen.height * 0.1f), _rb.velocity.ToString());

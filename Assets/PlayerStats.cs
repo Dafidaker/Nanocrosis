@@ -48,10 +48,10 @@ public class PlayerStats : MonoBehaviour
     
     private void Update()
     {
-        if(CurrentHealth <= 0)
+        /*if(CurrentHealth <= 0)
         {
             Debug.Log("YOU ARE DEAD, NOT BIG SURPRISE");
-        }
+        }*/
     }
 
     private void FixedUpdate()

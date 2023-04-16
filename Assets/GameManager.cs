@@ -9,11 +9,13 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
+    public bool isGameOver;
     
     [Header("Prefab"), Space(5)]
     public GameObject player;
     public GameObject ammo;
     public GameObject specialAmmo;
+    public GameObject bomb;
     [field: HideInInspector] public PlayerController playerController;
     
     [Header("Arenas"), Space(5)]
@@ -21,25 +23,26 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] private Arena initialArena;
     [field: HideInInspector] public ArenaClass currentArena;
     [field: SerializeField] public bool spawnEnemies;
+    [field: SerializeField] public Hitable phage;
     
     [Header("Transforms"), Space(5)]
-    [field: SerializeField] private Transform playerSpawnPosition;
-    
+    public Transform lungsPlayerSpawnPosition;
+    public Transform heartPlayerSpawnPosition;
     
     [Header("Camera"), Space(5)] 
-    public CinemachineVirtualCamera CinemachineVirtual;
+    public CinemachineVirtualCamera cinemachineVirtual;
     private float _camXSpeed;
     private float _camYSpeed;
     
     [field: HideInInspector] public float seconds;
 
-    public bool GamePaused;
+    public bool gamePaused;
     
     private void Awake()
     {
         Instance = this;
         playerController = player.GetComponent<PlayerController>();
-        player.transform.position = playerSpawnPosition.position;
+        player.transform.position = lungsPlayerSpawnPosition.position;
 
         foreach (var arenaClass in arenas)
         {
@@ -60,9 +63,14 @@ public class GameManager : MonoBehaviour
         {
             GetArena(enemySpawn.arena).enemiesSpawners.Add(enemySpawn);
         }
+
+        foreach (var itemSpawn in EnemyManager.Instance.itemSpawns)
+        {
+            GetArena(itemSpawn.arena).itemsSpawners.Add(itemSpawn);
+        }
         
-        _camXSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
-        _camYSpeed = CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
+        _camXSpeed = cinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
+        _camYSpeed = cinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
         
         updateMouseSentivity(null, Settings.MouseSentivity);
     }
@@ -111,7 +119,18 @@ public class GameManager : MonoBehaviour
 
     public void GameEnded(bool win)
     {
+        isGameOver = true;
         Time.timeScale = 0;
+
+        if (win)
+        {
+            PauseMenuController.Instance.WonGame();
+        }
+        else
+        {
+            PauseMenuController.Instance.LostGame();
+        }
+        
         var msm = win ? "you won" : "you lost";
         Debug.Log(msm);
     }
@@ -125,8 +144,8 @@ public class GameManager : MonoBehaviour
     {
         if (data is not Vector2) return;
         Vector2 mouseSentivity = (Vector2)data;
-        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseSentivity.x;
-        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseSentivity.y;
+        cinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseSentivity.x;
+        cinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseSentivity.y;
     }
 }
 
@@ -136,6 +155,8 @@ public class ArenaClass
     public Arena arenaType;
     public GameObject enemiesParent;
     public Transform[] waypoints;
+    public List<GameObject> trees;
+    [HideInInspector] public List<ArenaItemSpawner> itemsSpawners;
     [HideInInspector] public List<GameObject> enemies;
     [HideInInspector] public List<ArenaEnemySpawner> enemiesSpawners;
     

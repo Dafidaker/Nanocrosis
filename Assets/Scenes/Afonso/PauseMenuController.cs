@@ -8,8 +8,11 @@ public class PauseMenuController : MonoBehaviour
     public static PauseMenuController Instance;
 
     [SerializeField] private GameObject PauseMenu;
+    [SerializeField] private GameObject SettingsMenu;
     [SerializeField] private GameObject AreYouSureWindow;
     [SerializeField] private GameObject AliveUI;
+    [SerializeField] private GameObject WinScreen;
+    [SerializeField] private GameObject LoseScreen;
     private Controls _playerControls;
     private InputAction _menu;
 
@@ -35,9 +38,12 @@ public class PauseMenuController : MonoBehaviour
 
     private void PauseGame(InputAction.CallbackContext context)
     {
-        GameManager.Instance.GamePaused = !GameManager.Instance.GamePaused;
+        if(GameManager.Instance.isGameOver) return;
+        
+        GameManager.Instance.gamePaused = !GameManager.Instance.gamePaused;
 
-        if (GameManager.Instance.GamePaused) ActivateMenu();
+        if (GameManager.Instance.gamePaused) 
+                ActivateMenu();
         else
         {
             DeactivateMenu();
@@ -46,6 +52,7 @@ public class PauseMenuController : MonoBehaviour
 
     private void ActivateMenu()
     {
+        Debug.Log("ActivateMenu");
         Cursor.lockState = CursorLockMode.Confined;
         PauseMenu.SetActive(true);
         AliveUI.SetActive(false);
@@ -54,11 +61,35 @@ public class PauseMenuController : MonoBehaviour
 
     public void DeactivateMenu()
     {
-        GameManager.Instance.GamePaused = false;
+        Debug.Log("DeactivateMenu");
+        GameManager.Instance.gamePaused = false;
         Cursor.lockState = CursorLockMode.Locked;
         PauseMenu.SetActive(false);
+        SettingsMenu.SetActive(false);
+        AreYouSureWindow.SetActive(false);
         AliveUI.SetActive(true);
         Time.timeScale = 1;
+    }
+
+    public void WonGame()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        AliveUI.SetActive(false);
+        WinScreen.SetActive(true);
+    }
+    
+    public void LostGame()
+    {
+        Cursor.lockState = CursorLockMode.Confined;
+        AliveUI.SetActive(false);
+        LoseScreen.SetActive(true);
+    }
+
+    public void OpenSetting()
+    {
+        Debug.Log("OpenSetting");
+        PauseMenu.SetActive(false);
+        SettingsMenu.SetActive(true);
     }
 
     public void QuitGame()

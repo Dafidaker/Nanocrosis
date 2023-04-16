@@ -128,7 +128,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 136
   Gun: {fileID: 7615206379009653064, guid: 96caf1af24998734a96a2cb980a1e650, type: 3}
-  Damage: 5
+  Damage: 7
   Enhanced: 1
   clip: {fileID: 8300000, guid: 75adfe9a619833445a701305b983e548, type: 3}
   volume: 0.01

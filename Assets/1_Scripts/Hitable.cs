@@ -16,18 +16,22 @@ public class Hitable : MonoBehaviour
     public Enemy enemyType;
     public bool isItEnemy;
     public bool canHaveShield;
+    public bool onlyDamagableByExplosion;
     
     [Header("Health Stats"), Space(5)] 
     public int maxHealth;
-    [field: HideInInspector] public int currentHealth;
+    /*[field: HideInInspector]*/ public int currentHealth;
         
     [Header("Shield Stats"), Space(5)] 
+    [field: SerializeField] private GameObject shieldGameObject;
     public int maxShieldHealth;
-    [field: HideInInspector] public int currentShieldHealth;
+    /*[field: HideInInspector]*/ public int currentShieldHealth;
     [field: HideInInspector] public bool hasShield;
     [field: HideInInspector] public bool shieldIsActive;
     [field: SerializeField] private float shieldCooldown;
-    
+    [field: SerializeField, Range(0f,1f)] private float haveShieldChance;
+    private Coroutine _rechargeShield;
+    private bool _rechargingShield;
     
     [Header("Hit Animation"), Space(5)] 
     [field: SerializeField] private bool animate;
@@ -68,22 +72,67 @@ public class Hitable : MonoBehaviour
         _specialAmmo = GameManager.Instance.specialAmmo;
 
         enemyDied = GameEvents.Instance.enemyDied;
+
+        if (canHaveShield && Random.Range(0f,1f) <= haveShieldChance)
+        {
+            hasShield = true;
+            shieldIsActive = true;
+            shieldGameObject.SetActive(true);
+            currentShieldHealth = maxShieldHealth;
+        }
     }
 
     private void OnDestroy()
     {
-        if (_shaking != null)
+        _shaking?.Kill();
+
+        if (_rechargeShield != null)
         {
-            _shaking.Kill();
+            StopCoroutine(_rechargeShield);
         }
     }
 
+    private IEnumerator ResetShield()
+    {
+        _rechargingShield = true;
+        yield return new WaitForSeconds(shieldCooldown);
+        shieldIsActive = true;
+        shieldGameObject.SetActive(true);
+        currentShieldHealth = maxShieldHealth;
+        _rechargingShield = false;
+    }
+    
     public void GotHit(int damage, PlayerAttacks attackType)
     {
-        //Debug.Log("the attack type: " + attackType);
+        if (onlyDamagableByExplosion && attackType != PlayerAttacks.Explositon)
+        {
+            damage = 0;
+        }
         
-        //todo add the distinction between bullets / enhanced bullets / knife
-        currentHealth -= damage;
+        Debug.Log("attack type is " + attackType);
+        if (hasShield && shieldIsActive && attackType != PlayerAttacks.BulletEnhanced)
+        {
+            damage = 0;
+        }
+
+        if (hasShield && shieldIsActive)
+        {
+            currentShieldHealth -= damage;
+        }
+        else if (!hasShield || (hasShield && !shieldIsActive))
+        {
+            currentHealth -= damage;
+        }
+
+            
+        if ( hasShield && currentShieldHealth <= 0 && !_rechargingShield)
+        {
+            Debug.Log("deativate shield");
+            shieldIsActive = false;
+            shieldGameObject.SetActive(false);
+            _rechargeShield = StartCoroutine(ResetShield());
+        }
+        
         
         foreach (var textMesh in _damageTextMesh)
         {
@@ -112,7 +161,8 @@ public class Hitable : MonoBehaviour
 
     public float GetCurrentHealthPercentage()
     {
-        return (float)Math.Round((decimal)(currentHealth / maxHealth), 2);
+        return (float)Math.Round((float)currentHealth / maxHealth, 2);
+        //return 900 / 1000;
     }
     
     public float GetLostHealthPercentage()
@@ -122,13 +172,19 @@ public class Hitable : MonoBehaviour
     
     private void Death(PlayerAttacks attackType)
     {
-        if (Random.Range(0f, 1f) < 0.05f) { Instantiate(_ammo, transform.position, Quaternion.identity); }
+        var DropAmmoChange = 0.05f;
+        if (GameManager.Instance.player.GetComponent<PlayerController>().CurrentWeapon.name == "Shotgun") { DropAmmoChange = 0.025f; }
         if (hasShield) { Instantiate(_specialAmmo, transform.position, Quaternion.identity); }
+        
         if (attackType == PlayerAttacks.Knife) { Instantiate(_ammo, transform.position, Quaternion.identity); }
+        else if (Random.Range(0f, 1f) < DropAmmoChange) { Instantiate(_ammo, transform.position, Quaternion.identity); }
+        
         if (isItEnemy) { enemyDied.Ping(this, null); }
         
         
         if(doSound) SoundManager.Instance.PlaySound(clip,volume);
         Destroy(gameObject);
     }
+
+    
 }

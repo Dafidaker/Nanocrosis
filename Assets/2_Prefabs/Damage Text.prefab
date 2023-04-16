@@ -139,7 +139,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  duration: 0.1
+  duration: 0.4
 --- !u!1 &7617370455128135737
 GameObject:
   m_ObjectHideFlags: 0
@@ -238,7 +238,7 @@ TextMesh:
   m_Font: {fileID: 12800000, guid: 997a43b767814dd0a7642ec9b78cba41, type: 3}
   m_Color:
     serializedVersion: 2
-    rgba: 4284966759
+    rgba: 4294967295
 --- !u!114 &6398538195671771153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,4 +275,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  duration: 0.1
+  duration: 0.4

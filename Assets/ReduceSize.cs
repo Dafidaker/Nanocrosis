@@ -17,6 +17,8 @@ public class ReduceSize : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        transform.LookAt(GameManager.Instance.player.transform);
+        
         _timer -= Time.deltaTime;
 
         var value = _timer / duration;

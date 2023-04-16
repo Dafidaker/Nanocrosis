@@ -280,7 +280,7 @@ public class ChikaiAgent : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             other.gameObject.GetComponent<PlayerStats>().DamageTaken(_attackDamage);
-            other.GetComponent<Rigidbody>().AddForce(-GameManager.Instance.player.transform.forward  * 100f , ForceMode.Impulse);
+            other.GetComponent<Rigidbody>().AddForce(-GameManager.Instance.player.transform.forward  * 50f , ForceMode.Impulse);
         }
         
     }

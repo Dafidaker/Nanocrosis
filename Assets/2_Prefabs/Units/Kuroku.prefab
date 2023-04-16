@@ -5166,16 +5166,19 @@ MonoBehaviour:
   enemyType: 2
   isItEnemy: 1
   canHaveShield: 0
+  onlyDamagableByExplosion: 0
   maxHealth: 50
   currentHealth: 0
+  shieldGameObject: {fileID: 0}
   maxShieldHealth: 0
   currentShieldHealth: 0
   hasShield: 0
   shieldIsActive: 0
   shieldCooldown: 0
-  animate: 0
+  haveShieldChance: 0
+  animate: 1
   duration: 0.05
-  strength: 0
+  strength: 0.07
   vibrato: 0
   randomness: 0
   fadeOut: 1

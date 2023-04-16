@@ -14,6 +14,7 @@ public class EnemyManager : MonoBehaviour
     
     [field: SerializeField] private float spawnRange;
     [field: SerializeField] public ArenaEnemySpawner[] enemySpawns;
+    [field: SerializeField] public ArenaItemSpawner[] itemSpawns;
     [field: SerializeField] public float spawnAngle;
     [field: SerializeField] public int amountSpawnPositions;
     [field: SerializeField] private LayerMask spawnOn;
@@ -32,10 +33,14 @@ public class EnemyManager : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log("Phage Health "+ GameManager.Instance.phage.GetCurrentHealthPercentage());
+        
         if (GameManager.Instance.spawnEnemies)
         {
             SpawnEnemies();
         }
+        
+        SpawnItems();
     }
 
     public void UpdateEnemyList(Component sender, object data)
@@ -64,6 +69,7 @@ public class EnemyManager : MonoBehaviour
         }
         
     }
+    
     private void SpawnEnemies()
     {
         //goes through all the enemy spawners of the current arena 
@@ -108,7 +114,6 @@ public class EnemyManager : MonoBehaviour
         
         return amountEnemies < maxAmountEnemies;
     }
-
     private void SpawnEnemy(ArenaEnemySpawner enemySpawn)
     {
         var playerTransform = GameManager.Instance.player.transform;
@@ -171,35 +176,98 @@ public class EnemyManager : MonoBehaviour
         
     }
     
+    private void SpawnItems()
+    {
+        //goes through all the item spawners of the current arena 
+        foreach (var itemsSpawner in GameManager.Instance.currentArena.itemsSpawners)
+        {
+            //decreases the timers for the the spawners 
+            if (itemsSpawner.itemSpawnTimer >= 0)
+                itemsSpawner.itemSpawnTimer -= Time.deltaTime;
+                
+            //if the timer is smaller than 0 than 
+            if (itemsSpawner.itemSpawnTimer < 0)
+            {
+                //it checks if it can spawn the item
+                if (CanSpawnItem(itemsSpawner))
+                {
+                    //and if so it tries to spawn the utem
+                    SpawnItem(itemsSpawner);
+                }
+
+            }
+        }
+    }
+    private bool CanSpawnItem(ArenaItemSpawner itemSpawner)
+    {
+        var amountEnemies = itemSpawner.Items.Count;
+        var maxAmountEnemies = 0;
+        
+        var currentCurve = itemSpawner.maxAmount;
+
+        var minutes = GameManager.Instance.seconds / 60; 
+        
+        //if the seconds is higher than the curves max seconds it uses the max seconds of the curve
+        if (minutes > currentCurve[currentCurve.length-1].time)
+        {
+            maxAmountEnemies = (int)currentCurve.Evaluate(currentCurve[currentCurve.length - 1].time);
+        }
+        else
+        {
+            maxAmountEnemies = (int)currentCurve.Evaluate(GameManager.Instance.seconds / 60);
+        }
+        
+        return amountEnemies < maxAmountEnemies;
+    }
+    private void SpawnItem(ArenaItemSpawner itemSpawner)
+    {
+        var tempTree = new List<GameObject>();
+        tempTree.AddRange(GameManager.Instance.currentArena.trees);
+
+        var selectedTree = tempTree[Random.Range(0, tempTree.Count)];
+        var selectedTreeController = selectedTree.GetComponent<TreeController>();
+        var itemWaypoint = selectedTreeController.GetEmptyItemWaypoint();
+        
+        while (itemWaypoint == null && tempTree.Count > 0)
+        {
+            tempTree.Remove(selectedTree);
+            selectedTree = tempTree[Random.Range(0, tempTree.Count)];
+            selectedTreeController = selectedTree.GetComponent<TreeController>();
+            itemWaypoint = selectedTreeController.GetEmptyItemWaypoint();
+        }
+
+        if (tempTree.Count <= 0)
+        {
+            Debug.Log("no item spawn avaliable");
+            return;
+        }
+
+        if (itemWaypoint != null)
+        {
+            itemSpawner.itemSpawnTimer += itemSpawner.CoolDown; 
+            selectedTreeController.AddItem((ItemSpawn)itemWaypoint, itemSpawner.ItemType, itemSpawner.ItemPrefab);
+        }
+            
+    }
+    
     private void OnGUI()
     {
         var a = GameManager.Instance.currentArena.enemiesSpawners;
         
-        GUI.Box(new Rect(Screen.height * 0.7f, 0, Screen.width * 0.2f, Screen.height * 0.05f), "Time:" +
-            (GameManager.Instance.seconds / 60));
+        GUI.Box(new Rect(Screen.width * 0.5f - Screen.width * 0.05f, 0, Screen.width * 0.1f, Screen.height * 0.05f), "Time:" +
+            TimeSpan.FromSeconds(GameManager.Instance.seconds).ToString(@"mm\:ss"));
         
         /*GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.2f, Screen.height * 0.05f), "Enemy:" + a[0].enemy);
         GUI.Box(new Rect(0, Screen.height * 0.15f, Screen.width * 0.2f, Screen.height * 0.05f),"Amount: " + a[0].amountEnemies);
         GUI.Box(new Rect(0, Screen.height * 0.2f, Screen.width * 0.2f, Screen.height * 0.05f), "MaxAmount: " + a[0].maxAmount.Evaluate(GameManager.Instance.seconds /60 ));
         GUI.Box(new Rect(0, Screen.height * 0.25f, Screen.width * 0.2f, Screen.height * 0.05f), "Timer: " + a[0].enemySpawnTimer);*/
         
-        GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.2f, Screen.height * 0.05f), "Lungs State: " + ObjectiveManager.Instance.GetPercentageOfCurrentValue()*100);
+        GUI.Box(new Rect(0, Screen.height * 0.1f, Screen.width * 0.12f, Screen.height * 0.05f), "Lungs State: " +
+            Math.Round(ObjectiveManager.Instance.GetPercentageOfCurrentValue() * 100, 2));
+        GUI.Box(new Rect(0, Screen.height * 0.2f, Screen.width * 0.12f, Screen.height * 0.05f), "Phage Health: " +
+            GameManager.Instance.phage.GetCurrentHealthPercentage()*100 + "%");
         
     }
-}
-[System.Serializable]
-public class EnemySpawn_Old
-{
-    public Enemy enemy;
-    public GameObject prefab;
-    public AnimationCurve maxAmountHeart;
-    public AnimationCurve maxAmountLungs;
-    public float minDistanceToPlayer;
-    public float maxDistanceToPlayer;
-    public float enemySpawnTimer;
-    public float increaseTimer;
-    public (Arena,int)[] AmountEnemyPerArena;
-    
 }
 
 [System.Serializable]
@@ -215,5 +283,18 @@ public class ArenaEnemySpawner
     public float increaseTimer;
     [HideInInspector] public int amountEnemies;
     public List<GameObject> enemies;
+    
+}
+
+[System.Serializable]
+public class ArenaItemSpawner
+{
+    public ItemType ItemType;
+    public GameObject ItemPrefab;
+    public Arena arena;
+    public AnimationCurve maxAmount;
+    [HideInInspector] public float itemSpawnTimer;
+    public float CoolDown;
+    [HideInInspector]public List<GameObject> Items;
     
 }
