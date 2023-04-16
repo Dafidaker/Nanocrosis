@@ -58,6 +58,7 @@ public class PauseMenuController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         PauseMenu.SetActive(false);
         AliveUI.SetActive(true);
+        AreYouSureWindow.SetActive(false);
         Time.timeScale = 1;
     }
 
