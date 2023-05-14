@@ -49,8 +49,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0465a291daa159c4aa50b85062ec8a99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.1
-  animationSpeed: 0.01
+  speed: 10
+  animationSpeed: 0.5
   damage: 10
   itHits:
     serializedVersion: 2
@@ -118,8 +118,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 0
+  attackRange: 0
+  location: 0
   isItEnemy: 0
   canHaveShield: 0
+  onlyDamagableByExplosion: 0
+  attackPlayer: 0
+  alertByPlayerDistance: 0
+  alertDistance: 0
   maxHealth: 50
   currentHealth: 0
   shieldGameObject: {fileID: 0}
@@ -234,7 +240,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9237fe96b8b1d7840a5ca51676f64f25, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

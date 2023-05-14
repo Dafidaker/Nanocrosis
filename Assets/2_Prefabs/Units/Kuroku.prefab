@@ -5001,6 +5001,7 @@ GameObject:
   - component: {fileID: 217872272}
   - component: {fileID: 217872271}
   - component: {fileID: 5574858717280796203}
+  - component: {fileID: 4271216845968774391}
   m_Layer: 7
   m_Name: Kuroku
   m_TagString: Untagged
@@ -5090,7 +5091,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 3
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -5164,10 +5165,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 2
+  attackRange: 0
+  location: 0
   isItEnemy: 1
   canHaveShield: 0
   onlyDamagableByExplosion: 0
-  maxHealth: 50
+  attackPlayer: 0
+  minimumPlayerDistance: 30
+  alertDistance: 300
+  maxHealth: 25
   currentHealth: 0
   shieldGameObject: {fileID: 0}
   maxShieldHealth: 0
@@ -5189,6 +5195,34 @@ MonoBehaviour:
   doSound: 0
   clip: {fileID: 0}
   volume: 0
+--- !u!114 &4271216845968774391
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1090219386143568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d80f5713bbbb564586cb694368c251d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameEvent: {fileID: 11400000, guid: b698779232d6fca489c376b74fcfc157, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 217872272}
+        m_TargetAssemblyTypeName: FSMNavMeshAgent, Assembly-CSharp
+        m_MethodName: CheckNode
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1159745215084782
 GameObject:
   m_ObjectHideFlags: 0

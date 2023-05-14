@@ -16,7 +16,6 @@ public class DeadUIController : MonoBehaviour
         _timeToRepair = Player.TimeToRepair;
         Counter.SetText(_timeToRepair.ToString());
         StartCoroutine(Flash());
-        Debug.Log("Time to respawn: " + _timeToRepair);
     }
 
     private void Update()

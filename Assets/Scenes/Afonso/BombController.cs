@@ -69,7 +69,7 @@ public class BombController : MonoBehaviour
         }
         StartCoroutine(Explode());
 
-        var HitableScript = other.GetComponent<Hitable>();
+        var HitableScript = other.GetComponent<Hittable>();
         if (HitableScript != null)
         {
             HitableScript.GotHit(ImpactDamage, PlayerAttacks.Explositon);
@@ -77,7 +77,7 @@ public class BombController : MonoBehaviour
 
         if (other.CompareTag("BossPart"))
         {
-            other.GetComponentInParent<Hitable>().GotHit(ImpactDamage, PlayerAttacks.Explositon);
+            other.GetComponentInParent<Hittable>().GotHit(ImpactDamage, PlayerAttacks.Explositon);
         }
     }
 }

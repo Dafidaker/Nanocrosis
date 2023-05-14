@@ -560,6 +560,7 @@ GameObject:
   - component: {fileID: 7220725514435021438}
   - component: {fileID: 8172632419399782272}
   - component: {fileID: 815186701}
+  - component: {fileID: 8293235740006637701}
   m_Layer: 7
   m_Name: Toi
   m_TagString: Untagged
@@ -737,9 +738,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 1
+  attackRange: 1
+  location: 0
   isItEnemy: 1
   canHaveShield: 0
   onlyDamagableByExplosion: 0
+  attackPlayer: 0
+  minimumPlayerDistance: 30
+  alertDistance: 15
   maxHealth: 100
   currentHealth: 0
   shieldGameObject: {fileID: 0}
@@ -783,6 +789,34 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 5.44, z: 1}
   m_Center: {x: 0, y: 7, z: 0}
+--- !u!114 &8293235740006637701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3848166983890627949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d80f5713bbbb564586cb694368c251d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameEvent: {fileID: 11400000, guid: b698779232d6fca489c376b74fcfc157, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 4186228020388260135}
+        m_TargetAssemblyTypeName: FSMNavMeshAgent, Assembly-CSharp
+        m_MethodName: CheckNode
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3907037511281662945
 GameObject:
   m_ObjectHideFlags: 0

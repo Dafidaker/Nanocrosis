@@ -30,7 +30,7 @@ public class ExplosionController : MonoBehaviour
             //if (d.CurrentHealthPoints <= 0 && d.HasShield) Instantiate(EnhancementPickup, d.EnhancementPickupSpawnpoint.position, Quaternion.identity);
         }
 
-        var HitableScript = other.GetComponent<Hitable>();
+        var HitableScript = other.GetComponent<Hittable>();
         if (HitableScript != null)
         {
             HitableScript.GotHit(BlastDamage ,PlayerAttacks.Explositon);
@@ -38,7 +38,7 @@ public class ExplosionController : MonoBehaviour
 
         if (other.CompareTag("BossPart"))
         {
-            other.GetComponentInParent<Hitable>().GotHit(BlastDamage ,PlayerAttacks.Explositon);
+            other.GetComponentInParent<Hittable>().GotHit(BlastDamage ,PlayerAttacks.Explositon);
         }
     }
 }

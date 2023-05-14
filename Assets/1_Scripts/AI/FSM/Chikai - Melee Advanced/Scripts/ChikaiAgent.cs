@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Versioning;
 using DG.Tweening;
+using Enums;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -281,6 +282,10 @@ public class ChikaiAgent : MonoBehaviour
         {
             other.gameObject.GetComponent<PlayerStats>().DamageTaken(_attackDamage);
             other.GetComponent<Rigidbody>().AddForce(-GameManager.Instance.player.transform.forward  * 50f , ForceMode.Impulse);
+        }
+        else if (other.CompareTag("OxygenNode"))
+        {
+            other.GetComponent<Hittable>().GotHit(_attackDamage, PlayerAttacks.Knife);
         }
         
     }

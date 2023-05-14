@@ -15,6 +15,7 @@ public class FSMNavMeshAgent : MonoBehaviour
     [field: HideInInspector] public ChikaiAgent chikaiAgent;
     [field: HideInInspector] public KuroruAgent kuroruAgent;
     [field: HideInInspector] public ToiAgent toiAgent;
+    private Hittable hittable;
     
     public float canSeeDistance;
 
@@ -62,6 +63,8 @@ public class FSMNavMeshAgent : MonoBehaviour
         {
             toiAgent.CalledStart();
         }
+
+        hittable = GetComponent<Hittable>();
 
         GetWaypoints();
 
@@ -132,6 +135,16 @@ public class FSMNavMeshAgent : MonoBehaviour
             return  target.position + target.forward * howTimeInTheFuture;
         }
         return  target.position + targetDirection * (targetSpeed * howTimeInTheFuture);
+    }
+
+    public void CheckNode(Component sender, object data)
+    {
+        if (hittable.attackPlayer) { return; }
+
+        if (!target.GetComponent<OxigenNodeHittable>().targetable)
+        {
+            hittable.SelectTarget();
+        }
     }
 
     #endregion

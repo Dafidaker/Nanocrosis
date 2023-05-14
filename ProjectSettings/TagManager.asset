@@ -15,6 +15,7 @@ TagManager:
   - AmmoPickup
   - BossPart
   - DangerZone
+  - OxygenNode
   layers:
   - Default
   - TransparentFX

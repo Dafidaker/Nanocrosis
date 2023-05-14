@@ -23,7 +23,7 @@ public class BulletController : MonoBehaviour
 
     [field: SerializeField] private AudioClip clip;
     [field: SerializeField] private float volume;
-    
+
 
     private void OnEnable()
     {
@@ -50,6 +50,7 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("collision");
         if(collision.gameObject.CompareTag("bullet") || collision.gameObject.CompareTag("Player")) return;
         if(collision.gameObject.GetComponent<RespawningTargetController>() != null)
         {
@@ -68,7 +69,7 @@ public class BulletController : MonoBehaviour
             }
         }
 
-        var HitableScript = collision.gameObject.GetComponent<Hitable>();
+        var HitableScript = collision.gameObject.GetComponent<Hittable>();
         if (HitableScript != null)
         {
             PlayerAttacks playerAttacks = PlayerAttacks.Bullet;
@@ -81,7 +82,7 @@ public class BulletController : MonoBehaviour
         }
         else
         {
-            HitableScript = collision.gameObject.GetComponentInParent<Hitable>();
+            HitableScript = collision.gameObject.GetComponentInParent<Hittable>();
             
             PlayerAttacks playerAttacks = PlayerAttacks.Bullet;
             if (Enhanced)
@@ -109,17 +110,14 @@ public class BulletController : MonoBehaviour
     {
         //Debug.Log("bullet hit: " + other.name);
         
-        if ((ItHits.value & (1 << other.transform.gameObject.layer)) > 0) 
-        {
-            
-        }
-        else 
+        if (!((ItHits.value & (1 << other.transform.gameObject.layer)) > 0))
         {
             return;
         }
         
         
         if(other.CompareTag("bullet") || other.CompareTag("Player")) return;
+        
         if(other.GetComponent<RespawningTargetController>() != null)
         {
             RespawningTargetController d = other.GetComponent<RespawningTargetController>();
@@ -138,37 +136,25 @@ public class BulletController : MonoBehaviour
         }
         
         
-        var HitableScript = other.GetComponent<Hitable>();
-        var parentHitableScript = other.gameObject.GetComponentInParent<Hitable>();
-        if (HitableScript != null)
+        var hittableScript = other.GetComponent<Hittable>();
+        if (hittableScript != null && hittableScript.GetType() == typeof(OxigenNodeHittable))
         {
-            if (Enhanced)
-            {
-                HitableScript.GotHit(Damage, PlayerAttacks.BulletEnhanced);
-            }
-            HitableScript.GotHit(Damage,PlayerAttacks.Bullet);
-        }
-        else if(parentHitableScript != null)
-        {
-            PlayerAttacks playerAttacks = PlayerAttacks.Bullet;
-            if (Enhanced)
-            {
-                playerAttacks = PlayerAttacks.BulletEnhanced;
-            }
-
-            parentHitableScript.GotHit(Damage, playerAttacks);
+            Destroy(gameObject);
+            return;
         }
         
+        /*var parentHitableScript = other.gameObject.GetComponentInParent<Hittable>();*/
+        
+        hittableScript = hittableScript == null ? other.gameObject.GetComponentInParent<Hittable>() : hittableScript;
+        
+        var playerAttacks = Enhanced ? PlayerAttacks.BulletEnhanced : PlayerAttacks.Bullet;
 
-        /*HitableScript = other.GetComponentInParent<Hitable>();
-        if (other.CompareTag("BossPart"))
+        if (hittableScript != null)
         {
-            if (Gun.GetComponent<WeaponController>().IsEnhanced)
-            {
-                HitableScript.GotHit(Damage, PlayerAttacks.BulletEnhanced);
-            }
-            HitableScript.GotHit(Damage,PlayerAttacks.Bullet);
-        }*/
+            hittableScript.GotHit(Damage,playerAttacks);
+            PauseMenuController.Instance.CallHitmaker();
+        }
+        
         Destroy(gameObject);
     }
 }

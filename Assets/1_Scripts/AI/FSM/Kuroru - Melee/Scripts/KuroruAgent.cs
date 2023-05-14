@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Enums;
 using PathCreation.Examples;
 using UnityEngine;
 using UnityEngine.AI;
@@ -43,7 +44,10 @@ public class KuroruAgent : MonoBehaviour
     private void Update()
     {
         var direction =_fsmNavMeshAgent.target.transform.position - transform.position;
-        transform.forward = new Vector3(direction.x, transform.forward.y, direction.z);
+        var newDirection = new Vector3(direction.x, transform.forward.y, direction.z);
+        if (newDirection == Vector3.zero) return;
+        
+        transform.forward = newDirection;
     }
 
     private void FixedUpdate()
@@ -98,5 +102,11 @@ public class KuroruAgent : MonoBehaviour
         {
             other.GetComponent<PlayerStats>().DamageTaken(damage);
         }
+        else if (other.CompareTag("OxygenNode"))
+        {
+            other.GetComponent<Hittable>().GotHit(damage, PlayerAttacks.Knife);
+        }
+        
+        
     }
 }

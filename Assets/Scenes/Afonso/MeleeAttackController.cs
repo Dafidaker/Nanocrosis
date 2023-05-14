@@ -39,10 +39,10 @@ public class MeleeAttackController : MonoBehaviour
             }
         }
         
-        var HitableScript = col.GetComponent<Hitable>();
+        var HitableScript = col.GetComponent<Hittable>();
         if (HitableScript == null)
         {
-            HitableScript = col.GetComponentInParent<Hitable>();
+            HitableScript = col.GetComponentInParent<Hittable>();
         }
         
         if (HitableScript != null)

@@ -1,11 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using Enums;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.XR;
 using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
@@ -194,6 +192,10 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
+        Debug.DrawRay(transform.position, transform.forward * 10 , Color.red);
+        
+        if (GameManager.Instance.gamePaused) return;
+        
         _horizontalInput = _iMove.ReadValue<Vector2>().x;
         _verticalInput = _iMove.ReadValue<Vector2>().y;
 
@@ -481,6 +483,8 @@ public class PlayerController : MonoBehaviour
     
     private IEnumerator ReloadCountdown(WeaponController w)
     {
+        PauseMenuController.Instance.Reload(w.ReloadTime);
+        
         w.Reloading = true;
 
         //Changes colour
@@ -522,16 +526,12 @@ public class PlayerController : MonoBehaviour
     #region other
 
     private void RotatePlayer()
-        {
-            //var targetAngle = MathF.Atan2(_moveDirection.x, _moveDirection.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
-            //var angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _turnSmoothVelocity, turnSmoothTime);
-             
-            
-            if (!_iLook.triggered) return;
-            //_moveDirection = (Quaternion.Euler(0f, angle, 0f) * Vector3.forward).normalized;
-            var camTransformForward = cam.transform.forward;
-            transform.forward = new Vector3(camTransformForward.x, 0f, camTransformForward.z);
-        }
+    {
+        if (!_iLook.triggered) return;
+        
+        var camTransformForward = cam.transform.forward;
+        transform.forward = new Vector3(camTransformForward.x, 0f, camTransformForward.z);
+    }
     
     private void StateHandler()
         {
@@ -700,7 +700,7 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.Instance.gamePaused)
         {
-            Debug.Log("GAME IS PAUSED");
+            Debug.Log("Jump while game paused");
             return;
         }
         _jumpWasPressed = true;
@@ -737,9 +737,12 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.Instance.gamePaused)
         {
-            Debug.Log("GAME IS PAUSED");
+            //Debug.Log("GAME IS PAUSED");
             return;
         }
+
+        _isSprinting = false;
+        
         WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
 
         RaycastHit hit = default;
@@ -780,7 +783,6 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.Instance.gamePaused)
         {
-            Debug.Log("GAME IS PAUSED");
             return;
         }
         if (_shooting != null) StopCoroutine(_shooting);
@@ -790,9 +792,9 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.Instance.gamePaused)
         {
-            Debug.Log("GAME IS PAUSED");
             return;
         } 
+        
         WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
 
         if (weaponController.CurrentMag < weaponController.MagSize && weaponController.CurrentAmmoReserve > 0 && !weaponController.Reloading)
@@ -922,15 +924,46 @@ public class PlayerController : MonoBehaviour
     {
         dying = true;
         DisableInputSystem();
+        
         AliveUI.SetActive(false);
         DeadUI.SetActive(true);
+        EnemiesDisperse();
         yield return new WaitForSeconds(TimeToRepair);
+        CheckEnemyTarget();
         dying = false;
         AliveUI.SetActive(true);
         DeadUI.SetActive(false);
         EnableInputSystem();
         _playerStats.CurrentHealth = _playerStats.MaxHealth;
+        _playerStats.UpdateColor();
         HealthBar.SetHealth();
+    }
+    
+    
+    private void EnemiesDisperse()
+    {
+        foreach (var enemySpawn in GameManager.Instance.currentArena.enemiesSpawners)
+        {
+            enemySpawn.enemies ??= new List<GameObject>();
+
+            foreach (var enemy in enemySpawn.enemies.ToArray())
+            {
+                enemy.GetComponent<Hittable>().Disperse();
+            }
+        }
+    }
+
+    private void CheckEnemyTarget()
+    {
+        foreach (var enemySpawn in GameManager.Instance.currentArena.enemiesSpawners)
+        {
+            enemySpawn.enemies ??= new List<GameObject>();
+
+            foreach (var enemy in enemySpawn.enemies.ToArray())
+            {
+                enemy.GetComponent<Hittable>().CheckTarget();
+            }
+        }
     }
 
     public void EnableInputSystem()
@@ -1007,10 +1040,9 @@ public class PlayerController : MonoBehaviour
     #endregion
 
 
-    public void Hacks()
+    private void Hacks()
     {
         if (!Input.GetKey(KeyCode.LeftAlt)) { return; }
-        Debug.Log("alt");
         if (Input.GetKeyDown(KeyCode.Alpha1)) // go to lungs 
         {
             GameManager.Instance.ChangeArena(Arena.Lungs);
@@ -1113,6 +1145,7 @@ public class PlayerController : MonoBehaviour
         GUI.Box(new Rect(0, Screen.height * 0.6f, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + CurrentWeapon.GetComponent<WeaponController>().Reloading);
         GUI.Box(new Rect(0, Screen.height * 0.7f, Screen.width * 0.2f, Screen.height * 0.1f), "Available Buffs: " + AvailableBuffs);*/
     }
+    
 
     private void OnTriggerEnter(Collider col)
     {

@@ -1114,6 +1114,7 @@ GameObject:
   - component: {fileID: 5640544717569888670}
   - component: {fileID: 3386601288717749546}
   - component: {fileID: 1509229680914943871}
+  - component: {fileID: 3408783791366921406}
   m_Layer: 7
   m_Name: Chikai
   m_TagString: Untagged
@@ -1354,9 +1355,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyType: 0
+  attackRange: 0
+  location: 0
   isItEnemy: 1
   canHaveShield: 1
   onlyDamagableByExplosion: 0
+  attackPlayer: 0
+  minimumPlayerDistance: 30
+  alertDistance: 15
   maxHealth: 200
   currentHealth: 0
   shieldGameObject: {fileID: 2706919504629644801}
@@ -1379,6 +1385,34 @@ MonoBehaviour:
   doSound: 0
   clip: {fileID: 8300000, guid: 90386fa9df7957c4bb1bfc3318b773cd, type: 3}
   volume: 0.01
+--- !u!114 &3408783791366921406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4551769813614625359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d80f5713bbbb564586cb694368c251d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameEvent: {fileID: 11400000, guid: b698779232d6fca489c376b74fcfc157, type: 2}
+  response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 752564073490009267}
+        m_TargetAssemblyTypeName: FSMNavMeshAgent, Assembly-CSharp
+        m_MethodName: CheckNode
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4578856764459428760
 GameObject:
   m_ObjectHideFlags: 0

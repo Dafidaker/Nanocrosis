@@ -39,7 +39,7 @@ public class Transition : ScriptableObject
     private bool AndOrCondition(FiniteStateMachine fsm)
     {
         int externalCounter = 0;
-        And_Or externalOperator = And_Or.And;
+        //And_Or externalOperator = And_Or.And;
         int internalCounter = 0;
         And_Or internalOperator = And_Or.And;
         var thisResult = true;
@@ -118,7 +118,7 @@ public class Transition : ScriptableObject
         return targetState;
     }
 }
-[System.Serializable]
+[Serializable]
 public class Decisions
 {
     public ConditionsDictionary[] combinedConditions;
@@ -133,7 +133,7 @@ public enum And_Or
     Final
 }
 
-[System.Serializable]
+[Serializable]
 public class ConditionsDictionary
 {
     public Condition[] condition;

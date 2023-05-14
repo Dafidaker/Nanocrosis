@@ -56,21 +56,22 @@ public class WeaponController : MonoBehaviour
 
     private void Update()
     {
-        if (PauseManager.paused)
-        {
-            return;
-        }
-        else
-        {
-            if(CurrentMag <= 0) MagEmpty = true;
-            else MagEmpty = false;
-            if (CurrentAmmoReserve <= 0) OutOfAmmo = true;
-            else OutOfAmmo = false;
+        if (PauseManager.paused) { return; }
 
-            if (IsEnhanced) CurrentBulletPrefab = EnhancedBulletPrefab;
-            else CurrentBulletPrefab = BulletPrefab;
+        //var position = transform.position;
+        transform.forward = GameManager.Instance.cinemachineVirtual.transform.forward;
+        //transform.position = position;
+        
+        if(CurrentMag <= 0) MagEmpty = true;
+        else MagEmpty = false;
+        
+        if (CurrentAmmoReserve <= 0) OutOfAmmo = true;
+        else OutOfAmmo = false;
 
-            //transform.forward = Cam.forward;
-        }
+        if (IsEnhanced) CurrentBulletPrefab = EnhancedBulletPrefab;
+        else CurrentBulletPrefab = BulletPrefab;
+
+        //transform.forward = Cam.forward;
+        
     }
 }
