@@ -15,7 +15,6 @@ public class NanobotLightController : MonoBehaviour
 
     public void UpdateColor()
     {
-        Debug.Log("updated");
         var color = _playerStats.currentHealthColor;
         sphere.material.color = color;
         foreach (var light in lights)

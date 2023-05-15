@@ -143,13 +143,11 @@ public class PauseMenuController : MonoBehaviour
     
     public void CallHitmaker()
     {
-        Debug.Log("called hitmaker ");
         if (!_hitmakerCourotineGoing) StartCoroutine(Hitmaker());
     }
     private IEnumerator Hitmaker()
     {   
         _hitmakerCourotineGoing = true;
-        Debug.Log("hitmaker enables");
         hitmaker.enabled = true;
         yield return new WaitForSeconds(hitmakerTimer);
         hitmaker.enabled = false;

@@ -110,6 +110,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject DeadUI;
     public float TimeToRepair;
 
+    //animations
+    private Animator _animator;
+    
+    
+    
     private float _meleeCountdown;
 
     private Vector3 _delayedForceToApply;
@@ -143,6 +148,9 @@ public class PlayerController : MonoBehaviour
 
     private bool _damaged;
     public bool dying;
+    private static readonly int Running = Animator.StringToHash("Running");
+    private static readonly int Airborne = Animator.StringToHash("Airborne");
+    private static readonly int Jumping = Animator.StringToHash("Jumping");
 
     #region Unity Funtions
 
@@ -171,6 +179,8 @@ public class PlayerController : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _rb.freezeRotation = true;
 
+        _animator = GetComponent<Animator>();
+        
         CurrentWeapon.SetActive(true);
 
         _fireCountdown = CurrentWeapon.GetComponent<WeaponController>().FireRate;
@@ -195,10 +205,20 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(transform.position, transform.forward * 10 , Color.red);
         
         if (GameManager.Instance.gamePaused) return;
-        
-        _horizontalInput = _iMove.ReadValue<Vector2>().x;
-        _verticalInput = _iMove.ReadValue<Vector2>().y;
 
+        Vector2 moveInput = _iMove.ReadValue<Vector2>();
+
+        _animator.SetBool(Running, moveInput != Vector2.zero);
+        _animator.SetBool(Running, moveInput != Vector2.zero);
+        
+        //moveInput = transform.InverseTransformDirection(moveInput);
+        
+        _horizontalInput = moveInput.x;
+        _verticalInput = moveInput.y;
+        
+        /*_horizontalInput = _iMove.ReadValue<Vector2>().x;
+        _verticalInput = _iMove.ReadValue<Vector2>().y;*/
+        
         Hacks();
         
         //adds drag if player is grounded
@@ -316,6 +336,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Jump()
     {
+        _animator.SetBool(Jumping, true);
         _readyToJump = false;
         _jumpWasPressed = false;
         isJumpOver = false;
@@ -534,59 +555,60 @@ public class PlayerController : MonoBehaviour
     }
     
     private void StateHandler()
+    {
+        if (_dashing)
         {
-            if (_dashing)
-            {
-                _movementState = MovementState.Dash;
-                _desiredMoveSpeed = dashSpeed;
-                _speedChangeFactor = dashSpeedChangeFactor;
-            }
+            _movementState = MovementState.Dash;
+            _desiredMoveSpeed = dashSpeed;
+            _speedChangeFactor = dashSpeedChangeFactor;
+        }
+        
+        else if (isGrounded && _isSprinting)
+        {
+            _movementState = MovementState.Sprint;
+            _desiredMoveSpeed = sprintSpeed;
+        }
+        
+        else if (isGrounded)
+        {
+            _movementState = MovementState.Walk;
+            _desiredMoveSpeed = walkSpeed;
+        }
+
+        else
+        {
+            _movementState = MovementState.Airborne;
             
-            else if (isGrounded && _isSprinting)
+             
+            //if the player speed is lower than the sprint speed it makes the desired the walk
+            //other wise it makes the desired the sprint speed
+            _desiredMoveSpeed = _desiredMoveSpeed < sprintSpeed ? walkSpeed : sprintSpeed;
+        }
+
+        bool desiredMoveSpeedHasChanged = _desiredMoveSpeed != _lastDesiredMoveSpeed;
+        
+        if (_lastMovementState == MovementState.Dash)
+        {
+            _keepMomentum = true;
+        }
+        
+        if (desiredMoveSpeedHasChanged)
+        {
+            if (_keepMomentum)
             {
-                _movementState = MovementState.Sprint;
-                _desiredMoveSpeed = sprintSpeed;
+                if (_momentumCoroutine != null) { StopCoroutine(_momentumCoroutine); }
+                _momentumCoroutine = StartCoroutine(SmoothlyLerpMoveSpeed());
             }
-            
-            else if (isGrounded)
-            {
-                _movementState = MovementState.Walk;
-                _desiredMoveSpeed = walkSpeed;
-            }
-    
             else
             {
-                _movementState = MovementState.Airborne;
-                
-                //if the player speed is lower than the sprint speed it makes the desired the walk
-                //other wise it makes the desired the sprint speed
-                _desiredMoveSpeed = _desiredMoveSpeed < sprintSpeed ? walkSpeed : sprintSpeed;
+                if (_momentumCoroutine != null) { StopCoroutine(_momentumCoroutine); }
+                _moveSpeed = _desiredMoveSpeed;
             }
-    
-            bool desiredMoveSpeedHasChanged = _desiredMoveSpeed != _lastDesiredMoveSpeed;
-            
-            if (_lastMovementState == MovementState.Dash)
-            {
-                _keepMomentum = true;
-            }
-            
-            if (desiredMoveSpeedHasChanged)
-            {
-                if (_keepMomentum)
-                {
-                    if (_momentumCoroutine != null) { StopCoroutine(_momentumCoroutine); }
-                    _momentumCoroutine = StartCoroutine(SmoothlyLerpMoveSpeed());
-                }
-                else
-                {
-                    if (_momentumCoroutine != null) { StopCoroutine(_momentumCoroutine); }
-                    _moveSpeed = _desiredMoveSpeed;
-                }
-            }
-    
-            _lastDesiredMoveSpeed = _desiredMoveSpeed;
-            _lastMovementState = _movementState;
         }
+
+        _lastDesiredMoveSpeed = _desiredMoveSpeed;
+        _lastMovementState = _movementState;
+    }
     
     private bool OnSlope()
         {
@@ -602,6 +624,8 @@ public class PlayerController : MonoBehaviour
     private void DetectGround()
         {
             isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, layerMask);
+            
+            _animator.SetBool(Airborne, !isGrounded);
             
             //if _readyToJump is false it means the player just jumped meaning that they arent on the ground
             if (!_readyToJump) isGrounded = false;
@@ -689,7 +713,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("GAME IS PAUSED");
             return;
         }
-
+        
         if (!Settings.IsSprintToggle)
         {
             _isSprinting = false;
@@ -703,6 +727,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Jump while game paused");
             return;
         }
+        
         _jumpWasPressed = true;
         _jumpInputTimer = jumpBufferingDuration;
         
@@ -720,6 +745,9 @@ public class PlayerController : MonoBehaviour
             Debug.Log("GAME IS PAUSED");
             return;
         }
+        
+        _animator.SetBool(Jumping, false);
+        
         isJumpOver = true;
     }
     
@@ -924,7 +952,6 @@ public class PlayerController : MonoBehaviour
     {
         dying = true;
         DisableInputSystem();
-        
         AliveUI.SetActive(false);
         DeadUI.SetActive(true);
         EnemiesDisperse();
