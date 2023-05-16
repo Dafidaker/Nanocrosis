@@ -44,10 +44,24 @@ public class EnemyManager : MonoBehaviour
 
     public void UpdateEnemyList(Component sender, object data)
     {
-        foreach (var enemySpawn in GameManager.Instance.currentArena.enemiesSpawners)
+        if (sender is not Hittable) return;
+        
+        var hittable = sender.GetComponent<Hittable>();
+        var enemies = GameManager.Instance
+            .GetArenaEnemySpawner(GameManager.Instance.currentArena.enemiesSpawners, hittable.enemyType).enemies;
+            
+        if (!enemies.Contains(hittable.gameObject)) return;
+            
+        foreach (var enemy in enemies.Where(enemy => enemy == hittable.gameObject))
+        {
+            enemies.Remove(enemy);
+            return;
+        }
+
+        /*foreach (var enemySpawn in GameManager.Instance.currentArena.enemiesSpawners)
         {
             enemySpawn.enemies ??= new List<GameObject>();
-
+            
             foreach (var gameObject in enemySpawn.enemies.ToArray())
             {
                 if (gameObject == null)
@@ -55,8 +69,8 @@ public class EnemyManager : MonoBehaviour
                     enemySpawn.enemies.Remove(gameObject);
                 }
             }
-        }
-        
+        }*/
+
     }
     
     private void SpawnEnemies()

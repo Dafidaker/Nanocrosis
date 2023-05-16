@@ -91,7 +91,11 @@ public class Hittable : MonoBehaviour
             currentShieldHealth = maxShieldHealth;
         }
 
-        SelectTarget();
+        if (isItEnemy)
+        {
+            SelectTarget();
+        }
+        
     }
 
     private void OnDestroy()

@@ -27,9 +27,13 @@ public class PlayerStats : MonoBehaviour
 
     [SerializeField] private List<NanobotLightController> lightControllers;
 
+    private Animator _animator;
+    private static readonly int GotHit = Animator.StringToHash("GotHit");
+
     #region Unity Functions
     private void Start()
     {
+        _animator = GetComponent<Animator>();
         CurrentHealth = MaxHealth;
         CreateHealthIndicatorsDictionary();
         UpdateColor();
@@ -45,6 +49,7 @@ public class PlayerStats : MonoBehaviour
             return;
         }
         
+        _animator.SetTrigger(GotHit);
         CurrentHealth -= damagedTaken;
         UpdateColor();
         healthBarController.SetHealth();

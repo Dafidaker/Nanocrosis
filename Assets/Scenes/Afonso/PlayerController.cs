@@ -91,6 +91,8 @@ public class PlayerController : MonoBehaviour
     [Header("Aim"), Space(10)]
     [SerializeField] private float mouseYSentivity;
     [SerializeField] private float mouseXSentivity;
+    [SerializeField] private GameObject mesh;
+    [SerializeField] private float yThreshold;
     private float _camXSpeed;
     private float _camYSpeed;
     
@@ -151,6 +153,8 @@ public class PlayerController : MonoBehaviour
     private static readonly int Running = Animator.StringToHash("Running");
     private static readonly int Airborne = Animator.StringToHash("Airborne");
     private static readonly int Jumping = Animator.StringToHash("Jumping");
+    private static readonly int Dead = Animator.StringToHash("Dead");
+    private static readonly int Dashed = Animator.StringToHash("Dashed");
 
     #region Unity Funtions
 
@@ -215,6 +219,15 @@ public class PlayerController : MonoBehaviour
         
         _horizontalInput = moveInput.x;
         _verticalInput = moveInput.y;
+
+        if (CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.Value <= yThreshold)
+        {
+            mesh.SetActive(false);
+        }
+        else
+        {
+            mesh.SetActive(true);
+        }
         
         /*_horizontalInput = _iMove.ReadValue<Vector2>().x;
         _verticalInput = _iMove.ReadValue<Vector2>().y;*/
@@ -359,6 +372,8 @@ public class PlayerController : MonoBehaviour
     {
         //if the cooldown hasn't ended just returns
         if (_dashCooldownTimer > 0) return;
+        
+        _animator.SetTrigger(Dashed);
         
         //if the dash goes through the timer gets as big as the cooldown
         _dashCooldownTimer = dashCooldown;
@@ -950,6 +965,7 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator DieAndRespawn()
     {
+        _animator.SetBool(Dead, true);
         dying = true;
         DisableInputSystem();
         AliveUI.SetActive(false);
@@ -961,6 +977,7 @@ public class PlayerController : MonoBehaviour
         AliveUI.SetActive(true);
         DeadUI.SetActive(false);
         EnableInputSystem();
+        _animator.SetBool(Dead, false);
         _playerStats.CurrentHealth = _playerStats.MaxHealth;
         _playerStats.UpdateColor();
         HealthBar.SetHealth();

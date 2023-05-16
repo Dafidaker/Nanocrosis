@@ -5171,8 +5171,8 @@ MonoBehaviour:
   canHaveShield: 0
   onlyDamagableByExplosion: 0
   attackPlayer: 0
-  minimumPlayerDistance: 30
-  alertDistance: 300
+  alertByPlayerDistance: 5
+  alertDistance: 25
   maxHealth: 25
   currentHealth: 0
   shieldGameObject: {fileID: 0}
@@ -5184,7 +5184,7 @@ MonoBehaviour:
   haveShieldChance: 0
   animate: 1
   duration: 0.05
-  strength: 0.07
+  strength: 1
   vibrato: 0
   randomness: 0
   fadeOut: 1
