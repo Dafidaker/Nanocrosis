@@ -1170,7 +1170,7 @@ MonoBehaviour:
   attackTimer: 0
   isAttacking: 0
   antecipationDuration: 0.5
-  headbuttForce: 50
+  headbuttForce: 75
   headbuttDuration: 1
   headbuttTrigger: {fileID: 5640544717569888670}
   damageHeadbutt: 10
@@ -1202,7 +1202,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: -1372625422
   m_Radius: 2
-  m_Speed: 10
+  m_Speed: 9
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -1374,7 +1374,7 @@ MonoBehaviour:
   haveShieldChance: 0.7
   animate: 1
   duration: 0.05
-  strength: 0.1
+  strength: 0.07
   vibrato: 0
   randomness: 0
   fadeOut: 1

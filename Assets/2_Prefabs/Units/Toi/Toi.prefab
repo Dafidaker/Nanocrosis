@@ -757,7 +757,7 @@ MonoBehaviour:
   haveShieldChance: 0
   animate: 1
   duration: 0.05
-  strength: 1
+  strength: 0.07
   vibrato: 0
   randomness: 0
   fadeOut: 1

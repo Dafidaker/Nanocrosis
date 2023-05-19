@@ -1768,7 +1768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
+  m_Color: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2021,6 +2021,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mouseSentivityXValue: {fileID: 1621976258}
   mouseSentivityYValue: {fileID: 1723186399}
+  dashDirection: {fileID: 0}
+  sprintToggle: {fileID: 0}
+  mouseX: {fileID: 0}
+  mouseY: {fileID: 0}
 --- !u!1 &545695465
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
@@ -908,8 +909,7 @@ public class PlayerController : MonoBehaviour
         }
         if (_currentBomb != null)
         {
-            _currentBomb.GetComponent<BombPickupController>().Interact();
-            WeaponUI.BombAttached();
+            GetBomb();
         }
     }
     private void EnhanceWeapon(InputAction.CallbackContext context)
@@ -1189,7 +1189,57 @@ public class PlayerController : MonoBehaviour
         GUI.Box(new Rect(0, Screen.height * 0.6f, Screen.width * 0.2f, Screen.height * 0.1f), "Reloading: " + CurrentWeapon.GetComponent<WeaponController>().Reloading);
         GUI.Box(new Rect(0, Screen.height * 0.7f, Screen.width * 0.2f, Screen.height * 0.1f), "Available Buffs: " + AvailableBuffs);*/
     }
+
+    #region Colliding
+    private bool GetAmmo()
+    {
+        WeaponController w1 = Weapons[0].GetComponent<WeaponController>();
+        WeaponController w2 = Weapons[1].GetComponent<WeaponController>();
+
+        if ((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve))
+        {
+            Debug.Log("ALL AMMO RESERVES FULL");
+            return false;
+        }
+
+        foreach (GameObject weapon in Weapons)
+        {
+            WeaponController w = weapon.GetComponent<WeaponController>();
+            float AmmoRestored = w.AmmoReserve * 0.15f;
+            int RoundedAmmo = Mathf.RoundToInt(AmmoRestored);
+
+            if (w.CurrentAmmoReserve == w.AmmoReserve)
+            {
+                Debug.Log(w.Name + ": AMMO RESERVES FULL");
+            }
+
+            else if (RoundedAmmo + w.CurrentAmmoReserve > w.AmmoReserve)
+            {
+                w.CurrentAmmoReserve = w.AmmoReserve;
+            }
+            else w.CurrentAmmoReserve += RoundedAmmo;
+
+            WeaponUI.SetValues();
+            if (w.CurrentAmmoReserve > w.AmmoReserve * 0.3f) WeaponUI.ResetReserveColor();
+
+        }
+        return true;
+    }
+
+    private void GetSpecialAmmo()
+    {
+        AvailableBuffs += 2;
+        PickupUI.SetValue();
+    }
+
+    private void GetBomb()
+    {
+        _currentBomb.GetComponent<BombPickupController>().Interact();
+        WeaponUI.BombAttached();
+    }
+
     
+    #endregion
 
     private void OnTriggerEnter(Collider col)
     {
@@ -1205,7 +1255,6 @@ public class PlayerController : MonoBehaviour
                 AvailableBuffs += 1;
                 PickupUI.SetValue();
             }
-            else Debug.Log("Collect Pickup to go above 1");
         }
 
         if (col.CompareTag($"AmmoBuff"))
@@ -1219,8 +1268,6 @@ public class PlayerController : MonoBehaviour
         {
             WeaponController w1 = Weapons[0].GetComponent<WeaponController>();
             WeaponController w2 = Weapons[1].GetComponent<WeaponController>();
-
-           // Debug.Log((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve));
 
             if ((w1.CurrentAmmoReserve == w1.AmmoReserve) && (w2.CurrentAmmoReserve == w2.AmmoReserve))
             {
@@ -1248,6 +1295,33 @@ public class PlayerController : MonoBehaviour
                 Destroy(col.gameObject);
             }
         }
+
+        if (col.CompareTag("ItemTreeTrigger"))
+        {
+            var controller = col.gameObject.GetComponent<ItemTreeBranchController>();
+            var itemtype = controller.itemSpawn.item;
+            Debug.Log("item trigger");
+            Debug.Log("itemtype: " + itemtype);
+            switch (itemtype)
+            {
+                default:
+                    return;
+                case ItemType.Ammo:
+                    if (GetAmmo())
+                    {
+                        controller.RemovedItem();
+                    }
+                    break;
+                case ItemType.Explosive:
+                    controller.RemovedItem();
+                    GetBomb();
+                    break;
+                case ItemType.SpecialAmmo:
+                    controller.RemovedItem();
+                    GetSpecialAmmo();
+                    break;
+            }
+        }
         /*if (col.CompareTag($"DangerZone"))
         {
             if (_damaged) return;
@@ -1256,7 +1330,7 @@ public class PlayerController : MonoBehaviour
             _damaged = true;
             _playerStats.CurrentHealth -= 5;
             HealthBar.SetHealth();
-        }*/
+        }*/                                                                                                                                                                                                                                                                                                                     
     }
 
     private void OnTriggerStay(Collider col)

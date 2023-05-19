@@ -5,6 +5,7 @@ using System.Linq;
 using Cinemachine;
 using Enums;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 [Serializable]
@@ -65,6 +66,7 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] private GameObject oxygenBushPrefab;
     [field: SerializeField] private GameObject itemTreePrefab;
     [field: SerializeField] public List<GameObject> oxygenTreeGameObjects;
+    [field: SerializeField] public List<GameObject> oxygenBushesGameObjects;
     [field: SerializeField] public List<GameObject> itemTreeGameObjects;
     
     private void Awake()
@@ -74,6 +76,7 @@ public class GameManager : MonoBehaviour
         player.transform.position = lungsPlayerSpawnPosition.position;
         
         oxygenTreeGameObjects = new List<GameObject>();
+        oxygenBushesGameObjects = new List<GameObject>();
         itemTreeGameObjects = new List<GameObject>();
         
         foreach (var arenaClass in arenas)
@@ -164,10 +167,18 @@ public class GameManager : MonoBehaviour
 
             var go = Instantiate(oxygenBushPrefab, treeSpawnPositions[index]);
             
-            oxygenTreeGameObjects.Add(go); // todo maybe create new list for bushes if needed 
+            oxygenBushesGameObjects.Add(go); // todo maybe create new list for bushes if needed 
             
             treeSpawnPositions.Remove(treeSpawnPositions[index]);
         }
+
+        var lungs = GetArena(Arena.Lungs);
+        lungs.itemTrees.Clear();
+        lungs.itemTrees.AddRange(itemTreeGameObjects);
+        //lungs.oxigenTrees.Clear();
+        lungs.oxigenTrees.AddRange(oxygenTreeGameObjects);
+        //lungs.oxigenBushes.Clear();
+        lungs.oxigenBushes.AddRange(oxygenBushesGameObjects);
     }
     public void ChangeArena(Arena newArena)
     {
@@ -289,7 +300,9 @@ public class ArenaClass
     public Arena arenaType;
     public GameObject enemiesParent;
     public Transform[] waypoints;
-    public List<GameObject> trees;
+    public List<GameObject> itemTrees;
+    public List<GameObject> oxigenTrees;
+    public List<GameObject> oxigenBushes;
     [HideInInspector] public List<ArenaItemSpawner> itemsSpawners;
     [HideInInspector] public List<GameObject> enemies;
     [HideInInspector] public List<ArenaEnemySpawner> enemiesSpawners;

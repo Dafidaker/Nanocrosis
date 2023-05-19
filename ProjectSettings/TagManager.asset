@@ -16,6 +16,7 @@ TagManager:
   - BossPart
   - DangerZone
   - OxygenNode
+  - ItemTreeTrigger
   layers:
   - Default
   - TransparentFX

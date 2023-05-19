@@ -19,21 +19,13 @@ public class EnemyManager : MonoBehaviour
     [field: SerializeField] public int amountSpawnPositions;
     [field: SerializeField] private LayerMask spawnOn;
     
-    private 
-    void Awake()
+    private void Awake()
     {
         Instance = this;
     }
-
-    private void Start()
-    {
-        
-    }
-
-
+    
     private void Update()
     {
-
         if (GameManager.Instance.spawnEnemies)
         {
             SpawnEnemies();
@@ -47,15 +39,15 @@ public class EnemyManager : MonoBehaviour
         if (sender is not Hittable) return;
         
         var hittable = sender.GetComponent<Hittable>();
-        var enemies = GameManager.Instance
-            .GetArenaEnemySpawner(GameManager.Instance.currentArena.enemiesSpawners, hittable.enemyType).enemies;
+        if(hittable.enemyType == Enemy.Phage)return;
+        var enemies = GameManager.Instance.GetArenaEnemySpawner(GameManager.Instance.currentArena.enemiesSpawners, hittable.enemyType).enemies;
             
         if (!enemies.Contains(hittable.gameObject)) return;
             
         foreach (var enemy in enemies.Where(enemy => enemy == hittable.gameObject))
         {
             enemies.Remove(enemy);
-            return;
+            return; 
         }
 
         /*foreach (var enemySpawn in GameManager.Instance.currentArena.enemiesSpawners)
@@ -97,7 +89,6 @@ public class EnemyManager : MonoBehaviour
     }
     private bool CanSpawnEnemy(ArenaEnemySpawner enemySpawnOld)
     {
-
         var amountEnemies = enemySpawnOld.enemies.Count;
         var maxAmountEnemies = 0;
         
@@ -240,18 +231,19 @@ public class EnemyManager : MonoBehaviour
     private void SpawnItem(ArenaItemSpawner itemSpawner)
     {
         var tempTree = new List<GameObject>();
-        tempTree.AddRange(GameManager.Instance.currentArena.trees);
+        tempTree.AddRange(GameManager.Instance.currentArena.itemTrees);
+        
 
         var selectedTree = tempTree[Random.Range(0, tempTree.Count)];
         var selectedTreeController = selectedTree.GetComponent<ItemTreeController>();
-        var itemWaypoint = selectedTreeController.GetEmptyItemWaypoint();
+        var itemWaypoint = selectedTreeController.GetEmptyItemBranchWaypoint(); //var itemWaypoint = selectedTreeController.GetEmptyItemWaypoint();
         
         while (itemWaypoint == null && tempTree.Count > 0)
         {
             tempTree.Remove(selectedTree);
             selectedTree = tempTree[Random.Range(0, tempTree.Count)];
             selectedTreeController = selectedTree.GetComponent<ItemTreeController>();
-            itemWaypoint = selectedTreeController.GetEmptyItemWaypoint();
+            itemWaypoint = selectedTreeController.GetEmptyItemBranchWaypoint(); //itemWaypoint = selectedTreeController.GetEmptyItemWaypoint();
         }
 
         if (tempTree.Count <= 0)
@@ -263,7 +255,7 @@ public class EnemyManager : MonoBehaviour
         if (itemWaypoint != null)
         {
             itemSpawner.itemSpawnTimer += itemSpawner.CoolDown; 
-            selectedTreeController.AddItem((ItemSpawn)itemWaypoint, itemSpawner.ItemType, itemSpawner.ItemPrefab);
+            selectedTreeController.AddItemToBranch(itemSpawner.ItemType, itemSpawner.ItemPrefab); //selectedTreeController.AddItem((ItemSpawn)itemWaypoint, itemSpawner.ItemType, itemSpawner.ItemPrefab);
         }
             
     }

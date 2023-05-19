@@ -38,9 +38,10 @@ public class BulletController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Gun.GetComponent<WeaponController>().Name == "Rifle") transform.position = Vector3.MoveTowards(transform.position, Target, Speed * Time.deltaTime);
+        if (Gun.GetComponent<WeaponController>().Name == "Rifle") transform.position = Vector3.MoveTowards(transform.position, Target, Speed * Time.fixedDeltaTime);
         else if (Gun.GetComponent<WeaponController>().Name == "Shotgun") _rb.AddForce(transform.forward * Speed);
-        if(!Hit && Vector3.Distance(transform.position, Target) < .01f)
+        
+        if(Vector3.Distance(transform.position, Target) < .01f) //if(!Hit && Vector3.Distance(transform.position, Target) < .01f)
         {
             Destroy(gameObject);
         }
