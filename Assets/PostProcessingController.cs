@@ -42,6 +42,7 @@ public class PostProcessingController : MonoBehaviour
     public SmoothlyTransitionVignette VignetteValues;
     private ColorAdjustments _colorAdjustments;
     private bool colorAjustmentCourotine;
+    private ChromaticAberration _chromaticAberration;
     public void Start()
     {
         _volume = GetComponent<Volume>();
@@ -103,6 +104,7 @@ public class PostProcessingController : MonoBehaviour
         StartCoroutine(Decrease(_colorAdjustments,deadtimer - noColorTimer - 3f,0f));
     }
 
+    
     private void Update()
     {
         /*if (Input.GetKeyDown(KeyCode.V))
