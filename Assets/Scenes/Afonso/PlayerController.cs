@@ -965,6 +965,7 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator DieAndRespawn()
     {
+        GameEvents.Instance.playerDied.Ping(null, (1f,TimeToRepair)); //(float noColorTimer, float deadtimer)
         _animator.SetBool(Dead, true);
         dying = true;
         DisableInputSystem();

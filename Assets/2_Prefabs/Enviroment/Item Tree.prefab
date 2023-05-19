@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12db537b75c6640488ca1a5206f02471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSpawns:
+  itemSpawn:
     waypoint: {fileID: 0}
     itemGameObject: {fileID: 0}
 --- !u!1 &4151708805066713528
@@ -2263,7 +2263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12db537b75c6640488ca1a5206f02471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSpawns:
+  itemSpawn:
     waypoint: {fileID: 0}
     itemGameObject: {fileID: 0}
 --- !u!1 &9114443299819978555
@@ -2332,6 +2332,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12db537b75c6640488ca1a5206f02471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSpawns:
+  itemSpawn:
     waypoint: {fileID: 0}
     itemGameObject: {fileID: 0}

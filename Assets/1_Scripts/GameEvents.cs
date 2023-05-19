@@ -14,6 +14,9 @@ public class GameEvents : MonoBehaviour
     
     public GameEvent oxigenNodeIsTargatable;
     public GameEvent oxigenNodeIsUntargatable;
+
+    public GameEvent playerDied;
+    public GameEvent playerWasDamaged;
     private void Awake()
     {
         Instance = this;

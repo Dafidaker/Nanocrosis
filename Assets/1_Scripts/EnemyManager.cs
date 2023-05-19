@@ -26,6 +26,8 @@ public class EnemyManager : MonoBehaviour
     
     private void Update()
     {
+        if (GameManager.Instance.gamePaused || GameManager.Instance.isGameOver) { return; }
+        
         if (GameManager.Instance.spawnEnemies)
         {
             SpawnEnemies();

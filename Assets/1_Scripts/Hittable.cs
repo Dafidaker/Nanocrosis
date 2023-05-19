@@ -305,7 +305,7 @@ public class Hittable : MonoBehaviour
     {
         var DropAmmoChange = 0.05f;
         if (GameManager.Instance.player.GetComponent<PlayerController>().CurrentWeapon.name == "Shotgun") { DropAmmoChange = 0.025f; }
-        if (hasShield) { Instantiate(_specialAmmo, transform.position, Quaternion.identity); }
+        if (hasShield) { Instantiate(_specialAmmo, transform.position + Vector3.up , Quaternion.identity); }
         
         if (attackType == PlayerAttacks.Knife) { Instantiate(_ammo, transform.position, Quaternion.identity); }
         else if (Random.Range(0f, 1f) < DropAmmoChange) { Instantiate(_ammo, transform.position, Quaternion.identity); }

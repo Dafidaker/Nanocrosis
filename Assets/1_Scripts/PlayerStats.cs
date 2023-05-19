@@ -49,6 +49,7 @@ public class PlayerStats : MonoBehaviour
             return;
         }
         
+        GameEvents.Instance.playerWasDamaged.Ping(null,null);
         _animator.SetTrigger(GotHit);
         CurrentHealth -= damagedTaken;
         UpdateColor();
