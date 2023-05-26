@@ -91,7 +91,7 @@ public class KuroruAgent : MonoBehaviour
     public void Chase()
     {
         //Debug.Log("KuroruAgent _ Chase");
-        _agent.SetDestination(_fsmNavMeshAgent.target.position);
+                _agent.SetDestination(_fsmNavMeshAgent.target.position);
     }
 
     #endregion

@@ -4,20 +4,20 @@ using System.Collections.Generic;
 using Enums;
 using UnityEngine;
 
-[System.Serializable]
+[Serializable]
 public struct EnemyHealing
 {
     public Enemy enemy;
     public float healing;
 }
 
-[System.Serializable]
+[Serializable]
 public struct EnemyPercentage
 {
     public Enemy enemy;
     public float weight;
 }
-[System.Serializable]
+[Serializable]
 public struct ArenaPercentage
 {
     public Arena arena;
@@ -47,6 +47,8 @@ public class ObjectiveManager : MonoBehaviour
     public EnemyHealing[] enemyHealingInspector;
     private Dictionary<Enemy, float> _enemyHealing;
 
+    private float _timeSinceEnemyKilled;
+    [field: SerializeField] private float healingDuration;
     public float passiveHealingValue;
     public float updateUnlimitedObjectiveCooldown;
     private WaitForSeconds _unlimitedObjectiveWaitForSeconds;
@@ -54,6 +56,9 @@ public class ObjectiveManager : MonoBehaviour
     [Header("Node Stats"), Space(5)] 
     public float nodeHealingValue;
     public float nodeDamagingValue;
+
+    public float lungHealthChange;
+    private int _percentagedChanged;
     private void Awake()
     {
         Instance = this;
@@ -94,9 +99,15 @@ public class ObjectiveManager : MonoBehaviour
 
     private IEnumerator UpdateUnlimitedObjective()
     {
-        if (currentValue + passiveHealingValue <= maxValue)
+        var lastValue = GetCurrentValue(true, true); // currentValue
+        //Debug.Log("currentValue: " + currentValue);
+        //Debug.Log("lastValue: " + lastValue);
+        var lastLungHealth = lungHealthChange;
+        
+        if (currentValue + passiveHealingValue <= maxValue && _timeSinceEnemyKilled > 0)
         {
-            currentValue += passiveHealingValue;
+            //currentValue += passiveHealingValue;
+            ChangeValue(passiveHealingValue);
         }
         
         foreach (var enemySpawner in _lungs.enemiesSpawners.ToArray())
@@ -107,7 +118,8 @@ public class ObjectiveManager : MonoBehaviour
 
             weight *= _arenaMultiplier[GameManager.Instance.currentArena.arenaType];
 
-            currentValue -= amountOfEnemies * weight;
+            //currentValue -= amountOfEnemies * weight;
+            ChangeValue(-(amountOfEnemies * weight));
             
             //Debug.Log("Enemy: " + enemySpawner.enemy + "\namountOfEnemies: " + enemySpawner.enemies.Count + "\nAdd to Value: " + amountOfEnemies * weight);
         }
@@ -117,31 +129,88 @@ public class ObjectiveManager : MonoBehaviour
             GameManager.Instance.GameEnded(false);
         }
         
-        GameEvents.Instance.lungsHealthChanged.Ping(null, null);
-        
         yield return _unlimitedObjectiveWaitForSeconds;
         
         StartCoroutine(UpdateUnlimitedObjective());
     }
-    
+
+    public void ChangeValue(float change)
+    {
+        var lastValue = GetCurrentValue(true, true);
+        var lastLungHealth = lungHealthChange;
+        
+        //change value
+        currentValue += change;
+        GameEvents.Instance.lungsHealthChanged.Ping(null, null);
+        
+        lungHealthChange += (GetCurrentValue(true, true) - lastValue);
+        
+        var compareOldValue = Convert.ToInt32(Math.Floor(lastLungHealth));
+        var compareNewValue = Convert.ToInt32(Math.Floor(lungHealthChange));
+        
+        if (compareOldValue < compareNewValue) //a percentaged when up
+        {
+            _percentagedChanged++;
+            if (_percentagedChanged >= 10)
+            {
+                _percentagedChanged = 0;
+                DoctorManager.Instance.AddToQueue("LungsGainedHealth");
+            }
+            //Debug.Log("percentagedChanged: " + _percentagedChanged);
+        }
+        
+        if (compareOldValue > compareNewValue) //a percentaged when down
+        {
+            _percentagedChanged--;
+            if (_percentagedChanged <= -10)
+            {
+                _percentagedChanged = 0;
+                DoctorManager.Instance.AddToQueue("LungsLostHealth");
+            }
+            //Debug.Log("percentagedChanged: " + _percentagedChanged);
+        }
+        
+        if (lastValue > 10 && GetCurrentValue(true,true) <= 10)
+        {
+            DoctorManager.Instance.AddToQueue("LungsLowHealth");
+        }
+    }
+
+    private void Update()
+    {
+        _timeSinceEnemyKilled -= Time.deltaTime;
+    }
+
     public float GetPercentageOfCurrentValue()
     {
         return currentValue / maxValue;
     }
-
-    public void UpdateObjective(Component sender, object data) 
+    
+    public float GetCurrentValue(bool baseHundred, bool truncate ,bool round = false,int decimalCases = 0, MidpointRounding mode = MidpointRounding.ToEven)
     {
-        if (sender is Hittable && GameManager.Instance.currentArena.arenaType == Arena.Lungs)
+        var value = currentValue / maxValue;
+        
+        if (round) { value = (float)Math.Round(value, decimalCases, mode); }
+        if (baseHundred) { value *= 100; }
+        if (truncate) { return (float)Math.Truncate(value); }
+        
+        return currentValue / maxValue;
+    }
+
+    public void UpdateObjective(Component sender, object data)
+    {
+        if (sender is not Hittable || GameManager.Instance.currentArena.arenaType != Arena.Lungs) return;
+        
+        var enemyType = sender.GetComponent<Hittable>().enemyType;
+        if (enemyType == Enemy.Phage) { return; }
+        var healingValue = _enemyHealing[enemyType];
+
+        _timeSinceEnemyKilled = healingDuration;
+            
+        if (currentValue + healingValue <= maxValue)
         {
-            var enemyType = sender.GetComponent<Hittable>().enemyType;
-            if (enemyType == Enemy.Phage) { return; }
-            var healingValue = _enemyHealing[enemyType];
-            
-            
-            if (currentValue + healingValue <= maxValue)
-            {
-                currentValue += healingValue;
-            }
+            ChangeValue(healingValue);
+            //currentValue += healingValue;
         }
     }
     

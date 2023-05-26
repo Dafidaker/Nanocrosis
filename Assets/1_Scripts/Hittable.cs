@@ -47,8 +47,9 @@ public class Hittable : MonoBehaviour
     [field: SerializeField] private float vibrato;
     [field: SerializeField] private float randomness;
     [field: SerializeField] private bool fadeOut;
-    
-    [Header("Damage Text Pop up"), Space(5)] 
+
+    [Header("Damage Text Pop up"), Space(5)]
+    [field: SerializeField] private bool showDamage;
     public GameObject damageText;
     [field: SerializeField] private Transform textPosition;
     [field: SerializeField] private float textDuration;
@@ -69,7 +70,8 @@ public class Hittable : MonoBehaviour
     
     private Tween _shaking;
     private bool isShaking;
-    
+    private bool _isDead;
+
     private void Start()
     {
         _fsmNavMeshAgent = GetComponent<FSMNavMeshAgent>();
@@ -203,7 +205,9 @@ public class Hittable : MonoBehaviour
     
     public virtual void GotHit(int damage, PlayerAttacks attackType)
     {
-        if (!attackPlayer)
+        var beforeHealth = GetCurrentHealthPercentage() * 100;
+        
+        if (!attackPlayer && isItEnemy)
         {
             attackPlayer = true;
             _fsmNavMeshAgent.target = GameManager.Instance.player.transform;
@@ -231,9 +235,14 @@ public class Hittable : MonoBehaviour
         
         if (hasShield && shieldIsActive && attackType != PlayerAttacks.BulletEnhanced)
         {
+            GameManager.Instance.playerController.HitEnemyShield();
             damage = 0;
         }
-        
+
+        if (damage > 0)
+        {
+            PauseMenuController.Instance.CallHitmaker();
+        }
 
         if (hasShield && shieldIsActive)
         {
@@ -247,7 +256,6 @@ public class Hittable : MonoBehaviour
             
         if ( hasShield && currentShieldHealth <= 0 && !_rechargingShield)
         {
-            Debug.Log("deativate shield");
             shieldIsActive = false;
             shieldGameObject.SetActive(false);
             _rechargeShield = StartCoroutine(ResetShield());
@@ -263,13 +271,33 @@ public class Hittable : MonoBehaviour
         {
             reduce.duration = textDuration;
         }
+
+        if (showDamage)
+        {
+            var go =Instantiate(damageText, textPosition.position, Quaternion.identity, transform);
+            go.transform.localScale *= textSize;
+        }
         
-        var go =Instantiate(damageText, textPosition.position, Quaternion.identity, transform);
-        go.transform.localScale *= textSize;
         
         if (enemyType == Enemy.Phage)
         {
             GameEvents.Instance.bossTookDamage.Ping(this,null);
+            Debug.Log("beforeHealth: " + beforeHealth);
+            Debug.Log("CurrentHealth: " + GetCurrentHealthPercentage() *100);
+            switch (beforeHealth)
+            {
+                case >= 30 when GetCurrentHealthPercentage() *100 <= 30:
+                    
+                    DoctorManager.Instance.AddToQueue("BossHealth30");
+                    break;
+                case >= 50 when GetCurrentHealthPercentage() *100 <= 50:
+                    DoctorManager.Instance.AddToQueue("BossHealth50");
+                    break;
+                case >= 80 when GetCurrentHealthPercentage() *100 <= 80:
+                    Debug.Log("BossHealth30");
+                    DoctorManager.Instance.AddToQueue("BossHealth80");
+                    break;
+            }
         }
         
         if (currentHealth <= 0)
@@ -303,15 +331,16 @@ public class Hittable : MonoBehaviour
     
     private void Death(PlayerAttacks attackType)
     {
+        if (_isDead) return;
+        _isDead = true;
         var DropAmmoChange = 0.05f;
-        if (GameManager.Instance.player.GetComponent<PlayerController>().CurrentWeapon.name == "Shotgun") { DropAmmoChange = 0.025f; }
+        //if (GameManager.Instance.player.GetComponent<PlayerController>().CurrentWeapon.name == "Shotgun") { DropAmmoChange = 0.025f; }
         if (hasShield) { Instantiate(_specialAmmo, transform.position + Vector3.up , Quaternion.identity); }
         
         if (attackType == PlayerAttacks.Knife) { Instantiate(_ammo, transform.position, Quaternion.identity); }
         else if (Random.Range(0f, 1f) < DropAmmoChange) { Instantiate(_ammo, transform.position, Quaternion.identity); }
         
-        if (isItEnemy) { _enemyDied.Ping(this, null); }
-        
+        if (isItEnemy) { _enemyDied.Ping(this, null); }     
         
         if(doSound) SoundManager.Instance.PlaySound(clip,volume);
         Destroy(gameObject);

@@ -49,6 +49,7 @@ public class PostProcessingController : MonoBehaviour
         //_volume.profile.components.ForEach(c => Debug.Log(c.GetType().Name));
         _volume.profile.TryGet(out VignetteValues._vignette);
         _volume.profile.TryGet(out _colorAdjustments);
+        _volume.profile.TryGet(out _chromaticAberration);
     }
 
     private IEnumerator FlashVignette(SmoothlyTransitionVignette values)
@@ -63,7 +64,7 @@ public class PostProcessingController : MonoBehaviour
         StartCoroutine(values.TransitionVignette(false));
     }
     
-    private IEnumerator Decrease(ColorAdjustments color, float Decreaseduration, float targetValue  )
+    private IEnumerator DecreaseColor(ColorAdjustments color, float Decreaseduration, float targetValue  )
     {
         colorAjustmentCourotine = true;
         var floatParameter = color.saturation;
@@ -79,6 +80,23 @@ public class PostProcessingController : MonoBehaviour
         floatParameter.value = targetValue;
         colorAjustmentCourotine = false;
     }
+    
+    /*private IEnumerator DecreaseColor(ColorAdjustments color, float Decreaseduration, float targetValue  )
+    {
+        colorAjustmentCourotine = true;
+        var floatParameter = color.saturation;
+        float timeElapsed = 0;
+        float initialValue = floatParameter.value;
+        while (MathF.Abs(floatParameter.value - targetValue) > float.Epsilon)
+        {
+            floatParameter.value = Mathf.Lerp(initialValue, targetValue, timeElapsed / Decreaseduration);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        floatParameter.value = targetValue;
+        colorAjustmentCourotine = false;
+    }*/
 
     public void DeathPostProcessing(Component sender, object data)
     {
@@ -94,17 +112,16 @@ public class PostProcessingController : MonoBehaviour
     
     private IEnumerator DeathColorAjustments(float noColorTimer, float deadtimer)
     {
-        StartCoroutine(Decrease(_colorAdjustments,noColorTimer,-100f));
+        StartCoroutine(DecreaseColor(_colorAdjustments,noColorTimer,-100f));
         while (colorAjustmentCourotine)
         {
             yield return null;
         }
 
         yield return new WaitForSeconds(3f);
-        StartCoroutine(Decrease(_colorAdjustments,deadtimer - noColorTimer - 3f,0f));
+        StartCoroutine(DecreaseColor(_colorAdjustments,deadtimer - noColorTimer - 3f,0f));
     }
 
-    
     private void Update()
     {
         /*if (Input.GetKeyDown(KeyCode.V))

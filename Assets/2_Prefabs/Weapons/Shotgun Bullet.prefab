@@ -217,13 +217,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 200
-  TimeToDestroy: 0.5
+  TimeToDestroy: 1
   EnhancementPickup: {fileID: 601169438534941172, guid: 2693f94aa7b6af74f9b259151a519a98, type: 3}
   ItHits:
     serializedVersion: 2
     m_Bits: 136
   Gun: {fileID: 2418608199557592093, guid: f97af4dc1eff8fa48ba09de4420b9deb, type: 3}
-  Damage: 1
+  Damage: 5
   Enhanced: 0
   clip: {fileID: 0}
   volume: 0

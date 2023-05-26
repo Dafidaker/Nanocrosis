@@ -223,7 +223,7 @@ public class PhageAgent : MonoBehaviour
 
         _agent.isStopped = false;
         
-        Debug.Log("SeekingAttack");
+        //Debug.Log("SeekingAttack");
         ResetAttack();
     }
     

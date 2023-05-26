@@ -8,7 +8,6 @@ public class ItemTreeBranchController : MonoBehaviour
 
     public void RemovedItem()
     {
-        Debug.Log("remove item");
         itemSpawn.item = null;
         Destroy(itemSpawn.itemGameObject);
         itemSpawn.itemGameObject = null;

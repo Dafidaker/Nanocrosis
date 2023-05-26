@@ -63,20 +63,6 @@ public class ChikaiAgent : MonoBehaviour
     
     
     #region Unity Functions
-
-    private void OnEnable()
-    {
-        
-    }
-    
-    private void OnDisable()
-    {
-        
-    }
-
-    private void Awake()
-    {
-    }
     
     public void CalledStart()
     {
@@ -84,10 +70,8 @@ public class ChikaiAgent : MonoBehaviour
         _agent = _fsmNavMeshAgent._agent;
         finiteStateMachine = GetComponent<FiniteStateMachine>();
         _rb = GetComponent<Rigidbody>();
-        _target = _fsmNavMeshAgent.target;
         
         currentHealth = maxHealth;
-
     }
     
     private void Update()
@@ -103,8 +87,8 @@ public class ChikaiAgent : MonoBehaviour
             attackTimer = attackCooldown;
         }
 
-        if (_rotateTowardsTarget) transform.rotation = Quaternion.Slerp(transform.rotation, 
-                    Quaternion.LookRotation(_target.transform.position - transform.position), 0.5f);
+        if (_rotateTowardsTarget) 
+            transform.rotation = Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(_fsmNavMeshAgent.target.transform.position - transform.position), 0.5f);
         
     }
 

@@ -176,9 +176,9 @@ public class GameManager : MonoBehaviour
         lungs.itemTrees.Clear();
         lungs.itemTrees.AddRange(itemTreeGameObjects);
         //lungs.oxigenTrees.Clear();
-        lungs.oxigenTrees.AddRange(oxygenTreeGameObjects);
+        lungs.oxygenTrees.AddRange(oxygenTreeGameObjects);
         //lungs.oxigenBushes.Clear();
-        lungs.oxigenBushes.AddRange(oxygenBushesGameObjects);
+        lungs.oxygenBushes.AddRange(oxygenBushesGameObjects);
     }
     public void ChangeArena(Arena newArena)
     {
@@ -267,7 +267,8 @@ public class GameManager : MonoBehaviour
                 throw new ArgumentOutOfRangeException();
         }
 
-        ObjectiveManager.Instance.currentValue += ObjectiveManager.Instance.nodeHealingValue;
+        ObjectiveManager.Instance.ChangeValue(ObjectiveManager.Instance.nodeHealingValue);
+        //ObjectiveManager.Instance.currentValue += ObjectiveManager.Instance.nodeHealingValue;
     }
     
     public void BecomeUntargetableOxygenNode(Component sender, object data)
@@ -289,8 +290,8 @@ public class GameManager : MonoBehaviour
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        ObjectiveManager.Instance.currentValue -= ObjectiveManager.Instance.nodeDamagingValue;
+        ObjectiveManager.Instance.ChangeValue(-ObjectiveManager.Instance.nodeDamagingValue);
+        //ObjectiveManager.Instance.currentValue -= ObjectiveManager.Instance.nodeDamagingValue;
     }
 }
 
@@ -301,8 +302,8 @@ public class ArenaClass
     public GameObject enemiesParent;
     public Transform[] waypoints;
     public List<GameObject> itemTrees;
-    public List<GameObject> oxigenTrees;
-    public List<GameObject> oxigenBushes;
+    [FormerlySerializedAs("oxigenTrees")] public List<GameObject> oxygenTrees;
+    [FormerlySerializedAs("oxigenBushes")] public List<GameObject> oxygenBushes;
     [HideInInspector] public List<ArenaItemSpawner> itemsSpawners;
     [HideInInspector] public List<GameObject> enemies;
     [HideInInspector] public List<ArenaEnemySpawner> enemiesSpawners;

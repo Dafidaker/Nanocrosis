@@ -746,7 +746,7 @@ MonoBehaviour:
   attackPlayer: 0
   alertByPlayerDistance: 20
   alertDistance: 30
-  maxHealth: 100
+  maxHealth: 200
   currentHealth: 0
   shieldGameObject: {fileID: 0}
   maxShieldHealth: 0
