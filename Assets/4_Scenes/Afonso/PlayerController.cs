@@ -162,6 +162,8 @@ public class PlayerController : MonoBehaviour
     private static readonly int OneTime = Animator.StringToHash("OneTime");
     private static readonly int ShootSpread = Animator.StringToHash("ShootSpread");
     private static readonly int Change = Animator.StringToHash("Change");
+    private static readonly int Shot = Animator.StringToHash("Shot");
+    private static readonly int StoopedShooting = Animator.StringToHash("StoopedShooting");
 
     #region Unity Funtions
 
@@ -221,10 +223,7 @@ public class PlayerController : MonoBehaviour
 
         var isRunning = moveInput != Vector2.zero;
         _animator.SetBool(Running, isRunning);
-        if (!_animator.GetCurrentAnimatorStateInfo(0).IsTag("Running"))
-        {
-            _animator.SetTrigger(Change);
-        }
+        
         
         //moveInput = transform.InverseTransformDirection(moveInput);
         
@@ -360,7 +359,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Jump()
     {
-        _animator.SetTrigger(Change);
         _animator.SetBool(Jumping, true);
         _readyToJump = false;
         _jumpWasPressed = false;
@@ -508,10 +506,10 @@ public class PlayerController : MonoBehaviour
 
         if (weaponController.FullAuto)
         {
-            _animator.SetTrigger(OneTime);
+            /*_animator.SetTrigger(OneTime);
             _animator.SetBool(Shooting , true);
-            _animator.SetTrigger(Change);
-            
+            _animator.SetTrigger(Change);*/
+            _animator.SetTrigger(Shot);
             bullet = Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward)); // BulletParent
             BulletController bulletController = bullet.GetComponent<BulletController>();
 
@@ -521,9 +519,11 @@ public class PlayerController : MonoBehaviour
 
         else if (weaponController.SpreadShot) //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
         {
-            _animator.SetTrigger(OneTime);
+            /*_animator.SetTrigger(OneTime);
             _animator.SetTrigger(ShootSpread);
-            _animator.SetTrigger(Change);
+            _animator.SetTrigger(Change);*/
+            
+            _animator.SetTrigger(ShootSpread);
             int i = 0;
             foreach (Quaternion q in weaponController.Pellets.ToArray())
             {
@@ -550,6 +550,7 @@ public class PlayerController : MonoBehaviour
     
     private IEnumerator ReloadCountdown(WeaponController w)
     {
+        StopShootingAnimation();
         PauseMenuController.Instance.Reload(w.ReloadTime);
         
         w.Reloading = true;
@@ -629,7 +630,7 @@ public class PlayerController : MonoBehaviour
     
     private void StopShootingAnimation()
     {
-        _animator.SetBool(Shooting, false);
+        _animator.SetTrigger(StoopedShooting);
     }
     #endregion
 
@@ -714,10 +715,10 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, layerMask);
 
-            if (!isGrounded)
+            /*if (!isGrounded)
             {
                 _animator.SetTrigger(Change);
-            }
+            }*/
             _animator.SetBool(Airborne, !isGrounded);
             
             //if _readyToJump is false it means the player just jumped meaning that they arent on the ground
@@ -1022,7 +1023,8 @@ public class PlayerController : MonoBehaviour
     public IEnumerator DieAndRespawn()
     {
         GameEvents.Instance.playerDied.Ping(null, (1f,TimeToRepair)); //(float noColorTimer, float deadtimer)
-        _animator.SetTrigger(OneTime);
+        //_animator.SetTrigger(OneTime);
+        //_animator.SetTrigger(Change);
         _animator.SetBool(Dead, true);
         dying = true;
         DisableInputSystem();
