@@ -22,8 +22,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public bool isGameOver;
     public bool gamePaused;
-    
-    [Header("Prefab"), Space(5)]
+
+    [Header("Prefab"), Space(5)] 
+    public GameObject debugObject;
     public GameObject player;
     public GameObject ammo;
     public GameObject specialAmmo;
@@ -73,8 +74,14 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
         playerController = player.GetComponent<PlayerController>();
-        player.transform.position = lungsPlayerSpawnPosition.position;
         
+        player.transform.position = initialArena switch
+        {
+            Arena.Heart => heartPlayerSpawnPosition.position,
+            Arena.Lungs => lungsPlayerSpawnPosition.position,
+            _ => lungsPlayerSpawnPosition.position
+        };
+
         oxygenTreeGameObjects = new List<GameObject>();
         oxygenBushesGameObjects = new List<GameObject>();
         itemTreeGameObjects = new List<GameObject>();
@@ -114,7 +121,12 @@ public class GameManager : MonoBehaviour
         _camXSpeed = cinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed;
         _camYSpeed = cinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed;
         
-        PlaceTrees();
+        //PlaceTrees();
+
+        foreach (var arena in arenas)
+        {
+            PlaceTrees(arena);
+        }
         
         SettingsMenu.Instance.UpdateAllSettings();
     }
@@ -128,14 +140,18 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void PlaceTrees()
+    private void PlaceTrees(ArenaClass arena)
     {
-        var treeSpawnPositions = new List<Transform>();
-        treeSpawnPositions.AddRange(treeSpawns);
-
-        if (itemTrees > treeSpawnPositions.Count) { itemTrees = treeSpawnPositions.Count; }
+        int amoutItemTrees = arena.amountItemTrees;
+        int amountOxygenTree = arena.amountOxygenTrees; 
+        int amountOxygenBushes = arena.amountOxygenBushes;
         
-        for (var i = 0; i < itemTrees; i++)
+        var treeSpawnPositions = new List<Transform>();
+        treeSpawnPositions.AddRange(arena.treeSpawnWaypoints); //treeSpawns
+
+        if (amoutItemTrees > treeSpawnPositions.Count) { amoutItemTrees = treeSpawnPositions.Count; } // itemTrees => amoutItemTrees
+        
+        for (var i = 0; i < amoutItemTrees; i++)
         {
             var index = Random.Range(0, treeSpawnPositions.Count);
 
@@ -146,9 +162,9 @@ public class GameManager : MonoBehaviour
             treeSpawnPositions.Remove(treeSpawnPositions[index]);
         }
         
-        if (oxygenTrees > treeSpawnPositions.Count) { oxygenTrees = treeSpawnPositions.Count; }
+        if (amountOxygenTree > treeSpawnPositions.Count) { amountOxygenTree = treeSpawnPositions.Count; } // oxygenTrees  => amountOxygenTree
         
-        for (var i = 0; i < oxygenTrees; i++)
+        for (var i = 0; i < amountOxygenTree; i++)
         {
             var index = Random.Range(0, treeSpawnPositions.Count);
 
@@ -159,9 +175,9 @@ public class GameManager : MonoBehaviour
             treeSpawnPositions.Remove(treeSpawnPositions[index]);
         }
         
-        if (oxygenBushes > treeSpawnPositions.Count) { oxygenBushes = treeSpawnPositions.Count; }
+        if (amountOxygenBushes > treeSpawnPositions.Count) { amountOxygenBushes = treeSpawnPositions.Count; } // oxygenBushes =>  amountOxygenBushes
 
-        for (var i = 0; i < oxygenBushes; i++)
+        for (var i = 0; i < amountOxygenBushes; i++)
         {
             var index = Random.Range(0, treeSpawnPositions.Count);
 
@@ -172,13 +188,17 @@ public class GameManager : MonoBehaviour
             treeSpawnPositions.Remove(treeSpawnPositions[index]);
         }
 
-        var lungs = GetArena(Arena.Lungs);
+        /*var lungs = GetArena(Arena.Lungs);
         lungs.itemTrees.Clear();
         lungs.itemTrees.AddRange(itemTreeGameObjects);
         //lungs.oxigenTrees.Clear();
         lungs.oxygenTrees.AddRange(oxygenTreeGameObjects);
         //lungs.oxigenBushes.Clear();
-        lungs.oxygenBushes.AddRange(oxygenBushesGameObjects);
+        lungs.oxygenBushes.AddRange(oxygenBushesGameObjects);*/
+        
+        arena.itemTrees.AddRange(itemTreeGameObjects);
+        arena.oxygenTrees.AddRange(oxygenTreeGameObjects);
+        arena.oxygenBushes.AddRange(oxygenBushesGameObjects);
     }
     public void ChangeArena(Arena newArena)
     {
@@ -301,12 +321,51 @@ public class ArenaClass
     public Arena arenaType;
     public GameObject enemiesParent;
     public Transform[] waypoints;
+    public Transform[] treeSpawnWaypoints;
+    public int amountItemTrees;
+    public int amountOxygenTrees;
+    public int amountOxygenBushes;
     public List<GameObject> itemTrees;
     [FormerlySerializedAs("oxigenTrees")] public List<GameObject> oxygenTrees;
     [FormerlySerializedAs("oxigenBushes")] public List<GameObject> oxygenBushes;
     [HideInInspector] public List<ArenaItemSpawner> itemsSpawners;
     [HideInInspector] public List<GameObject> enemies;
     [HideInInspector] public List<ArenaEnemySpawner> enemiesSpawners;
-    
+
+
+    public Vector3 GetClosestWaypoint(Vector3 point)
+    {
+        var closestWaypoint = waypoints[0];
+        var closestDistance = float.MaxValue;
+
+        foreach (var waypoint in waypoints)
+        {
+            var distance = Vector3.Distance(waypoint.position, point);
+            
+            if (!(distance < closestDistance)) continue;
+            
+            closestWaypoint = waypoint;
+            closestDistance = distance;
+        }
+
+        return closestWaypoint.position;
+    }
+    public Vector3 GetFarthestWaypoint(Vector3 point)
+    {
+        var farthestWaypoint = waypoints[0];
+        var farthestDistance = 0f;
+
+        foreach (var waypoint in waypoints)
+        {
+            var distance = Vector3.Distance(waypoint.position, point);
+            
+            if (!(distance > farthestDistance)) continue;
+            
+            farthestWaypoint = waypoint;
+            farthestDistance = distance;
+        }
+
+        return farthestWaypoint.position;
+    }
 }
 

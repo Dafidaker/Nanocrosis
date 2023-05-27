@@ -83,7 +83,7 @@ public class EnemyManager : MonoBehaviour
                 if (CanSpawnEnemy(enemySpawn))
                 {
                     //and if so it tries to spawn the enemys
-                    SpawnEnemy(enemySpawn);
+                    GetSpawnPoint(enemySpawn);
                 }
 
             }
@@ -110,7 +110,7 @@ public class EnemyManager : MonoBehaviour
         
         return amountEnemies < maxAmountEnemies;
     }
-    private void SpawnEnemy(ArenaEnemySpawner enemySpawn)
+    private void GetSpawnPoint(ArenaEnemySpawner enemySpawn)
     {
         var playerTransform = GameManager.Instance.player.transform;
         var spawnAmount = 1;
@@ -142,18 +142,18 @@ public class EnemyManager : MonoBehaviour
                raycastHits.Add(hit);
            }
         }
-
-        if (raycastHits.Count == 0)
-        {
-            return;
-        }
         
         var arenaEnemySpawn = GameManager.Instance.currentArena.enemiesParent;
+
+        var enemySpawnPosition = raycastHits.Count == 0
+            ? GameManager.Instance.currentArena.GetClosestWaypoint(playerTransform.position)
+            : GameManager.Instance.currentArena.GetClosestWaypoint(raycastHits[Random.Range(0, raycastHits.Count)].point);
+
+        /*Instantiate(GameManager.Instance.debugObject, enemySpawnPosition, Quaternion.identity,
+            GameManager.Instance.gameObject.transform);*/
         
         for (int i = 0; i < spawnAmount; i++)
         {
-            var enemySpawnPosition = raycastHits[Random.Range(0, raycastHits.Count)].point;
-            
             var go = Instantiate(enemySpawn.prefab, enemySpawnPosition, Quaternion.identity, arenaEnemySpawn.transform);
             go.GetComponent<Hittable>().location = GameManager.Instance.currentArena.arenaType;
             
@@ -162,6 +162,11 @@ public class EnemyManager : MonoBehaviour
         }
         
         enemySpawn.amountEnemies = enemySpawn.enemies.Count;
+        
+    }
+
+    private void SpawnEnemy()
+    {
         
     }
     
@@ -234,7 +239,6 @@ public class EnemyManager : MonoBehaviour
     {
         var tempTree = new List<GameObject>();
         tempTree.AddRange(GameManager.Instance.currentArena.itemTrees);
-        
 
         var selectedTree = tempTree[Random.Range(0, tempTree.Count)];
         var selectedTreeController = selectedTree.GetComponent<ItemTreeController>();

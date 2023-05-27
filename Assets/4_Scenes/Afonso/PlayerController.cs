@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
     private float _horizontalInput;
     private float _verticalInput;
     
-    private Vector3 _moveDirection;
+    [HideInInspector] public Vector3 moveDirection;
     private Rigidbody _rb;
 
     private PlayerStats _playerStats;
@@ -158,6 +158,10 @@ public class PlayerController : MonoBehaviour
     private static readonly int Jumping = Animator.StringToHash("Jumping");
     private static readonly int Dead = Animator.StringToHash("Dead");
     private static readonly int Dashed = Animator.StringToHash("Dashed");
+    private static readonly int Shooting = Animator.StringToHash("Shooting");
+    private static readonly int OneTime = Animator.StringToHash("OneTime");
+    private static readonly int ShootSpread = Animator.StringToHash("ShootSpread");
+    private static readonly int Change = Animator.StringToHash("Change");
 
     #region Unity Funtions
 
@@ -209,14 +213,18 @@ public class PlayerController : MonoBehaviour
     
     private void Update()
     {
-        Debug.DrawRay(transform.position, transform.forward * 10 , Color.red);
+        //Debug.DrawRay(transform.position, transform.forward * 10 , Color.red);
         
         if (GameManager.Instance.gamePaused) return;
 
         Vector2 moveInput = _iMove.ReadValue<Vector2>();
 
-        _animator.SetBool(Running, moveInput != Vector2.zero);
-        _animator.SetBool(Running, moveInput != Vector2.zero);
+        var isRunning = moveInput != Vector2.zero;
+        _animator.SetBool(Running, isRunning);
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsTag("Running"))
+        {
+            _animator.SetTrigger(Change);
+        }
         
         //moveInput = transform.InverseTransformDirection(moveInput);
         
@@ -319,20 +327,20 @@ public class PlayerController : MonoBehaviour
     private void MovePlayer()
     {
         var playerTransform = transform;
-        _moveDirection = playerTransform.forward * _verticalInput + playerTransform.right * _horizontalInput;
+        moveDirection = playerTransform.forward * _verticalInput + playerTransform.right * _horizontalInput;
 
         //on a slope
         if (OnSlope())
         {
-            _rb.AddForce(GetSlopeMoveDirection(_moveDirection).normalized * (_moveSpeed * 10f), ForceMode.Force);
+            _rb.AddForce(GetSlopeMoveDirection(moveDirection).normalized * (_moveSpeed * 10f), ForceMode.Force);
         }
         else if (isGrounded)
         {
-            _rb.AddForce(_moveDirection.normalized * (_moveSpeed * 10f), ForceMode.Force); 
+            _rb.AddForce(moveDirection.normalized * (_moveSpeed * 10f), ForceMode.Force); 
         }
         else if (!isGrounded)
         {
-            _rb.AddForce(_moveDirection.normalized * (_moveSpeed * 10f * airMultiplier), ForceMode.Force); 
+            _rb.AddForce(moveDirection.normalized * (_moveSpeed * 10f * airMultiplier), ForceMode.Force); 
         }
         
     }
@@ -352,6 +360,7 @@ public class PlayerController : MonoBehaviour
     }
     private void Jump()
     {
+        _animator.SetTrigger(Change);
         _animator.SetBool(Jumping, true);
         _readyToJump = false;
         _jumpWasPressed = false;
@@ -376,6 +385,8 @@ public class PlayerController : MonoBehaviour
         //if the cooldown hasn't ended just returns
         if (_dashCooldownTimer > 0) return;
         
+        _animator.SetTrigger(Change);
+        _animator.SetTrigger(OneTime);
         _animator.SetTrigger(Dashed);
         
         //if the dash goes through the timer gets as big as the cooldown
@@ -387,7 +398,7 @@ public class PlayerController : MonoBehaviour
         
         if (Settings.DashMovementDirection)
         {
-            dashDirection = _moveDirection;
+            dashDirection = moveDirection;
         }
         
         if (!Settings.DashMovementDirection || (_verticalInput == 0 && _horizontalInput == 0))
@@ -484,6 +495,7 @@ public class PlayerController : MonoBehaviour
 
         if (weaponController.CurrentMag <= 0 && _shooting != null)
         {
+            Invoke(nameof(StopShootingAnimation), 1f);
             StopCoroutine(_shooting);
             return;
         }
@@ -496,6 +508,10 @@ public class PlayerController : MonoBehaviour
 
         if (weaponController.FullAuto)
         {
+            _animator.SetTrigger(OneTime);
+            _animator.SetBool(Shooting , true);
+            _animator.SetTrigger(Change);
+            
             bullet = Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward)); // BulletParent
             BulletController bulletController = bullet.GetComponent<BulletController>();
 
@@ -505,6 +521,9 @@ public class PlayerController : MonoBehaviour
 
         else if (weaponController.SpreadShot) //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
         {
+            _animator.SetTrigger(OneTime);
+            _animator.SetTrigger(ShootSpread);
+            _animator.SetTrigger(Change);
             int i = 0;
             foreach (Quaternion q in weaponController.Pellets.ToArray())
             {
@@ -608,6 +627,10 @@ public class PlayerController : MonoBehaviour
         DoctorManager.Instance.AddToQueue("HitEnemyWithShield");
     }
     
+    private void StopShootingAnimation()
+    {
+        _animator.SetBool(Shooting, false);
+    }
     #endregion
 
     #region other
@@ -690,7 +713,11 @@ public class PlayerController : MonoBehaviour
     private void DetectGround()
         {
             isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, layerMask);
-            
+
+            if (!isGrounded)
+            {
+                _animator.SetTrigger(Change);
+            }
             _animator.SetBool(Airborne, !isGrounded);
             
             //if _readyToJump is false it means the player just jumped meaning that they arent on the ground
@@ -834,7 +861,7 @@ public class PlayerController : MonoBehaviour
             //Debug.Log("GAME IS PAUSED");
             return;
         }
-
+        
         _isSprinting = false;
         
         WeaponController weaponController = CurrentWeapon.GetComponent<WeaponController>();
@@ -859,6 +886,7 @@ public class PlayerController : MonoBehaviour
 
             if (weaponController.Reloading) return;
 
+            _animator.SetBool(Shooting, true);
             if (!weaponController.FullAuto) SingleFire(weaponController);
             else _shooting = StartCoroutine(FullAuto());
         }
@@ -880,6 +908,8 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+        
+        Invoke(nameof(StopShootingAnimation), 1f);
         if (_shooting != null) StopCoroutine(_shooting);
     }
     
@@ -992,6 +1022,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator DieAndRespawn()
     {
         GameEvents.Instance.playerDied.Ping(null, (1f,TimeToRepair)); //(float noColorTimer, float deadtimer)
+        _animator.SetTrigger(OneTime);
         _animator.SetBool(Dead, true);
         dying = true;
         DisableInputSystem();

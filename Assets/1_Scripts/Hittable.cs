@@ -282,8 +282,8 @@ public class Hittable : MonoBehaviour
         if (enemyType == Enemy.Phage)
         {
             GameEvents.Instance.bossTookDamage.Ping(this,null);
-            Debug.Log("beforeHealth: " + beforeHealth);
-            Debug.Log("CurrentHealth: " + GetCurrentHealthPercentage() *100);
+            //Debug.Log("beforeHealth: " + beforeHealth);
+            //Debug.Log("CurrentHealth: " + GetCurrentHealthPercentage() *100);
             switch (beforeHealth)
             {
                 case >= 30 when GetCurrentHealthPercentage() *100 <= 30:

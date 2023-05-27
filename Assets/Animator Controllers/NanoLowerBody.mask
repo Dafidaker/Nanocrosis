@@ -1,0 +1,201 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: NanoLowerBody
+  m_Mask: 01000000000000000000000001000000010000000000000000000000000000000000000001000000010000000000000000000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: NanoArmature
+    m_Weight: 1
+  - m_Path: NanoArmature/forearm1-end000.L
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-end000.R
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.001
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.002
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.003
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.004
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.005
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.006
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.007
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.008
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.009
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.010
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.011
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.012
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.013
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.014
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.L.015
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.001
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.002
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.003
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.004
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.005
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.006
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.007
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.008
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.009
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.010
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.011
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.012
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.013
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.014
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-mid.000.R.015
+    m_Weight: 0
+  - m_Path: NanoArmature/forearm1-start.000.R
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-end.000.L
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-end.000.R
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.001
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.002
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.003
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.004
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.005
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.006
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.007
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.008
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.009
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.L.010
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.001
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.002
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.003
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.004
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.005
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.006
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.007
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.008
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.009
+    m_Weight: 0
+  - m_Path: NanoArmature/hand1-mid.000.R.010
+    m_Weight: 0
+  - m_Path: NanoArmature/leg1mid.002
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.003
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.004
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.005
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.006
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.007
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.008
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.009
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.010
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.011
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.012
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.013
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.014
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.015
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.016
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.017
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.018
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.019
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.020
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.021
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.022
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.023
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.024
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.025
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.026
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.027
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.028
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.029
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.030
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1mid.031
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1start.000.R
+    m_Weight: 1
+  - m_Path: NanoArmature/leg1start.000.R.001
+    m_Weight: 1
+  - m_Path: NanoArmature/midpoint.000
+    m_Weight: 0
+  - m_Path: NanoArmature/midpoint.000/forearm1-start.000.L
+    m_Weight: 0
+  - m_Path: NanoArmature/midpoint.000/leg1end.000
+    m_Weight: 0
+  - m_Path: NanoArmature/midpoint.000/leg1end.001
+    m_Weight: 0
+  - m_Path: TheNANOBOT
+    m_Weight: 0
+  - m_Path: WEAPON
+    m_Weight: 0

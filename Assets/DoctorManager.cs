@@ -60,7 +60,7 @@ public class DoctorManager : MonoBehaviour
 
         
         notification.avaliable = false;
-        Debug.Log("added: " + notification.identification);
+        //Debug.Log("added: " + notification.identification);
         
         _notificationsQueue.Enqueue(notification);
         
