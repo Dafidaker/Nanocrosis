@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1268192400479289479}
+  - component: {fileID: 7099986035256633453}
   m_Layer: 0
   m_Name: Kuroku Mesh
   m_TagString: Untagged
@@ -33,8 +34,34 @@ Transform:
   - {fileID: 1768837869310560681}
   - {fileID: 733166670441357104}
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7099986035256633453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585272016718287193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c158258c69a468459ae06e6367d0497, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  body:
+  - {fileID: 2750048793284871265}
+  - {fileID: 6833429304721040205}
+  - {fileID: 8335483883378982583}
+  sphere:
+  - {fileID: 3050727312295221459}
+  bodyMaterials:
+  - {fileID: 2100000, guid: 2b5b9a1e60761e3408f418f6cb07f29f, type: 2}
+  - {fileID: 2100000, guid: e31011bdb09b50e4cbab9498821e6418, type: 2}
+  - {fileID: 2100000, guid: ab68706b56ed975498108ac39a032ad4, type: 2}
+  sphereMaterials:
+  - {fileID: 2100000, guid: c1fcd32b3b76e1d499d573463cef4cf2, type: 2}
+  - {fileID: 2100000, guid: 71d8098efdec9c5488b505a1309ce597, type: 2}
+  - {fileID: 2100000, guid: 8c7aee2c45d8d5149ac35dbdc514febd, type: 2}
 --- !u!1 &3455341962732418548
 GameObject:
   m_ObjectHideFlags: 0

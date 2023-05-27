@@ -164,6 +164,7 @@ public class PlayerController : MonoBehaviour
     private static readonly int Change = Animator.StringToHash("Change");
     private static readonly int Shot = Animator.StringToHash("Shot");
     private static readonly int StoopedShooting = Animator.StringToHash("StoopedShooting");
+    private static readonly int Melee = Animator.StringToHash("Melee");
 
     #region Unity Funtions
 
@@ -1015,6 +1016,7 @@ public class PlayerController : MonoBehaviour
         }
         if (_meleeCountdown > 0) return;
 
+        _animator.SetTrigger(Melee);
         _meleeCountdown = 0.3f;
 
         MeleeAttack.SetActive(true);
