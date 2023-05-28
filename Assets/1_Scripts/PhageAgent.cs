@@ -193,7 +193,7 @@ public class PhageAgent : MonoBehaviour
 
         for (var i = 1; i <= amountOfMinions; i++)
         {
-            Instantiate(minionPrefab , explosiveMinionsSpawn.position, explosiveMinionsSpawn.rotation , transform); 
+            Instantiate(minionPrefab , explosiveMinionsSpawn.position, explosiveMinionsSpawn.rotation);  // Instantiate(minionPrefab , explosiveMinionsSpawn.position, explosiveMinionsSpawn.rotation , transform); 
             if (i != amountOfMinions)
             {
                 yield return new WaitForSeconds(timeBetweenSpawningEachMinion);

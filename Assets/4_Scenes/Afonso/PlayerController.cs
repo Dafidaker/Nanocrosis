@@ -164,6 +164,8 @@ public class PlayerController : MonoBehaviour
     private static readonly int Shot = Animator.StringToHash("Shot");
     private static readonly int StoopedShooting = Animator.StringToHash("StoopedShooting");
     private static readonly int Melee = Animator.StringToHash("Melee");
+    private static readonly int JumpedAgain = Animator.StringToHash("JumpedAgain");
+    private static readonly int LeaveShooting = Animator.StringToHash("LeaveShooting");
 
     #region Unity Funtions
 
@@ -359,6 +361,16 @@ public class PlayerController : MonoBehaviour
     }
     private void Jump()
     {
+        if (_currentJumps> 0 )
+        {
+            if (_animator.GetCurrentAnimatorStateInfo(0).IsTag("Shooting"))
+            {
+                _animator.SetTrigger(LeaveShooting);
+            }
+
+            _animator.SetTrigger(JumpedAgain);
+        }
+        
         _animator.SetBool(Jumping, true);
         _readyToJump = false;
         _jumpWasPressed = false;
@@ -491,7 +503,8 @@ public class PlayerController : MonoBehaviour
 
         if (weaponController.CurrentMag <= 0 && _shooting != null)
         {
-            Invoke(nameof(StopShootingAnimation), 1f);
+            //Invoke(nameof(StopShootingAnimation), 1.5f);
+            StartCoroutine(IEStopShootingAnimation(0));
             StopCoroutine(_shooting);
             return;
         }
@@ -505,6 +518,7 @@ public class PlayerController : MonoBehaviour
         if (weaponController.FullAuto)
         {
             _animator.SetTrigger(Shot);
+            _animator.SetBool(Shooting, true);
             _visualGunController.ChangeWeaponVisability(true);
             
             bullet = Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward)); // BulletParent
@@ -518,6 +532,7 @@ public class PlayerController : MonoBehaviour
         {
             
             _animator.SetTrigger(ShootSpread);
+            _animator.SetBool(Shooting, true);
             _visualGunController.ChangeWeaponVisability(true);
             
             int i = 0;
@@ -626,6 +641,15 @@ public class PlayerController : MonoBehaviour
     
     private void StopShootingAnimation()
     {
+        _animator.SetBool(Shooting, false);
+        _animator.SetTrigger(StoopedShooting);
+        _visualGunController.ChangeWeaponVisability(false);
+    }
+    
+    private IEnumerator IEStopShootingAnimation(float wait)
+    {
+        yield return new WaitForSeconds(wait);
+        _animator.SetBool(Shooting, false);
         _animator.SetTrigger(StoopedShooting);
         _visualGunController.ChangeWeaponVisability(false);
     }
@@ -907,7 +931,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
         
-        Invoke(nameof(StopShootingAnimation), 1f);
+        //Invoke(nameof(StopShootingAnimation), 1.5f);
+        StartCoroutine(IEStopShootingAnimation(1.5f));
         if (_shooting != null) StopCoroutine(_shooting);
     }
     
