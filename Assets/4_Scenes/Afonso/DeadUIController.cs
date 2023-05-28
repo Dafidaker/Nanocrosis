@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,13 +8,18 @@ public class DeadUIController : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI Counter;
     [SerializeField] private TextMeshProUGUI Title;
-    [SerializeField] private PlayerController Player;
+    private PlayerController _player;
     private float _timeToRepair;
+
+    private void Start()
+    {
+        _player = GameManager.Instance.playerController;
+    }
 
     private void OnEnable()
     {
-        Player = GameManager.Instance.player.gameObject.GetComponent<PlayerController>();
-        _timeToRepair = Player.TimeToRepair;
+        _player = GameManager.Instance.playerController;
+        _timeToRepair = _player.TimeToRepair;
         Counter.SetText(_timeToRepair.ToString());
         StartCoroutine(Flash());
     }

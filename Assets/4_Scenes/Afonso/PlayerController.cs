@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask bulletsHit;
     [SerializeField] private WeaponInfoController WeaponUI;
     [SerializeField] private PickupInfoController PickupUI;
+    [SerializeField] private VisualGunController _visualGunController;
     public GameObject FakeBomb;
     public bool BombAttached;
     public int AvailableBuffs;
@@ -159,9 +160,7 @@ public class PlayerController : MonoBehaviour
     private static readonly int Dead = Animator.StringToHash("Dead");
     private static readonly int Dashed = Animator.StringToHash("Dashed");
     private static readonly int Shooting = Animator.StringToHash("Shooting");
-    private static readonly int OneTime = Animator.StringToHash("OneTime");
     private static readonly int ShootSpread = Animator.StringToHash("ShootSpread");
-    private static readonly int Change = Animator.StringToHash("Change");
     private static readonly int Shot = Animator.StringToHash("Shot");
     private static readonly int StoopedShooting = Animator.StringToHash("StoopedShooting");
     private static readonly int Melee = Animator.StringToHash("Melee");
@@ -384,8 +383,6 @@ public class PlayerController : MonoBehaviour
         //if the cooldown hasn't ended just returns
         if (_dashCooldownTimer > 0) return;
         
-        _animator.SetTrigger(Change);
-        _animator.SetTrigger(OneTime);
         _animator.SetTrigger(Dashed);
         
         //if the dash goes through the timer gets as big as the cooldown
@@ -507,10 +504,9 @@ public class PlayerController : MonoBehaviour
 
         if (weaponController.FullAuto)
         {
-            /*_animator.SetTrigger(OneTime);
-            _animator.SetBool(Shooting , true);
-            _animator.SetTrigger(Change);*/
             _animator.SetTrigger(Shot);
+            _visualGunController.ChangeWeaponVisability(true);
+            
             bullet = Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward)); // BulletParent
             BulletController bulletController = bullet.GetComponent<BulletController>();
 
@@ -520,11 +516,10 @@ public class PlayerController : MonoBehaviour
 
         else if (weaponController.SpreadShot) //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
         {
-            /*_animator.SetTrigger(OneTime);
-            _animator.SetTrigger(ShootSpread);
-            _animator.SetTrigger(Change);*/
             
             _animator.SetTrigger(ShootSpread);
+            _visualGunController.ChangeWeaponVisability(true);
+            
             int i = 0;
             foreach (Quaternion q in weaponController.Pellets.ToArray())
             {
@@ -632,6 +627,7 @@ public class PlayerController : MonoBehaviour
     private void StopShootingAnimation()
     {
         _animator.SetTrigger(StoopedShooting);
+        _visualGunController.ChangeWeaponVisability(false);
     }
     #endregion
 
@@ -942,16 +938,22 @@ public class PlayerController : MonoBehaviour
         CurrentWeapon.SetActive(true);
         StopCoroutine(_shooting);
         WeaponUI.SetValues();
+        
+        _visualGunController.ChangeGun(weaponController.Name == "Rifle");
+        
         if (weaponController.CurrentMag > weaponController.MagSize * 0.3f) WeaponUI.ResetMagColor();
         else WeaponUI.LowAmmo();
+        
         if (weaponController.CurrentAmmoReserve > weaponController.AmmoReserve * 0.3f) WeaponUI.ResetReserveColor();
         else WeaponUI.LowReserve();
+        
         if (weaponController.IsEnhanced && !(weaponController.CurrentMag <= weaponController.MagSize * 0.3f)) WeaponUI.EnhancedWeapon();
         else if (weaponController.IsEnhanced && (weaponController.CurrentMag <= weaponController.MagSize * 0.3f))
         {
             WeaponUI.EnhancedWeapon();
             WeaponUI.LowAmmo();
         }
+        
         if (!weaponController.IsEnhanced)
         {
             WeaponUI.ResetEnhancedWeapon();

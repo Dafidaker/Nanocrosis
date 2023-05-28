@@ -53,12 +53,13 @@ public class PlayerStats : MonoBehaviour
         _animator.SetTrigger(GotHit);
         CurrentHealth -= damagedTaken;
         UpdateColor();
-        healthBarController.SetHealth();
-
+        
         if (CurrentHealth <= 0)
         {
             StartCoroutine(GameManager.Instance.playerController.DieAndRespawn());
         }
+        
+        healthBarController.SetHealth();
     }
     
     #endregion

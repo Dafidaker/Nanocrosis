@@ -31,6 +31,8 @@ public class DoctorManager : MonoBehaviour
 {
     public static DoctorManager Instance;
 
+    [SerializeField] private bool ShowNotifications;
+    
     [HideInInspector] private Queue<Notification> _notificationsQueue;
     
     [SerializeField] private DoctorNotificationValues doctorNot;
@@ -55,6 +57,8 @@ public class DoctorManager : MonoBehaviour
 
     public void AddToQueue(String id)
     {
+        if (!ShowNotifications) return;
+        
         var notification = GetNotification(id);
         if (notification.duration == 0f || !notification.avaliable) return;
 
