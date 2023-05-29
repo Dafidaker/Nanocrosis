@@ -141,9 +141,9 @@ public class ToiAgent : MonoBehaviour
                 continue;
             }
             attack.ShootRangedAttack((_fsmNavMeshAgent.target.position - attack.transform.position).normalized);
+            AudioManager.Instance.PlaySFX("ToiAttack", transform.position);
             yield return new WaitForSeconds(1f);
         }
-        
         yield return new WaitForSeconds(2f);
         
         isAttacking = false;
@@ -183,7 +183,7 @@ public class ToiAgent : MonoBehaviour
         }
         
         yield return new WaitForSeconds(spinDuration + launchDuration);
-        
+        AudioManager.Instance.PlaySFX("ToiAttack", transform.position);
         isAttacking = false;
         _agent.isStopped = false;
     }

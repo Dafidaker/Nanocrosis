@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BombPickupController : MonoBehaviour
+public class RespawnEnchancement : MonoBehaviour
 {
     [SerializeField] private float TimeToRespawn;
-    [SerializeField] private GameObject Center;
+    [SerializeField] private GameObject DisableObject;
     [SerializeField] private bool respawn;
     
     private bool _interactable = true;
     public void Interact()
     {
         if (!_interactable) return;
-        PlayerController.Instance.BombAttached = true;
-        PlayerController.Instance.FakeBomb.SetActive(true);
+        /*PlayerController.Instance.BombAttached = true;
+        PlayerController.Instance.FakeBomb.SetActive(true);*/
         if (respawn)
         {
             StartCoroutine(Respawn());
@@ -26,16 +26,16 @@ public class BombPickupController : MonoBehaviour
 
     private IEnumerator Respawn()
     {
-        gameObject.GetComponent<BoxCollider>().enabled = false;
+        //gameObject.GetComponent<BoxCollider>().enabled = false;
         gameObject.GetComponent<SphereCollider>().enabled = false;
-        gameObject.GetComponent<MeshRenderer>().enabled = false;
-        Center.gameObject.SetActive(false);
-        _interactable = false;
+        //gameObject.GetComponent<MeshRenderer>().enabled = false;
+        DisableObject.gameObject.SetActive(false);
+        _interactable = false;  
         yield return new WaitForSeconds(TimeToRespawn);
-        gameObject.GetComponent<BoxCollider>().enabled = true;
+        //.GetComponent<BoxCollider>().enabled = true;
         gameObject.GetComponent<SphereCollider>().enabled = true;
-        gameObject.GetComponent<MeshRenderer>().enabled = true;
-        Center.gameObject.SetActive(true);
+        //gameObject.GetComponent<MeshRenderer>().enabled = true;
+        DisableObject.gameObject.SetActive(true);
         //Center.GetComponent<MeshRenderer>().enabled = true;
         _interactable = true;
     }

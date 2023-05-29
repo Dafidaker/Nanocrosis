@@ -522,11 +522,15 @@ public class PlayerController : MonoBehaviour
 
         GameObject bullet;
 
+        
+        
         if (weaponController.FullAuto)
         {
+            AudioManager.Instance.PlaySFX("Shoot");
             _animator.SetTrigger(Shot);
             _animator.SetBool(Shooting, true);
             _visualGunController.ChangeWeaponVisability(true);
+            
             
             bullet = Instantiate(weaponController.CurrentBulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward)); // BulletParent
             BulletController bulletController = bullet.GetComponent<BulletController>();
@@ -537,7 +541,7 @@ public class PlayerController : MonoBehaviour
 
         else if (weaponController.SpreadShot) //bullet = GameObject.Instantiate(weaponController.BulletPrefab, FirePoint.position, Quaternion.LookRotation(cam.forward), BulletParent);
         {
-            
+            AudioManager.Instance.PlaySFX("ShootShotgun");
             _animator.SetTrigger(ShootSpread);
             _animator.SetBool(Shooting, true);
             _visualGunController.ChangeWeaponVisability(true);
@@ -927,7 +931,7 @@ public class PlayerController : MonoBehaviour
 
             if (weaponController.Reloading) return;
 
-            AudioManager.Instance.PlaySFX("Shoot");
+            
             _animator.SetBool(Shooting, true);
             if (!weaponController.FullAuto) SingleFire(weaponController);
             else _shooting = StartCoroutine(FullAuto());
@@ -1026,7 +1030,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (_teleportTimer < 0)
+        if (_teleportTimer < 0 && GameManager.Instance.canTeleport)
         {
             Teleport();
         }
@@ -1381,6 +1385,8 @@ public class PlayerController : MonoBehaviour
         if (col.CompareTag($"Bomb"))
         {
             _currentBomb = col.gameObject;
+            Debug.Log("Got Bomb");
+            GetBomb();
         }
 
         if (col.CompareTag($"BuffPuddle"))
@@ -1397,6 +1403,13 @@ public class PlayerController : MonoBehaviour
             AvailableBuffs += 2;
             PickupUI.SetValue();
             Destroy(col.gameObject);
+        }
+
+        if (col.CompareTag($"RespawnEnchacement"))
+        {
+            AvailableBuffs += 2;
+            PickupUI.SetValue();
+            col.GetComponent<RespawnEnchancement>().Interact();
         }
 
         if (col.CompareTag($"AmmoPickup"))

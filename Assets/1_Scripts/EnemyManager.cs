@@ -164,11 +164,6 @@ public class EnemyManager : MonoBehaviour
         enemySpawn.amountEnemies = enemySpawn.enemies.Count;
         
     }
-
-    private void SpawnEnemy()
-    {
-        
-    }
     
     private void SpawnItems()
     {

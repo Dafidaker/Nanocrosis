@@ -18,10 +18,17 @@ public class SettingsMenu : MonoBehaviour
     
     [field: SerializeField] private Slider mouseX;
     [field: SerializeField] private Slider mouseY;
-
+    
+    [field: SerializeField] private Slider masterSound;
+    [field: SerializeField] private Slider musicSound;
+    [field: SerializeField] private Slider effectsSound;
+    
     public void Awake()
     {
         Instance = this;
+        masterSound.onValueChanged.AddListener(SetMasterVolume);
+        musicSound.onValueChanged.AddListener(SetMusicVolume);
+        effectsSound.onValueChanged.AddListener(SetEffectsVolume);
     }
 
     public void UpdateAllSettings()
@@ -72,4 +79,20 @@ public class SettingsMenu : MonoBehaviour
         Settings.MouseSentivity.y = value;
         Settings.ChangeSentivity();
     }
+
+    private void SetMasterVolume(float value)
+    {
+        AudioManager.Instance.SetMasterVolume(value);
+    }
+    
+    private void SetMusicVolume(float value)
+    {
+        AudioManager.Instance.SetMusicVolume(value);
+    }
+    
+    private void SetEffectsVolume(float value)
+    {
+        AudioManager.Instance.SetSFXVolume(value);
+    }
+    
 }

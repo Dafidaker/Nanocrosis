@@ -74,6 +74,9 @@ public class Hittable : MonoBehaviour
     private bool isShaking;
     private bool _isDead;
 
+    [SerializeField] private float aggroDuration;
+    private float _aggroTimer;
+
     private void Start()
     {
         _fsmNavMeshAgent = GetComponent<FSMNavMeshAgent>();
@@ -100,6 +103,19 @@ public class Hittable : MonoBehaviour
             SelectTarget();
         }
         
+    }
+
+    private void Update()
+    {
+        if (_aggroTimer >= 0 )
+        {
+            _aggroTimer -= Time.deltaTime;
+        }
+
+        if (_aggroTimer < 0)
+        {
+            Disperse();
+        }
     }
 
     private void OnDestroy()
@@ -130,9 +146,13 @@ public class Hittable : MonoBehaviour
         {
             attackPlayer = true;
         }
+
+        if (attackPlayer)
+        {
+            _aggroTimer = aggroDuration;
+        }
         
         _fsmNavMeshAgent.target = attackPlayer ? GameManager.Instance.player.transform : GetClosestHittableNode();
-        
     }
 
     public void Disperse()
@@ -202,6 +222,7 @@ public class Hittable : MonoBehaviour
     public void SwichTargetToPlayer()
     {
         attackPlayer = true;
+        _aggroTimer = aggroDuration;
         _fsmNavMeshAgent.target = GameManager.Instance.player.transform;
     }
     
@@ -211,6 +232,7 @@ public class Hittable : MonoBehaviour
         
         if (!attackPlayer && isItEnemy)
         {
+            _aggroTimer = aggroDuration;
             attackPlayer = true;
             _fsmNavMeshAgent.target = GameManager.Instance.player.transform;
 

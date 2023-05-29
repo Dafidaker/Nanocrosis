@@ -60,6 +60,9 @@ public class ChikaiAgent : MonoBehaviour
     [Header("Componenets"), Space(10)]
     [field: SerializeField] private RespawningTargetController respawningTargetController;
     private Rigidbody _rb;
+
+    public float AggroDuration = 5f;
+    private float AgrroTimer = 0f;
     
     
     #region Unity Functions
@@ -87,8 +90,8 @@ public class ChikaiAgent : MonoBehaviour
             attackTimer = attackCooldown;
         }
 
-        if (_rotateTowardsTarget) 
-            transform.rotation = Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(_fsmNavMeshAgent.target.transform.position - transform.position), 0.5f);
+        //if (_rotateTowardsTarget) 
+        transform.rotation = Quaternion.Slerp(transform.rotation,Quaternion.LookRotation(_fsmNavMeshAgent.target.transform.position - transform.position), 0.5f);
         
     }
 

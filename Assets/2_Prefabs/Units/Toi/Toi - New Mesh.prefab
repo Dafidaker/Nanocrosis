@@ -809,8 +809,8 @@ MonoBehaviour:
   rangeAttackState: {fileID: 11400000, guid: e027293e6e1cb804b885b5a0c41f2c43, type: 2}
   meleeAttackState: {fileID: 11400000, guid: 6580879a12a8a9d4db96e0cbc8861964, type: 2}
   evadeState: {fileID: 11400000, guid: 58159a430185fcf449db1832855c29d3, type: 2}
-  currentHealth: 100
-  maxHealth: 100
+  currentHealth: 70
+  maxHealth: 70
   hasShield: 0
   attackCooldown: 5
   distanceToTarget: 0
@@ -902,6 +902,7 @@ MonoBehaviour:
   doSound: 0
   clip: {fileID: 0}
   volume: 0
+  aggroDuration: 25
 --- !u!65 &815186701
 BoxCollider:
   m_ObjectHideFlags: 0

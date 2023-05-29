@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     public bool isGameOver;
     public bool gamePaused;
     public bool isInvincible;
+    public float teleportActivationTime;
+    public bool canTeleport;
 
     [Header("Prefab"), Space(5)] 
     public GameObject debugObject;
@@ -141,7 +143,12 @@ public class GameManager : MonoBehaviour
         var transform1 = cinemachineVirtual.transform;
         Debug.DrawRay(transform1.position, transform1.forward * 10f , Color.green);
         
+        
         seconds += Time.deltaTime;
+
+        if (!(seconds > teleportActivationTime) || canTeleport) return;
+        canTeleport = true;
+        DoctorManager.Instance.AddToQueue("Teleport");
     }
 
 

@@ -1359,6 +1359,7 @@ MonoBehaviour:
   - {fileID: 8950066042180631779}
   - {fileID: 9097227232069491850}
   respawningTargetController: {fileID: 0}
+  AggroDuration: 5
 --- !u!195 &6967938366787232080
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1555,6 +1556,7 @@ MonoBehaviour:
   doSound: 0
   clip: {fileID: 8300000, guid: 90386fa9df7957c4bb1bfc3318b773cd, type: 3}
   volume: 0.01
+  aggroDuration: 25
 --- !u!114 &3408783791366921406
 MonoBehaviour:
   m_ObjectHideFlags: 0

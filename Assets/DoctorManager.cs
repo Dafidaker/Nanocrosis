@@ -53,15 +53,21 @@ public class DoctorManager : MonoBehaviour
         {
             notification.avaliable = true;
         }
+        
+        AddToQueue("Move1");
+        AddToQueue("Move2");
+        AddToQueue("Guns");
+        AddToQueue("Special Ammo");
     }
 
+    
+    
     public void AddToQueue(String id)
     {
         if (!ShowNotifications) return;
         
         var notification = GetNotification(id);
         if (notification.duration == 0f || !notification.avaliable) return;
-
         
         notification.avaliable = false;
         //Debug.Log("added: " + notification.identification);
@@ -88,6 +94,7 @@ public class DoctorManager : MonoBehaviour
 
     private IEnumerator ShowNotification()
     {
+        AudioManager.Instance.PlaySFX("Notification");
         var notification = _notificationsQueue.Dequeue();
         _notificationAreBeingShown = true;
         if (notification.title.Length > 0)

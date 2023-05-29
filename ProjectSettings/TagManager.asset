@@ -17,6 +17,7 @@ TagManager:
   - DangerZone
   - OxygenNode
   - ItemTreeTrigger
+  - RespawnEnchacement
   layers:
   - Default
   - TransparentFX
