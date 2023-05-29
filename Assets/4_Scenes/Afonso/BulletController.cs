@@ -113,6 +113,7 @@ public class BulletController : MonoBehaviour
         
         if (!((ItHits.value & (1 << other.transform.gameObject.layer)) > 0))
         {
+            
             return;
         }
         
@@ -140,6 +141,8 @@ public class BulletController : MonoBehaviour
         var hittableScript = other.GetComponent<Hittable>();
         if (hittableScript != null && hittableScript.GetType() == typeof(OxigenNodeHittable))
         {
+            var go = Instantiate(GameManager.Instance.vfxHitAnything, transform.position, Quaternion.identity);
+            Destroy(go, 1f);
             Destroy(gameObject);
             return;
         }
@@ -152,9 +155,13 @@ public class BulletController : MonoBehaviour
 
         if (hittableScript != null)
         {
-            hittableScript.GotHit(Damage,playerAttacks);
+            /*var go = Instantiate(hittableScript.vfx, transform.position, Quaternion.identity);
+            Destroy(go, 1f);*/
+            hittableScript.GotHit(Damage,playerAttacks,transform.position );
         }
         
+        var a = Instantiate(GameManager.Instance.vfxHitAnything, transform.position, Quaternion.identity);
+        Destroy(a, 1f);
         Destroy(gameObject);
     }
 }

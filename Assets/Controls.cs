@@ -143,6 +143,15 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Teleport"",
+                    ""type"": ""Button"",
+                    ""id"": ""2669f994-556e-40ed-9bff-24c6175cc53f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -259,7 +268,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""041ed107-e3d9-45ac-a9fb-14e3ae9f3b2c"",
-                    ""path"": ""<Keyboard>/f"",
+                    ""path"": ""<Mouse>/rightButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -332,6 +341,17 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                     ""action"": ""EnhanceAmmo"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f77ec958-2186-4c90-9470-f909ff887a6a"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Teleport"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -381,6 +401,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_EnhanceAmmo = m_Player.FindAction("EnhanceAmmo", throwIfNotFound: true);
+        m_Player_Teleport = m_Player.FindAction("Teleport", throwIfNotFound: true);
         // Pause
         m_Pause = asset.FindActionMap("Pause", throwIfNotFound: true);
         m_Pause_PauseGame = m_Pause.FindAction("PauseGame", throwIfNotFound: true);
@@ -456,6 +477,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_Interact;
     private readonly InputAction m_Player_EnhanceAmmo;
+    private readonly InputAction m_Player_Teleport;
     public struct PlayerActions
     {
         private @Controls m_Wrapper;
@@ -473,6 +495,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
         public InputAction @EnhanceAmmo => m_Wrapper.m_Player_EnhanceAmmo;
+        public InputAction @Teleport => m_Wrapper.m_Player_Teleport;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -521,6 +544,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @EnhanceAmmo.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnhanceAmmo;
                 @EnhanceAmmo.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnhanceAmmo;
                 @EnhanceAmmo.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnEnhanceAmmo;
+                @Teleport.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTeleport;
+                @Teleport.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTeleport;
+                @Teleport.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTeleport;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -564,6 +590,9 @@ public partial class @Controls : IInputActionCollection2, IDisposable
                 @EnhanceAmmo.started += instance.OnEnhanceAmmo;
                 @EnhanceAmmo.performed += instance.OnEnhanceAmmo;
                 @EnhanceAmmo.canceled += instance.OnEnhanceAmmo;
+                @Teleport.started += instance.OnTeleport;
+                @Teleport.performed += instance.OnTeleport;
+                @Teleport.canceled += instance.OnTeleport;
             }
         }
     }
@@ -616,6 +645,7 @@ public partial class @Controls : IInputActionCollection2, IDisposable
         void OnReload(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
         void OnEnhanceAmmo(InputAction.CallbackContext context);
+        void OnTeleport(InputAction.CallbackContext context);
     }
     public interface IPauseActions
     {

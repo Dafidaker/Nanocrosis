@@ -5183,6 +5183,7 @@ MonoBehaviour:
   shieldIsActive: 0
   shieldCooldown: 0
   haveShieldChance: 0
+  vfx: {fileID: 5307667670975671980, guid: c8c5f2e97c1592c48b05ae2e1c95bdc6, type: 3}
   animate: 1
   duration: 0.05
   strength: 0.5
@@ -5692,6 +5693,26 @@ PrefabInstance:
     - target: {fileID: 1585272016718287193, guid: 74940520aad5f674d834550fbc3a2410, type: 3}
       propertyPath: m_Name
       value: Kuroku Mesh
+      objectReference: {fileID: 0}
+    - target: {fileID: 1585272016718287193, guid: 74940520aad5f674d834550fbc3a2410, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3455341962732418548, guid: 74940520aad5f674d834550fbc3a2410, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4780812065937837112, guid: 74940520aad5f674d834550fbc3a2410, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599971132007378181, guid: 74940520aad5f674d834550fbc3a2410, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8613348567512450021, guid: 74940520aad5f674d834550fbc3a2410, type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

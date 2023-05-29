@@ -40,7 +40,7 @@ public class OxigenNodeHittable : Hittable
         GameEvents.Instance.oxigenNodeIsTargatable.Ping(this,null);
     }
     
-    public override void GotHit(int damage, PlayerAttacks attackType)
+    public override void GotHit(int damage, PlayerAttacks attackType, Vector3 hitLocation = default)
     {
         if (!targetable || _deflating) return;
         currentHealth -= damage;    

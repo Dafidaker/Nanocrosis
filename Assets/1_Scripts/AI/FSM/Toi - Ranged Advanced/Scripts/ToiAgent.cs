@@ -104,7 +104,8 @@ public class ToiAgent : MonoBehaviour
             attackTimer = attackCooldown;
         }
         
-        var newRotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(new Vector3(_target.transform.position.x , transform.position.y , _target.transform.position.z) - transform.position), 0.5f);
+        var newRotation = Quaternion.Slerp(transform.rotation, 
+            Quaternion.LookRotation(new Vector3(_target.transform.position.x , transform.position.y , _target.transform.position.z) - transform.position), 0.5f);
         transform.rotation = newRotation;
     }
 

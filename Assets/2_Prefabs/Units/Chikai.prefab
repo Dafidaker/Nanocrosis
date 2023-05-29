@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 5426163938102842396}
   - component: {fileID: 4866935717289187723}
   - component: {fileID: 729037987779867140}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: BezierCircle.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -523,7 +523,7 @@ Transform:
   m_GameObject: {fileID: 2706919504629644801}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 5.2, y: 5.2, z: 5.2}
+  m_LocalScale: {x: 5.83, y: 5.83, z: 5.83}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8358452084813226909}
@@ -557,7 +557,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a1e97cbf2538241b691aae8243b5fb10, type: 2}
+  - {fileID: 2100000, guid: b9b4fcd9eb425db48b6076d63d5c79c5, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1033,7 +1033,7 @@ GameObject:
   - component: {fileID: 1790583303512956851}
   - component: {fileID: 695723174747653108}
   - component: {fileID: 5128947139496701550}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cylinder.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1539,6 +1539,8 @@ MonoBehaviour:
   shieldIsActive: 0
   shieldCooldown: 20
   haveShieldChance: 0.7
+  vfx: {fileID: 5307667670975671980, guid: a346eb236e1717f459c47c3ce819c36d, type: 3}
+  shieldVfx: {fileID: 5307667670975671980, guid: 38a25fd50453c2743abf90cda9d77c35, type: 3}
   animate: 1
   duration: 0.05
   strength: 0.07
@@ -1799,7 +1801,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2162287897894492367}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6749,7 +6751,7 @@ GameObject:
   - component: {fileID: 1433851880781383726}
   - component: {fileID: 3161325568874753458}
   - component: {fileID: 2586014613362242492}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cylinder.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6832,7 +6834,7 @@ GameObject:
   - component: {fileID: 5008112741757541607}
   - component: {fileID: 2347200714750652145}
   - component: {fileID: 8441897395833350483}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6949,7 +6951,7 @@ GameObject:
   - component: {fileID: 8165929425153729110}
   - component: {fileID: 8796950637123615104}
   - component: {fileID: 6949496595437304863}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Torus
   m_TagString: Untagged
   m_Icon: {fileID: 0}

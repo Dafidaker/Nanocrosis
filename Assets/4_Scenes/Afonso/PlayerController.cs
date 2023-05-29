@@ -116,6 +116,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject DeadUI;
     public float TimeToRepair;
 
+    
+    [Header("Teleport"), Space(10)]
+    [SerializeField] private float teleportCooldonw;
+    private float _teleportTimer;
+    
     //animations
     private Animator _animator;
     
@@ -148,6 +153,7 @@ public class PlayerController : MonoBehaviour
     private InputAction _iReload;
     private InputAction _iInteract;
     private InputAction _iEnhanceAmmo;
+    private InputAction _iTeleport;
 
     //Item interactions.
     private GameObject _currentBomb;
@@ -297,8 +303,9 @@ public class PlayerController : MonoBehaviour
             Invoke(nameof(EndCoyoteTime), coyoteDuration);
         }*/
 
-        if(_fireCountdown > 0) _fireCountdown -= Time.deltaTime;
-        if(_meleeCountdown > 0) _meleeCountdown -= Time.deltaTime;
+        if(_fireCountdown >= 0) _fireCountdown -= Time.deltaTime;
+        if(_meleeCountdown >= 0) _meleeCountdown -= Time.deltaTime;
+        if(_teleportTimer >= 0) _teleportTimer -= Time.deltaTime;
 
         if (CanJump())
         {
@@ -721,7 +728,7 @@ public class PlayerController : MonoBehaviour
         _lastMovementState = _movementState;
     }
     
-    private bool OnSlope()
+        private bool OnSlope()
         {
             //if it doesnt hit a slope it returns false 
             if (!Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _slopeHit,0.6f, layerMask )) return false;
@@ -732,7 +739,7 @@ public class PlayerController : MonoBehaviour
             return angle > minSlopeAngle && angle != 0;
         }
     
-    private void DetectGround()
+        private void DetectGround()
         {
             isGrounded = Physics.SphereCast(transform.position,0.5f ,Vector3.down, out _,0.6f, layerMask);
 
@@ -748,12 +755,12 @@ public class PlayerController : MonoBehaviour
             //if the player is on the ground their jumps will reset
             if (isGrounded) { _currentJumps = 0; }
         }
-    private Vector3 GetSlopeMoveDirection(Vector3 vector)
+        private Vector3 GetSlopeMoveDirection(Vector3 vector)
         {
             return Vector3.ProjectOnPlane(vector, _slopeHit.normal);
         }
     
-    private IEnumerator SmoothlyLerpMoveSpeed()
+        private IEnumerator SmoothlyLerpMoveSpeed()
         {
             float time = 0;
             float difference = Mathf.Abs(_desiredMoveSpeed - _moveSpeed);
@@ -776,7 +783,7 @@ public class PlayerController : MonoBehaviour
             _keepMomentum = false;
         }
         
-    private bool CanJump()
+        private bool CanJump()
         {
             //if the player isn't _readyToJump or
             //the nº of jumps that they took are higher or equal to the amount allowed it returns
@@ -788,19 +795,31 @@ public class PlayerController : MonoBehaviour
             return true;
         }
 
-    private void UpdateCamSentivity()
-    {
-        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseXSentivity;
-        CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseYSentivity;
-        
-    }
+        private void UpdateCamSentivity()
+        {
+            CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_HorizontalAxis.m_MaxSpeed = _camXSpeed * mouseXSentivity;
+            CinemachineVirtual.GetCinemachineComponent<CinemachinePOV>().m_VerticalAxis.m_MaxSpeed = _camYSpeed * mouseYSentivity;
+        }
+
+        private void Teleport()
+        {
+            _teleportTimer = teleportCooldonw;
+            if (GameManager.Instance.currentArena.arenaType == Arena.Heart)
+            {
+                GameManager.Instance.ChangeArena(Arena.Lungs);
+                transform.position = GameManager.Instance.lungsPlayerSpawnPosition.position;
+            }
+            else
+            {
+                GameManager.Instance.ChangeArena(Arena.Heart);
+                transform.position = GameManager.Instance.heartPlayerSpawnPosition.position;
+            }
+        }
 
     #endregion
     
     
     #endregion
-
-    
     
     #region Input System Functions
     
@@ -908,6 +927,7 @@ public class PlayerController : MonoBehaviour
 
             if (weaponController.Reloading) return;
 
+            AudioManager.Instance.PlaySFX("Shoot");
             _animator.SetBool(Shooting, true);
             if (!weaponController.FullAuto) SingleFire(weaponController);
             else _shooting = StartCoroutine(FullAuto());
@@ -997,6 +1017,24 @@ public class PlayerController : MonoBehaviour
             GetBomb();
         }
     }
+
+    private void TeleportInput(InputAction.CallbackContext context)
+    {
+        if (GameManager.Instance.gamePaused)
+        {
+            Debug.Log("GAME IS PAUSED");
+            return;
+        }
+
+        if (_teleportTimer < 0)
+        {
+            Teleport();
+        }
+        else
+        {
+            DoctorManager.Instance.AddToQueue("TeleportInCooldown");
+        }
+    }
     private void EnhanceWeapon(InputAction.CallbackContext context)
     {
         if (GameManager.Instance.gamePaused)
@@ -1069,7 +1107,7 @@ public class PlayerController : MonoBehaviour
         _animator.SetBool(Dead, false);
         _playerStats.CurrentHealth = _playerStats.MaxHealth;
         _playerStats.UpdateColor();
-        HealthBar.SetHealth();
+        //HealthBar.SetHealth(); //health
     }
     
     
@@ -1151,6 +1189,10 @@ public class PlayerController : MonoBehaviour
         _iEnhanceAmmo = PlayerControls.Player.EnhanceAmmo;
         _iEnhanceAmmo.performed += EnhanceWeapon;
         _iEnhanceAmmo.Enable();
+        
+        _iTeleport = PlayerControls.Player.Teleport;
+        _iTeleport.performed += TeleportInput;
+        _iTeleport.Enable();
 
     }
     public void DisableInputSystem()
@@ -1260,6 +1302,10 @@ public class PlayerController : MonoBehaviour
             _currentBomb = Instantiate(GameManager.Instance.bomb);
             _currentBomb.GetComponent<BombPickupController>().Interact();
             WeaponUI.BombAttached();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha0)) // make player invinsable
+        {
+            GameManager.Instance.isInvincible = !GameManager.Instance.isInvincible;
         }
     }
     
@@ -1431,7 +1477,7 @@ public class PlayerController : MonoBehaviour
             HealthBar.SetHealth();
             _damaged = true;*/
             _playerStats.DamageTaken(1);
-            HealthBar.SetHealth();
+            //HealthBar.SetHealth(); // Health Bar
         }
     }
 

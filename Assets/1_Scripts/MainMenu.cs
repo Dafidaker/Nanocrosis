@@ -18,7 +18,10 @@ public class MainMenu : MonoBehaviour
     {
         Application.Quit();
     }
-    
-    
+
+    public void PressedButton()
+    {
+        AudioManager.Instance.PlaySFX("ClickButton");
+    }
     
 }

@@ -131,14 +131,14 @@ public class DoctorManager : MonoBehaviour
             t.cooldown -= Time.deltaTime;
         }*/
 
-        if (Input.GetKeyDown(KeyCode.A))
+        /*if (Input.GetKeyDown(KeyCode.A))
         {
             AddToQueue("LungsLostHealth");
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
             AddToQueue("LungsGainedHealth");
-        }
+        }*/ 
     }
 
 

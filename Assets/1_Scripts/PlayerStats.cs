@@ -31,7 +31,7 @@ public class PlayerStats : MonoBehaviour
     private static readonly int GotHit = Animator.StringToHash("GotHit");
 
     #region Unity Functions
-    private void Start()
+    private void Awake()
     {
         _animator = GetComponent<Animator>();
         CurrentHealth = MaxHealth;
@@ -44,11 +44,12 @@ public class PlayerStats : MonoBehaviour
 
     public void DamageTaken(int damagedTaken)
     {   
-        if (GameManager.Instance.playerController.dying)
+        if (GameManager.Instance.playerController.dying || GameManager.Instance.isInvincible)
         {
             return;
         }
         
+        AudioManager.Instance.PlaySFX("GotHit");
         GameEvents.Instance.playerWasDamaged.Ping(null,null);
         _animator.SetTrigger(GotHit);
         CurrentHealth -= damagedTaken;
@@ -59,7 +60,7 @@ public class PlayerStats : MonoBehaviour
             StartCoroutine(GameManager.Instance.playerController.DieAndRespawn());
         }
         
-        healthBarController.SetHealth();
+        //healthBarController.SetHealth(); // health bar
     }
     
     #endregion
@@ -88,7 +89,7 @@ public class PlayerStats : MonoBehaviour
 
         foreach (var controller in lightControllers)
         {
-            controller.UpdateColor();
+            controller.UpdateColor(currentHealthColor);
         }
     }
 

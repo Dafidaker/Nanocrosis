@@ -23,6 +23,7 @@ public class HealthBarController : MonoBehaviour
     
     public void SetHealth()
     {
+        
         Slider.value = _playerStats.CurrentHealth;
         Fill.color = Gradient.Evaluate(Slider.normalizedValue);
     }

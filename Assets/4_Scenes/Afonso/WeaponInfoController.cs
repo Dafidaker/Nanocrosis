@@ -10,28 +10,50 @@ public class WeaponInfoController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI Reserve;
     [SerializeField] private GameObject GunStats;
     [SerializeField] private GameObject BombText;
-    private GameObject _player;
+
+    [SerializeField]private RectTransform rifle;
+    [SerializeField]private RectTransform shotgun;
+    [SerializeField]private GameObject bomb;
+    
+    private PlayerController _player;
     private WeaponController _weaponController;
     private Color _enhancedColor;
 
     private void Start()
     {
-        _player = GameManager.Instance.player.gameObject;
-        _weaponController = _player.GetComponent<PlayerController>().CurrentWeapon.GetComponent<WeaponController>();
+        _player = GameManager.Instance.playerController;
+        _weaponController = _player.CurrentWeapon.GetComponent<WeaponController>();
 
         _enhancedColor = new Color(1f, 0.34f, 0f);
 
-        WeaponName.SetText(_weaponController.Name);
+        //WeaponName.SetText(_weaponController.Name);
         Mag.SetText(_weaponController.MagSize.ToString());
         Reserve.SetText(_weaponController.AmmoReserve.ToString());
 
-        BombText.SetActive(false);
+        bomb.SetActive(false);
+        //BombText.SetActive(false);
     }
-
+    
     public void SetValues()
     {
-        _weaponController = _player.GetComponent<PlayerController>().CurrentWeapon.GetComponent<WeaponController>();
-        WeaponName.SetText(_weaponController.Name);
+        if (_player.BombAttached)
+        {
+            return;
+        }
+        _player = GameManager.Instance.playerController;
+        _weaponController = _player.CurrentWeapon.GetComponent<WeaponController>();
+        if (_weaponController.Name == "Rifle")
+        {
+            rifle.localScale = new Vector2(1f, 1f);
+            shotgun.localScale = new Vector2(0.5f, 0.5f);
+        }
+        else
+        {
+            shotgun.localScale = new Vector2(1f, 1f);
+            rifle.localScale = new Vector2(0.5f, 0.5f);
+        }
+        
+        //WeaponName.SetText(_weaponController.Name);
         Mag.SetText(_weaponController.CurrentMag.ToString());
         Reserve.SetText(_weaponController.CurrentAmmoReserve.ToString());
     }
@@ -80,25 +102,32 @@ public class WeaponInfoController : MonoBehaviour
 
     public void BombAttached()
     {
-        BombText.SetActive(true);
-        GunStats.SetActive(false);
+        bomb.SetActive(true);
+        rifle.localScale = new Vector2(0.5f, 0.5f);
+        shotgun.localScale = new Vector2(0.5f, 0.5f);
+        /*BombText.SetActive(true);
+        GunStats.SetActive(false);*/
     }
 
     public void BombUnattached()
     {
-        BombText.SetActive(false);
-        GunStats.SetActive(true);
+        bomb.SetActive(false);
+        
+        SetValues();
+        
+        /*BombText.SetActive(false);
+        GunStats.SetActive(true);*/
     }
 
     public void EnhancedWeapon()
     {
         Mag.color = _enhancedColor;
-        WeaponName.color = _enhancedColor;
+        //WeaponName.color = _enhancedColor;
     }
 
     public void ResetEnhancedWeapon()
     {
         Mag.color = Color.white;
-        WeaponName.color = Color.white;
+        //WeaponName.color = Color.white;
     }
 }

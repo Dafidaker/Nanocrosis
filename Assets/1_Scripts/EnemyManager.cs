@@ -247,7 +247,7 @@ public class EnemyManager : MonoBehaviour
         while (itemWaypoint == null && tempTree.Count > 0)
         {
             tempTree.Remove(selectedTree);
-            if(tempTree.Count < 0) return;
+            if(tempTree.Count <= 0) return;
             Debug.Log("tree" + tempTree.Count);
             selectedTree = tempTree[Random.Range(0, tempTree.Count)];
             selectedTreeController = selectedTree.GetComponent<ItemTreeController>();

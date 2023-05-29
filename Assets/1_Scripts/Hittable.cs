@@ -41,6 +41,8 @@ public class Hittable : MonoBehaviour
     private bool _rechargingShield;
     
     [Header("Hit Animation"), Space(5)] 
+    [field: SerializeField] public GameObject vfx;
+    [field: SerializeField] public GameObject shieldVfx;
     [field: SerializeField] private bool animate;
     [field: SerializeField] private float duration;
     [field: SerializeField] private float strength;
@@ -203,7 +205,7 @@ public class Hittable : MonoBehaviour
         _fsmNavMeshAgent.target = GameManager.Instance.player.transform;
     }
     
-    public virtual void GotHit(int damage, PlayerAttacks attackType)
+    public virtual void GotHit(int damage, PlayerAttacks attackType, Vector3 hitLocation = default)
     {
         var beforeHealth = GetCurrentHealthPercentage() * 100;
         
@@ -243,14 +245,21 @@ public class Hittable : MonoBehaviour
         {
             PauseMenuController.Instance.CallHitmaker();
         }
+        
+        
 
         if (hasShield && shieldIsActive)
         {
             currentShieldHealth -= damage;
+            var go = Instantiate(damage > 0 ? shieldVfx : GameManager.Instance.vfxHitAnything, hitLocation, Quaternion.identity);
+            Destroy(go, 1f);
         }
         else if (!hasShield || (hasShield && !shieldIsActive))
         {
             currentHealth -= damage;
+            if (vfx == null) { vfx = GameManager.Instance.vfxHitEnemy; }
+            var go = Instantiate(vfx, hitLocation, Quaternion.identity);
+            Destroy(go, 1f);
         }
 
             

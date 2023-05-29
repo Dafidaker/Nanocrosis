@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public bool isGameOver;
     public bool gamePaused;
+    public bool isInvincible;
 
     [Header("Prefab"), Space(5)] 
     public GameObject debugObject;
@@ -29,6 +30,8 @@ public class GameManager : MonoBehaviour
     public GameObject ammo;
     public GameObject specialAmmo;
     public GameObject bomb;
+    public GameObject vfxHitEnemy;
+    public GameObject vfxHitAnything;
     [field: HideInInspector] public PlayerController playerController;
     
     [Header("Arenas"), Space(5)]
@@ -97,6 +100,8 @@ public class GameManager : MonoBehaviour
         }
         
         ChangeArena(initialArena);
+        
+        AudioManager.Instance.PlayMusic("Gameplay");
     }
 
     private void Start()
